@@ -33,6 +33,18 @@ test("every primary public route resolves", async ({ request }) => {
   }
 });
 
+test("reservation prototype is visibly read-only and creator credit is linked", async ({ page }) => {
+  await page.goto("/rezervace");
+
+  await expect(page.getByRole("heading", { name: "Rezervace areálu" })).toBeVisible();
+  await expect(page.getByText("Zatím pouze náhled")).toBeVisible();
+  await expect(page.getByRole("button", { name: /Odesílání zatím vypnuto/ })).toBeDisabled();
+  await expect(page.getByLabel("Prostor")).toBeDisabled();
+
+  const creator = page.getByRole("link", { name: /Cingy\.Tech/ });
+  await expect(creator).toHaveAttribute("href", "https://cingy.tech");
+});
+
 test("navigation and layout work at the current viewport", async ({ page }, testInfo) => {
   await page.goto("/");
 

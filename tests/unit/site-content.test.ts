@@ -5,6 +5,7 @@ import {
   facilities,
   navigation,
   newsPreview,
+  reservationAreas,
   schedulePreview,
   teams,
 } from "../../src/content/site";
@@ -37,18 +38,20 @@ describe("public site content", () => {
       "Multifunkční hřiště",
       "Posilovna",
       "Finská sauna",
+      "Klubovna a zázemí",
     ]);
     expect(club.address).toBe("U hřiště, Rynholec");
     expect(club.coordinates).toEqual({ latitude: 50.1349364, longitude: 13.92615 });
   });
 
   it("keeps preview schedule entries visibly non-production", () => {
-    expect(schedulePreview).toHaveLength(3);
+    expect(schedulePreview).toHaveLength(4);
     expect(schedulePreview.every(({ preview }) => preview)).toBe(true);
     expect(schedulePreview.map(({ team }) => team)).toEqual([
       "A tým",
       "Žáci",
       "Přípravka",
+      "Areál",
     ]);
   });
 
@@ -59,5 +62,16 @@ describe("public site content", () => {
       title: "Nové místo pro Baník Rynholec vzniká",
     });
     expect(newsPreview).toHaveLength(3);
+  });
+
+  it("offers read-only reservation areas for every public booking surface", () => {
+    expect(reservationAreas.map(({ name }) => name)).toEqual([
+      "Hřiště",
+      "Multifunkční hřiště",
+      "Posilovna",
+      "Sauna",
+      "Klubovna",
+    ]);
+    expect(reservationAreas.every(({ status }) => status === "Read-only náhled")).toBe(true);
   });
 });

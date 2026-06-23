@@ -1,23 +1,211 @@
 ---
+import { CalendarDays, ShieldCheck, Users } from "lucide-react";
+
 import PageHero from "../components/public/PageHero.astro";
+import { facilities, teams } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
 <PublicLayout title="Klub" description="TJ Baník Rynholec a jeho sportovní komunita.">
   <PageHero title="Klub" description="Fotbal napříč generacemi a sportovní zázemí pro celý Rynholec." />
+
   <section class="content-band">
-    <div class="container prose">
-      <h2>TJ Baník Rynholec</h2>
-      <p>
-        Klub spojuje přípravku, žáky, A tým a starou gardu. Nový web vzniká jako společné místo pro dění v klubu,
-        výsledky, zápasy, zprávy a provoz sportovního areálu.
-      </p>
-      <h2>Jeden klub, jeden areál</h2>
-      <p>
-        Domovem Baníku je areál v ulici U hřiště s fotbalovým a multifunkčním hřištěm, posilovnou, saunou,
-        in-line dráhou a tréninkovým zázemím.
-      </p>
+    <div class="container club-intro">
+      <div class="club-copy">
+        <h2>TJ Baník Rynholec</h2>
+        <p>
+          Tento web vzniká jako samostatné digitální místo pro klub, sportovní areál a budoucí správu rezervací.
+          První verze je záměrně postavená jako read-only prototyp: ukazuje strukturu, styl a obsahové bloky,
+          zatímco ostrá data doplníme až po potvrzení od klubu.
+        </p>
+        <p>
+          Cílem je, aby návštěvník rychle našel program, tým, kontakt, informace o areálu a později i možnost
+          požádat o rezervaci bez telefonování naslepo.
+        </p>
+      </div>
+      <img src="/images/sportovni-areal-secondary.jpg" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+    </div>
+
+    <div class="container club-metrics" aria-label="Přehled klubu">
+      <article>
+        <strong>{teams.length}</strong>
+        <span>týmové kategorie</span>
+      </article>
+      <article>
+        <strong>{facilities.length}</strong>
+        <span>rezervačních oblastí areálu</span>
+      </article>
+      <article>
+        <strong>1</strong>
+        <span>společný kalendář pro program a obsazenost</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="club-system">
+    <div class="container system-grid">
+      <article>
+        <Users aria-hidden="true" size={30} strokeWidth={1.8} />
+        <h2>Klubový obsah</h2>
+        <p>Novinky, týmy, zápasy a informace budou držet jednotný styl. Texty a fotky teď fungují jako placeholder.</p>
+      </article>
+      <article>
+        <CalendarDays aria-hidden="true" size={30} strokeWidth={1.8} />
+        <h2>Program areálu</h2>
+        <p>Kalendář zatím čteme jen jako ukázku. Později se napojí na admin, schválené rezervace a Excel import/export.</p>
+      </article>
+      <article>
+        <ShieldCheck aria-hidden="true" size={30} strokeWidth={1.8} />
+        <h2>Správa pod kontrolou</h2>
+        <p>Netlify a technické věci zůstávají u Cingy.Tech. Klub bude používat vlastní zabezpečený admin panel.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="content-band">
+    <div class="container next-content">
+      <h2>Co doplníme před ostrým spuštěním</h2>
+      <ul>
+        <li>skutečné soupisky, trenéry a tréninkové časy</li>
+        <li>aktuální fotky týmů a areálu ve vyšším rozlišení</li>
+        <li>kontakty na správné osoby po potvrzení klubem</li>
+        <li>pravidla rezervací, ceník a schvalovací proces</li>
+      </ul>
     </div>
   </section>
 </PublicLayout>
 
+<style>
+  .club-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: stretch;
+    gap: 3rem;
+  }
+
+  .club-copy {
+    align-self: center;
+  }
+
+  .club-copy h2,
+  .system-grid h2,
+  .next-content h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .club-copy p,
+  .system-grid p {
+    color: var(--color-muted);
+  }
+
+  .club-intro img {
+    width: 100%;
+    min-height: 390px;
+    object-fit: cover;
+  }
+
+  .club-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 3rem;
+    border-top: 1px solid var(--color-line);
+    border-left: 1px solid var(--color-line);
+  }
+
+  .club-metrics article {
+    min-height: 150px;
+    padding: 1.5rem;
+    border-right: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .club-metrics strong {
+    display: block;
+    color: var(--color-green);
+    font-family: var(--font-display);
+    font-size: 4rem;
+    line-height: 0.9;
+  }
+
+  .club-metrics span {
+    display: block;
+    margin-top: 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .club-system {
+    padding-block: var(--space-7);
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+
+  .system-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid #3a403b;
+    border-left: 1px solid #3a403b;
+  }
+
+  .system-grid article {
+    min-height: 280px;
+    padding: 2rem;
+    border-right: 1px solid #3a403b;
+    border-bottom: 1px solid #3a403b;
+  }
+
+  .system-grid svg {
+    margin-bottom: 1.5rem;
+    color: var(--color-green-bright);
+  }
+
+  .system-grid p {
+    color: #d0d6d1;
+  }
+
+  .next-content {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .next-content ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .next-content li {
+    padding: 1rem 1.25rem;
+    border-left: 5px solid var(--color-green);
+    background: var(--color-paper);
+    color: var(--color-muted);
+    font-weight: 600;
+  }
+
+  @media (max-width: 840px) {
+    .club-intro,
+    .club-metrics,
+    .system-grid,
+    .next-content {
+      grid-template-columns: 1fr;
+    }
+
+    .club-intro img {
+      min-height: 260px;
+    }
+
+    .system-grid article {
+      min-height: 0;
+    }
+  }
+</style>

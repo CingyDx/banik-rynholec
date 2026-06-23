@@ -1,36 +1,257 @@
 ---
+import { CalendarDays, Lock, RotateCw } from "lucide-react";
+
 import PageHero from "../components/public/PageHero.astro";
-import SchedulePreview from "../components/public/SchedulePreview.astro";
+import { calendarDays } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
 <PublicLayout title="Kalendář" description="Program TJ Baník Rynholec a sportovního areálu.">
-  <PageHero title="Kalendář" description="Zápasy, tréninky a schválené využití sportovního areálu." />
-  <SchedulePreview />
-  <section class="calendar-note">
-    <div class="container">
-      <strong>Náhled struktury</strong>
-      <p>Termíny v první verzi nahradíme ověřenými daty z klubového kalendáře před zveřejněním webu.</p>
+  <PageHero title="Kalendář" description="Read-only náhled zápasů, tréninků a budoucí obsazenosti areálu." />
+
+  <section class="content-band">
+    <div class="container calendar-shell">
+      <aside class="calendar-status" aria-label="Stav kalendáře">
+        <CalendarDays aria-hidden="true" size={34} strokeWidth={1.7} />
+        <h2>Prototyp bez ostrých dat</h2>
+        <p>
+          Kalendář je zatím jen náhled struktury. Ukazuje, jak budou vedle sebe fungovat zápasy, tréninky,
+          volné bloky a schválené rezervace.
+        </p>
+        <ul>
+          <li><Lock aria-hidden="true" size={17} /> žádné žádosti se zatím neodesílají</li>
+          <li><RotateCw aria-hidden="true" size={17} /> import/export Excel bude v admin panelu</li>
+        </ul>
+      </aside>
+
+      <div class="calendar-board">
+        {calendarDays.map((group) => (
+          <section class="calendar-group" aria-labelledby={`calendar-${group.label.replaceAll(" ", "-")}`}>
+            <div class="calendar-group-heading">
+              <div>
+                <span>{group.date}</span>
+                <h2 id={`calendar-${group.label.replaceAll(" ", "-")}`}>{group.label}</h2>
+              </div>
+              <p>{group.note}</p>
+            </div>
+
+            <div class="calendar-events">
+              {group.events.map((event) => (
+                <article class={`calendar-event status-${event.status.toLowerCase().replace("á", "a")}`}>
+                  <div class="event-date">
+                    <strong>{event.day}</strong>
+                    <span>{event.date}</span>
+                  </div>
+                  <time>{event.time}</time>
+                  <div class="event-main">
+                    <span>{event.type} · {event.team}</span>
+                    <h3>{event.opponent}</h3>
+                    <p>{event.venue}</p>
+                  </div>
+                  <strong class="event-status">{event.status}</strong>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
     </div>
   </section>
 </PublicLayout>
 
 <style>
-  .calendar-note {
-    padding-block: var(--space-5);
-    background: var(--color-paper);
+  .calendar-shell {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.36fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
   }
 
-  .calendar-note strong {
+  .calendar-status {
+    position: sticky;
+    top: 1.5rem;
+    padding: 2rem;
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+
+  .calendar-status svg {
+    color: var(--color-green-bright);
+  }
+
+  .calendar-status h2,
+  .calendar-group-heading h2,
+  .event-main h3 {
+    margin: 0;
     font-family: var(--font-display);
-    font-size: 1.4rem;
+    line-height: 1;
     text-transform: uppercase;
   }
 
-  .calendar-note p {
-    max-width: 700px;
-    margin: 0.35rem 0 0;
+  .calendar-status h2 {
+    margin-top: 1.25rem;
+    font-size: 2.25rem;
+  }
+
+  .calendar-status p {
+    color: #d2d7d3;
+  }
+
+  .calendar-status ul {
+    display: grid;
+    gap: 0.85rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .calendar-status li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    color: #d2d7d3;
+    font-size: 0.9rem;
+  }
+
+  .calendar-board {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .calendar-group {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .calendar-group-heading {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.4fr) minmax(0, 1fr);
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .calendar-group-heading span,
+  .event-main span {
+    color: var(--color-green);
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .calendar-group-heading h2 {
+    margin-top: 0.25rem;
+    font-size: 2.3rem;
+  }
+
+  .calendar-group-heading p {
+    margin: 0;
     color: var(--color-muted);
   }
-</style>
 
+  .calendar-events {
+    display: grid;
+  }
+
+  .calendar-event {
+    display: grid;
+    grid-template-columns: 92px 92px minmax(0, 1fr) 96px;
+    align-items: center;
+    min-height: 112px;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .event-date {
+    display: grid;
+    min-height: 76px;
+    place-content: center;
+    background: var(--color-green-deep);
+    color: var(--color-white);
+    line-height: 1.05;
+    text-align: center;
+  }
+
+  .event-date strong {
+    font-size: 0.78rem;
+  }
+
+  .event-date span,
+  .calendar-event time {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  .calendar-event time {
+    padding-inline: 1rem;
+    border-right: 3px solid var(--color-yellow);
+  }
+
+  .event-main {
+    padding: 1rem 1.5rem;
+  }
+
+  .event-main h3 {
+    margin-top: 0.35rem;
+    font-size: 1.75rem;
+  }
+
+  .event-main p {
+    margin: 0.35rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+
+  .event-status {
+    justify-self: end;
+    margin-right: 1rem;
+    padding: 0.35rem 0.55rem;
+    border: 1px solid var(--color-line);
+    color: var(--color-muted);
+    font-size: 0.72rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .status-volno .event-status {
+    border-color: var(--color-green);
+    color: var(--color-green);
+  }
+
+  .status-blokovano .event-status {
+    border-color: var(--color-yellow);
+    color: var(--color-black);
+    background: var(--color-yellow);
+  }
+
+  @media (max-width: 920px) {
+    .calendar-shell,
+    .calendar-group-heading {
+      grid-template-columns: 1fr;
+    }
+
+    .calendar-status {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .calendar-event {
+      grid-template-columns: 76px 68px minmax(0, 1fr);
+      min-height: 118px;
+    }
+
+    .event-status {
+      grid-column: 3;
+      justify-self: start;
+      margin: 0 0 0.9rem 1rem;
+    }
+
+    .event-main {
+      padding: 0.85rem 1rem 0.35rem;
+    }
+
+    .event-main h3 {
+      font-size: 1.35rem;
+    }
+  }
+</style>

@@ -296,6 +296,18 @@ summary {
   font-size: 0.82rem;
 }
 
+.creator-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #c9d0ca;
+  transition: color var(--transition-fast);
+}
+
+.creator-link:hover {
+  color: var(--color-green-bright);
+}
+
 .page-hero {
   padding-block: var(--space-7);
   background: var(--color-black);

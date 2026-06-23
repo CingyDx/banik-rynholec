@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, Dumbbell, Flame, MapPin, Trophy } from "lucide-react";
+import { ArrowRight, Dumbbell, Flame, House, MapPin, Trophy } from "lucide-react";
 
 import { facilities } from "../../content/site";
 
@@ -8,6 +8,7 @@ const icons = {
   multifunction: MapPin,
   gym: Dumbbell,
   sauna: Flame,
+  clubhouse: House,
 };
 ---
 
@@ -35,6 +36,7 @@ const icons = {
           <Icon aria-hidden="true" size={27} strokeWidth={1.8} />
           <h3>{facility.name}</h3>
           <p>{facility.description}</p>
+          <span>{facility.capacity}</span>
           <ArrowRight aria-hidden="true" size={18} />
         </a>
       );
@@ -73,7 +75,7 @@ const icons = {
 
   .facility-list {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     margin-top: 2.5rem;
     border-top: 1px solid var(--color-line);
   }
@@ -101,10 +103,21 @@ const icons = {
   }
 
   .facility-item p {
-    min-height: 68px;
+    min-height: 92px;
     margin: 0 0 1rem;
     color: var(--color-muted);
     font-size: 0.86rem;
+  }
+
+  .facility-item span {
+    display: block;
+    min-height: 36px;
+    margin-bottom: 1rem;
+    color: var(--color-green-deep);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-transform: uppercase;
   }
 
   @media (max-width: 900px) {
@@ -121,7 +134,7 @@ const icons = {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .facility-item:nth-child(3) {
+    .facility-item:nth-child(odd) {
       border-left: 1px solid var(--color-line);
     }
   }
@@ -132,7 +145,7 @@ const icons = {
     }
 
     .facility-item,
-    .facility-item:nth-child(3) {
+    .facility-item:nth-child(odd) {
       min-height: 0;
       border-right: 0;
       border-bottom: 1px solid var(--color-line);
@@ -144,6 +157,10 @@ const icons = {
     }
 
     .facility-item p {
+      min-height: 0;
+    }
+
+    .facility-item span {
       min-height: 0;
     }
   }

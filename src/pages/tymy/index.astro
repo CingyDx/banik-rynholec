@@ -1,73 +1,229 @@
 ---
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarDays, Medal, Shirt, Trophy, Users } from "lucide-react";
 
 import PageHero from "../../components/public/PageHero.astro";
 import { teams } from "../../content/site";
 import PublicLayout from "../../layouts/PublicLayout.astro";
+
+const icons = {
+  pripravka: Shirt,
+  zaci: Users,
+  "a-tym": Trophy,
+  "stara-garda": Medal,
+};
 ---
 
 <PublicLayout title="Týmy" description="Týmy TJ Baník Rynholec od přípravky po starou gardu.">
   <PageHero title="Naše týmy" description="Čtyři generace, jeden znak a společná radost ze hry." />
+
   <section class="content-band">
     <div class="container team-page-list">
-      {teams.map((team, index) => (
-        <article class="team-page-item" id={team.id}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <div>
-            <h2>{team.name}</h2>
-            <p>{team.description}</p>
-          </div>
-          <a class="text-link" href="/kontakt">Kontakt <ArrowRight aria-hidden="true" size={18} /></a>
-        </article>
-      ))}
+      {teams.map((team, index) => {
+        const Icon = icons[team.id];
+        return (
+          <article class="team-page-item" id={team.id}>
+            <div class="team-visual" aria-hidden="true">
+              <img src="/images/club-logo.png" alt="" width="88" height="130" loading="lazy" />
+              <span>{String(index + 1).padStart(2, "0")}</span>
+            </div>
+            <div class="team-content">
+              <Icon aria-hidden="true" size={32} strokeWidth={1.8} />
+              <p class="team-kicker">{team.ageGroup}</p>
+              <h2>{team.name}</h2>
+              <p>{team.description}</p>
+              <dl>
+                <div>
+                  <dt>Zaměření</dt>
+                  <dd>{team.focus}</dd>
+                </div>
+                <div>
+                  <dt>Tréninky</dt>
+                  <dd>{team.training}</dd>
+                </div>
+                <div>
+                  <dt>Kontakt</dt>
+                  <dd>{team.contactNote}</dd>
+                </div>
+              </dl>
+              <a class="text-link" href="/kalendar">
+                Program týmu <CalendarDays aria-hidden="true" size={18} />
+              </a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="team-note">
+    <div class="container note-inner">
+      <h2>Obsah týmů je připravený na reálná data</h2>
+      <p>
+        Fotky, soupisky, trenéry a tréninkové časy doplníme po potvrzení klubem. Struktura stránky už počítá s tím,
+        že později půjde obsah spravovat přes admin panel bez zásahu do kódu.
+      </p>
+      <a class="command" href="/kontakt">
+        Poslat podklady <ArrowRight aria-hidden="true" size={18} />
+      </a>
     </div>
   </section>
 </PublicLayout>
 
 <style>
   .team-page-list {
-    border-top: 1px solid var(--color-line);
+    display: grid;
+    gap: 2rem;
   }
 
   .team-page-item {
     display: grid;
-    min-height: 150px;
-    grid-template-columns: 70px 1fr auto;
-    align-items: center;
-    gap: 2rem;
-    border-bottom: 1px solid var(--color-line);
+    grid-template-columns: minmax(210px, 0.36fr) minmax(0, 1fr);
+    min-height: 380px;
+    border: 1px solid var(--color-line);
+    background: var(--color-white);
   }
 
-  .team-page-item > span {
+  .team-visual {
+    position: relative;
+    display: grid;
+    min-height: 100%;
+    place-items: center;
+    overflow: hidden;
+    background:
+      linear-gradient(135deg, rgba(47, 135, 63, 0.92), rgba(32, 95, 48, 0.92)),
+      url("/images/sportovni-areal-secondary.jpg") center / cover;
+  }
+
+  .team-visual::after {
+    position: absolute;
+    inset: auto -10% -25% 20%;
+    height: 70%;
+    background: rgba(9, 11, 9, 0.45);
+    content: "";
+    transform: skewX(-18deg);
+  }
+
+  .team-visual img {
+    position: relative;
+    z-index: 1;
+    width: 96px;
+    height: 142px;
+    object-fit: contain;
+  }
+
+  .team-visual span {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1rem;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.62);
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .team-content {
+    padding: 2rem;
+  }
+
+  .team-content > svg {
+    color: var(--color-green);
+  }
+
+  .team-kicker {
+    margin: 1.25rem 0 0.4rem;
     color: var(--color-green);
     font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
   }
 
   h2 {
     margin: 0;
     font-family: var(--font-display);
-    font-size: 2.6rem;
-    line-height: 1;
+    font-size: 3.2rem;
+    line-height: 0.95;
     text-transform: uppercase;
   }
 
-  p {
-    margin: 0.4rem 0 0;
+  .team-content p {
+    max-width: 720px;
     color: var(--color-muted);
   }
 
-  @media (max-width: 620px) {
-    .team-page-item {
-      grid-template-columns: 45px 1fr;
-      gap: 1rem;
-      padding-block: 1.5rem;
+  dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 1.5rem 0;
+    border-top: 1px solid var(--color-line);
+    border-left: 1px solid var(--color-line);
+  }
+
+  dl div {
+    min-height: 120px;
+    padding: 1rem;
+    border-right: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  dt {
+    color: var(--color-green);
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0.35rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+
+  .team-note {
+    padding-block: var(--space-6);
+    background: var(--color-paper);
+  }
+
+  .note-inner {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.55fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .note-inner h2 {
+    font-size: 2.1rem;
+  }
+
+  .note-inner p {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  @media (max-width: 900px) {
+    .team-page-item,
+    .note-inner {
+      grid-template-columns: 1fr;
     }
 
-    .team-page-item .text-link {
-      grid-column: 2;
+    .team-visual {
+      min-height: 220px;
+    }
+
+    dl {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    h2 {
+      font-size: 2.6rem;
+    }
+
+    .team-content {
+      padding: 1.5rem;
     }
   }
 </style>
-

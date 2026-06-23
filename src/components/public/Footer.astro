@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, ExternalLink, MapPin } from "lucide-react";
 
 import { club, navigation } from "../../content/site";
 
@@ -38,7 +38,10 @@ const mapUrl = `https://www.google.com/maps?q=${club.coordinates.latitude},${clu
   </div>
   <div class="container footer-bottom">
     <span>© {year} TJ Baník Rynholec</span>
-    <span>Web a technická správa Cingy.Tech</span>
+    <a class="creator-link" href="https://cingy.tech" target="_blank" rel="noreferrer">
+      Web vytvořil a technicky spravuje Cingy.Tech
+      <ExternalLink aria-hidden="true" size={15} strokeWidth={2} />
+    </a>
   </div>
 </footer>
 

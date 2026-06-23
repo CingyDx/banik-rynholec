@@ -26,6 +26,7 @@ const icons = {
             <Icon aria-hidden="true" size={38} strokeWidth={1.7} />
             <h3>{team.name}</h3>
             <p>{team.description}</p>
+            <span>{team.ageGroup} · {team.focus}</span>
             <ArrowRight className="team-arrow" aria-hidden="true" size={20} />
           </a>
         );
@@ -81,9 +82,18 @@ const icons = {
   }
 
   .team-item p {
-    margin: 0 0 1rem;
+    margin: 0 0 0.85rem;
     color: #d2d7d3;
     font-size: 0.9rem;
+  }
+
+  .team-item span {
+    margin-bottom: 1rem;
+    color: #aeb8b0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-transform: uppercase;
   }
 
   .team-arrow {

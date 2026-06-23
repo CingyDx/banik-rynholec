@@ -1,5 +1,5 @@
 ---
-import { MapPin } from "lucide-react";
+import { Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 
 import PageHero from "../components/public/PageHero.astro";
 import { club } from "../content/site";
@@ -8,20 +8,43 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
 <PublicLayout title="Kontakt" description="Kde najdete TJ Baník Rynholec a sportovní areál.">
   <PageHero title="Kontakt" description="Sportovní areál TJ Baník Rynholec v ulici U hřiště." />
+
   <section class="content-band">
     <div class="container contact-page">
-      <div>
-        <span class="contact-label">Adresa</span>
-        <h2>{club.address}</h2>
-        <p>GPS {club.coordinates.latitude}, {club.coordinates.longitude}</p>
-        <a class="command command--primary" href={`https://www.google.com/maps?q=${club.coordinates.latitude},${club.coordinates.longitude}`} target="_blank" rel="noreferrer">
-          Otevřít mapu <MapPin aria-hidden="true" size={18} />
-        </a>
-      </div>
-      <div class="contact-confirmation">
-        <span class="contact-label">Klubové kontakty</span>
-        <h2>Ověřujeme správné osoby</h2>
-        <p>Telefon a e-mail zveřejníme až po potvrzení Michalem a Rudlou, aby návštěvníci psali přímo správnému člověku.</p>
+      <article class="map-card">
+        <img src="/images/sportovni-areal-secondary.jpg" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+        <div>
+          <span class="contact-label">Adresa</span>
+          <h2>{club.address}</h2>
+          <p>GPS {club.coordinates.latitude}, {club.coordinates.longitude}</p>
+          <a class="command command--primary" href={`https://www.google.com/maps?q=${club.coordinates.latitude},${club.coordinates.longitude}`} target="_blank" rel="noreferrer">
+            Otevřít mapu <MapPin aria-hidden="true" size={18} />
+          </a>
+        </div>
+      </article>
+
+      <div class="contact-grid">
+        <article>
+          <Phone aria-hidden="true" size={26} strokeWidth={1.8} />
+          <span class="contact-label">Telefon</span>
+          <h2>Bude doplněn</h2>
+          <p>Číslo zveřejníme až po potvrzení správcem areálu.</p>
+        </article>
+        <article>
+          <Mail aria-hidden="true" size={26} strokeWidth={1.8} />
+          <span class="contact-label">E-mail</span>
+          <h2>Bude doplněn</h2>
+          <p>Kontaktní adresa musí vést na člověka, který bude žádosti reálně řešit.</p>
+        </article>
+        <article class="wide">
+          <ShieldCheck aria-hidden="true" size={26} strokeWidth={1.8} />
+          <span class="contact-label">Poznámka k prototypu</span>
+          <h2>Bez osobních údajů</h2>
+          <p>
+            Do veřejného repozitáře ani prototypu zatím nedáváme soukromé kontakty, dokud je klub nepotvrdí
+            pro zveřejnění.
+          </p>
+        </article>
       </div>
     </div>
   </section>
@@ -30,30 +53,59 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 <style>
   .contact-page {
     display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: 2.5rem;
+    align-items: stretch;
+  }
+
+  .map-card {
+    border: 1px solid var(--color-line);
+  }
+
+  .map-card img {
+    width: 100%;
+    min-height: 360px;
+    object-fit: cover;
+  }
+
+  .map-card div {
+    padding: 2rem;
+  }
+
+  .contact-grid {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
     border-top: 1px solid var(--color-line);
     border-left: 1px solid var(--color-line);
   }
 
-  .contact-page > div {
-    min-height: 320px;
-    padding: 2.5rem;
+  .contact-grid article {
+    min-height: 230px;
+    padding: 1.5rem;
     border-right: 1px solid var(--color-line);
     border-bottom: 1px solid var(--color-line);
+  }
+
+  .contact-grid .wide {
+    grid-column: span 2;
+  }
+
+  .contact-grid svg {
+    margin-bottom: 1rem;
+    color: var(--color-green);
   }
 
   .contact-label {
     color: var(--color-green);
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
   }
 
   h2 {
     margin: 1rem 0 0;
     font-family: var(--font-display);
-    font-size: 2.6rem;
+    font-size: 2.45rem;
     line-height: 1;
     text-transform: uppercase;
   }
@@ -63,15 +115,18 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     color: var(--color-muted);
   }
 
-  @media (max-width: 700px) {
-    .contact-page {
+  @media (max-width: 850px) {
+    .contact-page,
+    .contact-grid {
       grid-template-columns: 1fr;
     }
 
-    .contact-page > div {
-      min-height: 0;
-      padding: 2rem 1.5rem;
+    .contact-grid .wide {
+      grid-column: auto;
+    }
+
+    .map-card img {
+      min-height: 240px;
     }
   }
 </style>
-
