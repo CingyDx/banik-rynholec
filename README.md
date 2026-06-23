@@ -6,9 +6,15 @@ Public club website and facility administration platform for TJ Banik Rynholec.
 
 The project is in the public first-look phase. The approved product and visual specifications live in `docs/superpowers/specs`, and implementation plans live in `docs/superpowers/plans`.
 
+## Links
+
+- GitHub: https://github.com/CingyDx/banik-rynholec
+- Netlify first look: https://banikrynholec.netlify.app
+- Netlify project: https://app.netlify.com/projects/banikrynholec
+
 ## Local Development
 
-Commands will be available after the Astro foundation is installed:
+Use these commands for local work:
 
 ```bash
 npm install
@@ -26,6 +32,7 @@ npm run test:e2e
 - The application will use a dedicated `banikrynholec` Netlify project in the existing `kryon-dx` team.
 - Client administrators use the application at `/admin`; they do not need Netlify access.
 - WEDOS DNS remains unchanged until launch readiness is confirmed.
+- First-look deploys are manual from the local repository so design iteration does not consume Netlify build minutes on every push. Enable Git-based continuous deployment only when a branch is ready for review.
 
 ## Security
 

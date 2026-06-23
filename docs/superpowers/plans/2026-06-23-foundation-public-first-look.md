@@ -188,12 +188,12 @@
 - Modify: `README.md`
 - Generated and ignored: `.netlify/state.json`
 
-- [ ] Create a public GitHub repository named `banik-rynholec` under `CingyDx`, then add it as `origin` and push `main` and `feat/public-first-look`.
+- [x] Create a public GitHub repository named `banik-rynholec` under `CingyDx`, then add it as `origin` and push `main` and `feat/public-first-look`.
 - [x] Create a separate Netlify project named `banikrynholec` in the existing `kryon-dx` team.
-- [ ] Link the local project, deploy a preview, and smoke-test the preview URL.
+- [x] Link the local project, deploy a first-look preview, and smoke-test the preview URL.
 - [x] Do not connect `banikrynholec.cz` or change WEDOS DNS during this phase.
 - [x] Record the preview workflow and ownership boundaries in `README.md`.
-- [ ] Commit with `git add README.md && git commit -m "docs: add preview deployment workflow"`, then push `main`.
+- [x] Commit with `git add README.md && git commit -m "docs: add preview deployment workflow"`, then push `main`.
 
 ## Definition Of Done
 
@@ -202,4 +202,4 @@
 - [x] Desktop and mobile screenshots show no overlap, clipped controls, missing images, or horizontal scroll.
 - [x] The public routes are honest about unfinished booking functionality.
 - [x] Git history contains focused commits and no credentials.
-- [ ] A Netlify preview is available while the production domain remains untouched.
+- [x] A Netlify preview is available while the production domain remains untouched.
