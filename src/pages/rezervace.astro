@@ -1,0 +1,83 @@
+---
+import PageHero from "../components/public/PageHero.astro";
+import PublicLayout from "../layouts/PublicLayout.astro";
+---
+
+<PublicLayout title="Rezervace" description="Budoucí žádosti o rezervaci sportovního areálu TJ Baník Rynholec.">
+  <PageHero title="Rezervace areálu" description="Žádost odešlete online, konečný termín potvrdí správce areálu." />
+  <section class="content-band">
+    <div class="container booking-flow">
+      <article>
+        <span>01</span>
+        <h2>Vyberete prostor a čas</h2>
+        <p>Fotbalové hřiště, multifunkční hřiště, posilovna nebo sauna.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h2>Správce žádost zkontroluje</h2>
+        <p>Ověří dostupnost, případný konflikt a provozní podmínky.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h2>Dostanete potvrzení</h2>
+        <p>Rezervace platí až po ručním schválení správcem areálu.</p>
+      </article>
+    </div>
+    <div class="container booking-status">
+      <strong>Formulář spustíme po potvrzení rezervačních pravidel klubu.</strong>
+    </div>
+  </section>
+</PublicLayout>
+
+<style>
+  .booking-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--color-line);
+    border-left: 1px solid var(--color-line);
+  }
+
+  .booking-flow article {
+    min-height: 300px;
+    padding: 2rem;
+    border-right: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .booking-flow span {
+    color: var(--color-green);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    margin: 1.5rem 0 1rem;
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: var(--color-muted);
+  }
+
+  .booking-status {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 5px solid var(--color-yellow);
+    background: var(--color-paper);
+  }
+
+  @media (max-width: 760px) {
+    .booking-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .booking-flow article {
+      min-height: 0;
+    }
+  }
+</style>
+

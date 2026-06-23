@@ -1,0 +1,169 @@
+---
+import { ArrowRight } from "lucide-react";
+
+import { club } from "../../content/site";
+---
+
+<section class="hero">
+  <img
+    class="hero-image"
+    src="/images/sportovni-areal-hero.jpg"
+    alt="Fotbalové hřiště v Rynholci"
+    width="450"
+    height="253"
+    fetchpriority="high"
+  />
+  <div class="hero-content container">
+    <h1>TJ Baník<br />Rynholec</h1>
+    <p>{club.tagline}</p>
+    <a class="command command--primary hero-command" href="/rezervace">
+      Rezervovat areál
+      <ArrowRight aria-hidden="true" size={22} strokeWidth={2} />
+    </a>
+  </div>
+  <div class="hero-stripes" aria-hidden="true"><span></span><span></span></div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: clamp(520px, calc(100dvh - var(--header-height) - 96px), 650px);
+    min-height: 520px;
+    overflow: hidden;
+    background: var(--color-black);
+    color: var(--color-white);
+    isolation: isolate;
+  }
+
+  .hero-image {
+    position: absolute;
+    z-index: -2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-content {
+    display: flex;
+    height: 100%;
+    min-height: 520px;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 3.5rem;
+  }
+
+  h1 {
+    max-width: 700px;
+    margin: 0;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: 7rem;
+    font-weight: 700;
+    line-height: 0.78;
+    text-shadow: 0 3px 20px rgb(0 0 0 / 85%);
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 2rem 0 1.5rem;
+    padding: 0.2rem 0.65rem;
+    background: rgb(9 11 9 / 84%);
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+
+  .hero-command {
+    min-width: 260px;
+    min-height: 58px;
+    font-size: 1.35rem;
+  }
+
+  .hero-stripes {
+    position: absolute;
+    right: -90px;
+    bottom: -85px;
+    display: flex;
+    height: 290px;
+    gap: 20px;
+    transform: skewX(-38deg);
+  }
+
+  .hero-stripes span {
+    width: 58px;
+    background: var(--color-green);
+  }
+
+  @media (max-width: 820px) {
+    .hero {
+      display: grid;
+      height: auto;
+      min-height: 690px;
+      grid-template-rows: 300px auto;
+    }
+
+    .hero-image {
+      position: relative;
+      z-index: auto;
+      top: auto;
+      grid-row: 1;
+      height: 300px;
+      object-position: center;
+    }
+
+    .hero-content {
+      grid-row: 2;
+      height: auto;
+      min-height: 390px;
+      justify-content: flex-start;
+      padding-block: 2.75rem 3.5rem;
+      background: var(--color-black);
+    }
+
+    h1 {
+      font-size: 5.2rem;
+      line-height: 0.82;
+      text-shadow: none;
+    }
+
+    p {
+      margin-block: 1.5rem;
+      padding: 0;
+      background: transparent;
+      font-size: 1.12rem;
+    }
+
+    .hero-command {
+      width: 100%;
+    }
+
+    .hero-stripes {
+      right: -50px;
+      bottom: -130px;
+      height: 300px;
+      opacity: 0.55;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero {
+      min-height: 660px;
+      grid-template-rows: 260px auto;
+    }
+
+    .hero-image {
+      height: 260px;
+    }
+
+    .hero-content {
+      min-height: 400px;
+    }
+
+    h1 {
+      font-size: 4.3rem;
+    }
+  }
+</style>

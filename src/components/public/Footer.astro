@@ -1,0 +1,44 @@
+---
+import { ArrowRight, MapPin } from "lucide-react";
+
+import { club, navigation } from "../../content/site";
+
+const year = new Date().getFullYear();
+const mapUrl = `https://www.google.com/maps?q=${club.coordinates.latitude},${club.coordinates.longitude}`;
+---
+
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand">
+      <img src="/images/club-logo.png" alt="" width="88" height="130" loading="lazy" />
+      <div>
+        <strong>TJ Baník<br />Rynholec</strong>
+        <span>{club.tagline}</span>
+      </div>
+    </div>
+
+    <div>
+      <span class="footer-label">Kde nás najdete</span>
+      <a class="footer-location" href={mapUrl} target="_blank" rel="noreferrer">
+        <MapPin aria-hidden="true" size={22} strokeWidth={2} />
+        <span>{club.address}<br />GPS {club.coordinates.latitude}, {club.coordinates.longitude}</span>
+      </a>
+    </div>
+
+    <div>
+      <span class="footer-label">Rychlé odkazy</span>
+      <nav class="footer-nav" aria-label="Navigace v zápatí">
+        {navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <a class="text-link" href="/rezervace" style="margin-top: 1.25rem">
+        Rezervace
+        <ArrowRight aria-hidden="true" size={17} />
+      </a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© {year} TJ Baník Rynholec</span>
+    <span>Web a technická správa Cingy.Tech</span>
+  </div>
+</footer>
+

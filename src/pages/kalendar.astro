@@ -1,0 +1,36 @@
+---
+import PageHero from "../components/public/PageHero.astro";
+import SchedulePreview from "../components/public/SchedulePreview.astro";
+import PublicLayout from "../layouts/PublicLayout.astro";
+---
+
+<PublicLayout title="Kalendář" description="Program TJ Baník Rynholec a sportovního areálu.">
+  <PageHero title="Kalendář" description="Zápasy, tréninky a schválené využití sportovního areálu." />
+  <SchedulePreview />
+  <section class="calendar-note">
+    <div class="container">
+      <strong>Náhled struktury</strong>
+      <p>Termíny v první verzi nahradíme ověřenými daty z klubového kalendáře před zveřejněním webu.</p>
+    </div>
+  </section>
+</PublicLayout>
+
+<style>
+  .calendar-note {
+    padding-block: var(--space-5);
+    background: var(--color-paper);
+  }
+
+  .calendar-note strong {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+  }
+
+  .calendar-note p {
+    max-width: 700px;
+    margin: 0.35rem 0 0;
+    color: var(--color-muted);
+  }
+</style>
+

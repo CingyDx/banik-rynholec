@@ -1,0 +1,151 @@
+---
+import { ArrowRight, Dumbbell, Flame, MapPin, Trophy } from "lucide-react";
+
+import { facilities } from "../../content/site";
+
+const icons = {
+  football: Trophy,
+  multifunction: MapPin,
+  gym: Dumbbell,
+  sauna: Flame,
+};
+---
+
+<section class="facility-section">
+  <div class="container facility-lead">
+    <div class="facility-copy">
+      <h2 class="section-title">Sportovní areál</h2>
+      <div class="section-rule"></div>
+      <p>Fotbal, trénink, regenerace a pohyb pro celý Rynholec na jednom místě.</p>
+      <a class="command" href="/areal">Prohlédnout areál <ArrowRight aria-hidden="true" size={18} /></a>
+    </div>
+    <img
+      src="/images/sportovni-areal-secondary.jpg"
+      alt="Sportovní areál TJ Baník Rynholec"
+      width="450"
+      height="253"
+      loading="lazy"
+    />
+  </div>
+  <div class="container facility-list">
+    {facilities.map((facility) => {
+      const Icon = icons[facility.id];
+      return (
+        <a class="facility-item" href={`/areal#${facility.id}`}>
+          <Icon aria-hidden="true" size={27} strokeWidth={1.8} />
+          <h3>{facility.name}</h3>
+          <p>{facility.description}</p>
+          <ArrowRight aria-hidden="true" size={18} />
+        </a>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .facility-section {
+    padding-block: var(--space-7);
+    background: var(--color-white);
+  }
+
+  .facility-lead {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.6fr);
+    align-items: stretch;
+    gap: 3rem;
+  }
+
+  .facility-copy {
+    padding-block: 1rem;
+  }
+
+  .facility-copy p {
+    max-width: 340px;
+    margin: 1.5rem 0 2rem;
+    color: var(--color-muted);
+  }
+
+  .facility-lead > img {
+    width: 100%;
+    min-height: 360px;
+    object-fit: cover;
+  }
+
+  .facility-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .facility-item {
+    min-height: 230px;
+    padding: 1.75rem 1.5rem 1.25rem;
+    border-right: 1px solid var(--color-line);
+  }
+
+  .facility-item:first-child {
+    border-left: 1px solid var(--color-line);
+  }
+
+  .facility-item > svg {
+    color: var(--color-green);
+  }
+
+  .facility-item h3 {
+    margin: 1.2rem 0 0.65rem;
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .facility-item p {
+    min-height: 68px;
+    margin: 0 0 1rem;
+    color: var(--color-muted);
+    font-size: 0.86rem;
+  }
+
+  @media (max-width: 900px) {
+    .facility-lead {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .facility-lead > img {
+      min-height: 260px;
+    }
+
+    .facility-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .facility-item:nth-child(3) {
+      border-left: 1px solid var(--color-line);
+    }
+  }
+
+  @media (max-width: 540px) {
+    .facility-list {
+      grid-template-columns: 1fr;
+    }
+
+    .facility-item,
+    .facility-item:nth-child(3) {
+      min-height: 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--color-line);
+      border-left: 0;
+    }
+
+    .facility-item:first-child {
+      border-left: 0;
+    }
+
+    .facility-item p {
+      min-height: 0;
+    }
+  }
+</style>
+

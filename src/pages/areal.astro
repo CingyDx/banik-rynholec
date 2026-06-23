@@ -1,0 +1,95 @@
+---
+import { ArrowRight, MapPin } from "lucide-react";
+
+import PageHero from "../components/public/PageHero.astro";
+import { club, facilities } from "../content/site";
+import PublicLayout from "../layouts/PublicLayout.astro";
+---
+
+<PublicLayout title="Sportovní areál" description="Sportovní areál TJ Baník Rynholec v ulici U hřiště.">
+  <PageHero title="Sportovní areál" description="Hřiště, posilovna, sauna a zázemí v ulici U hřiště." />
+  <section class="content-band">
+    <div class="container areal-intro">
+      <img src="/images/sportovni-areal-hero.jpg" alt="Fotbalové hřiště v areálu Rynholec" width="450" height="253" />
+      <div>
+        <h2>Areál pro sport i regeneraci</h2>
+        <p>
+          Areál tvoří fotbalové hřiště s umělým trávníkem a osvětlením, multifunkční hřiště, in-line dráha,
+          workoutová sestava, šatny, sprchy, sauna a klubovna.
+        </p>
+        <a class="text-link" href={`https://www.google.com/maps?q=${club.coordinates.latitude},${club.coordinates.longitude}`} target="_blank" rel="noreferrer">
+          {club.address} <MapPin aria-hidden="true" size={18} />
+        </a>
+      </div>
+    </div>
+    <div class="container areal-list">
+      {facilities.map((facility) => (
+        <article id={facility.id}>
+          <h2>{facility.name}</h2>
+          <p>{facility.description}</p>
+          <a class="text-link" href="/rezervace">Rezervace <ArrowRight aria-hidden="true" size={18} /></a>
+        </article>
+      ))}
+    </div>
+  </section>
+</PublicLayout>
+
+<style>
+  .areal-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .areal-intro img {
+    width: 100%;
+    min-height: 360px;
+    object-fit: cover;
+  }
+
+  .areal-intro h2,
+  .areal-list h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .areal-intro p,
+  .areal-list p {
+    color: var(--color-muted);
+  }
+
+  .areal-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--color-line);
+    border-left: 1px solid var(--color-line);
+  }
+
+  .areal-list article {
+    min-height: 240px;
+    padding: 2rem;
+    border-right: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  @media (max-width: 760px) {
+    .areal-intro,
+    .areal-list {
+      grid-template-columns: 1fr;
+    }
+
+    .areal-intro img {
+      min-height: 240px;
+    }
+
+    .areal-list article {
+      min-height: 0;
+    }
+  }
+</style>
+

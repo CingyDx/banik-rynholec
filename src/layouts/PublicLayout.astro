@@ -1,0 +1,37 @@
+---
+import Footer from "../components/public/Footer.astro";
+import Header from "../components/public/Header.astro";
+import "../styles/global.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const {
+  title = "TJ Baník Rynholec",
+  description = "Fotbal, sport a areál pro celý Rynholec.",
+} = Astro.props;
+const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník Rynholec`;
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#090b09" />
+    <link rel="icon" type="image/png" href="/images/club-logo.png" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Přejít na obsah</a>
+    <Header currentPath={Astro.url.pathname} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+

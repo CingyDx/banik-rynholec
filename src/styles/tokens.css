@@ -1,0 +1,35 @@
+:root {
+  --color-black: #090b09;
+  --color-ink: #151815;
+  --color-white: #ffffff;
+  --color-paper: #f4f5f3;
+  --color-line: #d5d9d4;
+  --color-muted: #69706a;
+  --color-green-deep: #205f30;
+  --color-green: #2f873f;
+  --color-green-bright: #49ac55;
+  --color-yellow: #f2c230;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Inter", Arial, sans-serif;
+  --container: 1260px;
+  --header-height: 104px;
+  --radius-small: 4px;
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4.5rem;
+  --space-8: 6rem;
+  --transition-fast: 160ms ease;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --header-height: 84px;
+    --space-7: 3.5rem;
+    --space-8: 4.5rem;
+  }
+}
+

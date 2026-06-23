@@ -1,0 +1,98 @@
+---
+import { ArrowRight } from "lucide-react";
+
+import { newsPreview } from "../../content/site";
+---
+
+<section class="news-section">
+  <div class="container news-heading">
+    <h2 class="section-title">Z klubu</h2>
+    <a class="command" href="/novinky">Všechny novinky <ArrowRight aria-hidden="true" size={18} /></a>
+  </div>
+  <div class="container news-list">
+    {newsPreview.map((item) => (
+      <a class="news-item" href={item.href}>
+        <span>{item.date} · {item.category}</span>
+        <h3>{item.title}</h3>
+        <ArrowRight aria-hidden="true" size={19} />
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .news-section {
+    padding-block: var(--space-6);
+    background: var(--color-ink);
+    color: var(--color-white);
+  }
+
+  .news-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .news-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid #4b504c;
+  }
+
+  .news-item {
+    min-height: 170px;
+    padding: 1.5rem;
+    border-right: 1px solid #4b504c;
+  }
+
+  .news-item:first-child {
+    border-left: 1px solid #4b504c;
+  }
+
+  .news-item span {
+    color: var(--color-green-bright);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .news-item h3 {
+    min-height: 60px;
+    margin: 0.8rem 0 1.2rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .news-item svg {
+    color: var(--color-green-bright);
+  }
+
+  @media (max-width: 720px) {
+    .news-heading {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .news-list {
+      grid-template-columns: 1fr;
+    }
+
+    .news-item,
+    .news-item:first-child {
+      min-height: 0;
+      border-right: 0;
+      border-bottom: 1px solid #4b504c;
+      border-left: 0;
+    }
+
+    .news-item h3 {
+      min-height: 0;
+    }
+  }
+</style>
+
