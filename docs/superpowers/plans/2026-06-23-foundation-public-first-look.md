@@ -197,7 +197,7 @@
 
 ## Definition Of Done
 
-- [ ] A fresh clone installs with `npm ci` and passes all verification commands.
+- [x] A fresh clone installs with `npm ci` and passes all verification commands.
 - [x] The first look is visibly tailored to TJ Banik Rynholec and uses real supplied assets.
 - [x] Desktop and mobile screenshots show no overlap, clipped controls, missing images, or horizontal scroll.
 - [x] The public routes are honest about unfinished booking functionality.
