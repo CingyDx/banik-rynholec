@@ -35,7 +35,7 @@ npm run test:e2e
 
 ## Temporary Asset Sources
 
-- Club crest source: `C:\Users\kryst\Downloads\2-Logo Banik Rynholec.pdf`, supplied by the client. The source PDF stays outside the repository.
+- Club crest source: client-supplied PDF. The source PDF stays outside the repository.
 - Venue photos: [Obec Rynholec - Sportovni areal](https://www.obecrynholec.cz/obec-rynholec/sportovni-areal/), supplied by the client as the temporary photo source.
 - The municipality versions are only 450 pixels wide. They are suitable for the first look, but launch quality requires original-size files or a new club photo set.
 - Publication permission and youth-photo privacy rules must be confirmed before launch.
@@ -45,4 +45,3 @@ npm run test:e2e
 - `main` contains reviewed releases.
 - Feature work is developed on focused branches and reviewed through deploy previews.
 - Production deploys are reserved for reviewed releases; content and booking updates will not trigger builds.
-
