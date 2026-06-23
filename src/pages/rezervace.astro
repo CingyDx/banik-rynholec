@@ -6,18 +6,15 @@ import { reservationAreas } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
-<PublicLayout title="Rezervace" description="Budoucí žádosti o rezervaci sportovního areálu TJ Baník Rynholec.">
-  <PageHero title="Rezervace areálu" description="Read-only náhled budoucí žádosti. Ostré odesílání spustíme až s admin panelem." />
+<PublicLayout title="Rezervace" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+  <PageHero title="Rezervace areálu" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
 
   <section class="content-band">
     <div class="container booking-intro">
       <article>
         <Lock aria-hidden="true" size={34} strokeWidth={1.8} />
         <h2>Zatím pouze náhled</h2>
-        <p>
-          Tato stránka ukazuje, jak bude působit budoucí rezervační systém. Formulář je vypnutý, protože nejdřív
-          potřebujeme potvrdit pravidla, správce, e-mailové notifikace a admin workflow.
-        </p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
       </article>
       <div class="booking-flow">
         <div>
@@ -39,7 +36,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       <section class="area-list" aria-labelledby="reservation-areas">
         <div class="section-heading">
           <h2 id="reservation-areas">Co půjde rezervovat</h2>
-          <p>Placeholder přehled všech prostorů. Texty, ceny a pravidla doladíme s klubem.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </div>
         <div class="area-grid">
           {reservationAreas.map((area) => (
@@ -58,7 +55,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
       <aside class="booking-mock-panel" aria-labelledby="booking-mock-title">
         <h2 id="booking-mock-title">Ukázka žádosti</h2>
-        <p>Formulář je vizuálně připravený, ale neodesílá data.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         <form class="booking-mock">
           <fieldset disabled>
             <label>
@@ -81,11 +78,11 @@ import PublicLayout from "../layouts/PublicLayout.astro";
             </label>
             <label>
               Kontakt
-              <input type="text" value="Jméno, telefon nebo e-mail" />
+              <input type="text" value="+420 777 123 456 / info@banikrynholec.cz" />
             </label>
             <label>
               Poznámka
-              <textarea rows="4">Krátká poznámka pro správce areálu.</textarea>
+              <textarea rows="4">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</textarea>
             </label>
           </fieldset>
           <button type="button" disabled>
@@ -100,10 +97,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     <div class="container approval-inner">
       <CheckCircle2 aria-hidden="true" size={34} strokeWidth={1.8} />
       <h2>Další fáze: admin panel</h2>
-      <p>
-        Jakmile bude veřejný prototyp sedět, navážeme administrací: přihlášení, seznam žádostí, schválení/zamítnutí,
-        kalendář, e-mailová upozornění a import/export Excel.
-      </p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
       <a class="command" href="/kalendar">
         Zobrazit kalendář <ArrowRight aria-hidden="true" size={18} />
       </a>

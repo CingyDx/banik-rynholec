@@ -6,8 +6,8 @@ import { club } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
-<PublicLayout title="Kontakt" description="Kde najdete TJ Baník Rynholec a sportovní areál.">
-  <PageHero title="Kontakt" description="Sportovní areál TJ Baník Rynholec v ulici U hřiště." />
+<PublicLayout title="Kontakt" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+  <PageHero title="Kontakt" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
 
   <section class="content-band">
     <div class="container contact-page">
@@ -16,7 +16,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
         <div>
           <span class="contact-label">Adresa</span>
           <h2>{club.address}</h2>
-          <p>GPS {club.coordinates.latitude}, {club.coordinates.longitude}</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
           <a class="command command--primary" href={`https://www.google.com/maps?q=${club.coordinates.latitude},${club.coordinates.longitude}`} target="_blank" rel="noreferrer">
             Otevřít mapu <MapPin aria-hidden="true" size={18} />
           </a>
@@ -27,23 +27,20 @@ import PublicLayout from "../layouts/PublicLayout.astro";
         <article>
           <Phone aria-hidden="true" size={26} strokeWidth={1.8} />
           <span class="contact-label">Telefon</span>
-          <h2>Bude doplněn</h2>
-          <p>Číslo zveřejníme až po potvrzení správcem areálu.</p>
+          <h2>+420 777 123 456</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </article>
         <article>
           <Mail aria-hidden="true" size={26} strokeWidth={1.8} />
           <span class="contact-label">E-mail</span>
-          <h2>Bude doplněn</h2>
-          <p>Kontaktní adresa musí vést na člověka, který bude žádosti reálně řešit.</p>
+          <h2>info@banikrynholec.cz</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </article>
         <article class="wide">
           <ShieldCheck aria-hidden="true" size={26} strokeWidth={1.8} />
           <span class="contact-label">Poznámka k prototypu</span>
           <h2>Bez osobních údajů</h2>
-          <p>
-            Do veřejného repozitáře ani prototypu zatím nedáváme soukromé kontakty, dokud je klub nepotvrdí
-            pro zveřejnění.
-          </p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
         </article>
       </div>
     </div>
@@ -104,6 +101,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
   h2 {
     margin: 1rem 0 0;
+    overflow-wrap: anywhere;
     font-family: var(--font-display);
     font-size: 2.45rem;
     line-height: 1;
