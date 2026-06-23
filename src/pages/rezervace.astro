@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, CheckCircle2, Lock, Send } from "lucide-react";
+import { Lock, Send } from "lucide-react";
 
 import PageHero from "../components/public/PageHero.astro";
 import { reservationAreas } from "../content/site";
@@ -93,16 +93,6 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     </div>
   </section>
 
-  <section class="approval-band">
-    <div class="container approval-inner">
-      <CheckCircle2 aria-hidden="true" size={34} strokeWidth={1.8} />
-      <h2>Další fáze: admin panel</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
-      <a class="command" href="/kalendar">
-        Zobrazit kalendář <ArrowRight aria-hidden="true" size={18} />
-      </a>
-    </div>
-  </section>
 </PublicLayout>
 
 <style>
@@ -125,8 +115,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
   .booking-intro h2,
   .section-heading h2,
-  .booking-mock-panel h2,
-  .approval-inner h2 {
+  .booking-mock-panel h2 {
     margin: 0;
     font-family: var(--font-display);
     line-height: 1;
@@ -188,16 +177,14 @@ import PublicLayout from "../layouts/PublicLayout.astro";
   }
 
   .section-heading h2,
-  .booking-mock-panel h2,
-  .approval-inner h2 {
+  .booking-mock-panel h2 {
     font-size: 2.35rem;
   }
 
   .section-heading p,
   .area-grid p,
   .area-grid small,
-  .booking-mock-panel p,
-  .approval-inner p {
+  .booking-mock-panel p {
     color: var(--color-muted);
   }
 
@@ -309,34 +296,11 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     cursor: not-allowed;
   }
 
-  .approval-band {
-    padding-block: var(--space-6);
-    background: var(--color-black);
-    color: var(--color-white);
-  }
-
-  .approval-inner {
-    display: grid;
-    grid-template-columns: auto minmax(220px, 0.4fr) minmax(0, 1fr) auto;
-    gap: 1.5rem;
-    align-items: center;
-  }
-
-  .approval-inner svg {
-    color: var(--color-green-bright);
-  }
-
-  .approval-inner p {
-    margin: 0;
-    color: #d2d7d3;
-  }
-
   @media (max-width: 980px) {
     .booking-intro,
     .booking-flow,
     .reservation-layout,
-    .section-heading,
-    .approval-inner {
+    .section-heading {
       grid-template-columns: 1fr;
     }
 

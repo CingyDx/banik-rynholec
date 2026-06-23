@@ -33,7 +33,7 @@ test("every primary public route resolves", async ({ request }) => {
   }
 });
 
-test("reservation prototype is visibly read-only and creator credit is linked", async ({ page }) => {
+test("reservation page is visibly read-only and creator credit is linked", async ({ page }) => {
   await page.goto("/rezervace");
 
   await expect(page.getByRole("heading", { name: "Rezervace areálu" })).toBeVisible();
@@ -43,6 +43,46 @@ test("reservation prototype is visibly read-only and creator credit is linked", 
 
   const creator = page.getByRole("link", { name: /Cingy\.Tech/ });
   await expect(creator).toHaveAttribute("href", "https://cingy.tech");
+});
+
+test("calendar supports views, editable mock reservations, and Excel export", async ({ page }) => {
+  await page.goto("/kalendar");
+
+  await expect(page.getByRole("heading", { level: 1, name: "Kalendář" })).toBeVisible();
+  await expect(page.getByLabel("Správa kalendáře")).toBeVisible();
+  await expect(page.locator(".calendar-app[data-ready='true']")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Nová rezervace" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Týden" }).click();
+  await expect(page.getByLabel("Týdenní zobrazení")).toBeVisible();
+
+  await page.getByRole("button", { name: "Seznam" }).click();
+  await expect(page.getByLabel("Seznamové zobrazení")).toBeVisible();
+
+  await page.getByRole("button", { name: /A tým vs\. Lorem FC/ }).first().click();
+  await expect(page.getByRole("dialog", { name: "Detail události" })).toBeVisible();
+  await page.getByRole("button", { name: "Zavřít detail" }).click();
+
+  const composer = page.locator(".booking-composer");
+  await composer.getByLabel("Název").fill("Test rezervace");
+  await composer.getByLabel("Prostor / tým").selectOption("sauna");
+  await composer.getByLabel("Stav").selectOption("čeká na schválení");
+  await composer.getByLabel("Začátek").fill("2026-06-29T18:00");
+  await composer.getByLabel("Konec").fill("2026-06-29T20:00");
+  await page.getByRole("button", { name: "Přidat rezervaci" }).click();
+
+  const detail = page.getByRole("dialog", { name: "Detail události" });
+  await expect(detail).toBeVisible();
+  await expect(detail.getByLabel("Název")).toHaveValue("Test rezervace");
+  await page.getByRole("button", { name: "Zavřít detail" }).click();
+
+  await page.getByRole("button", { name: "Seznam" }).click();
+  await expect(page.getByRole("button", { name: /Test rezervace/ })).toBeVisible();
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export Excel" }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe("banik-rynholec-kalendar.xlsx");
 });
 
 test("navigation and layout work at the current viewport", async ({ page }, testInfo) => {
