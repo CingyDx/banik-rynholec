@@ -170,7 +170,15 @@ export default function CalendarApp() {
     try {
       const imported = await importCalendarEventsFromFile(file);
       setEvents(imported);
-      setSelectedId(imported[0]?.id ?? null);
+      setSelectedId(null);
+      setQuery("");
+      setView("month");
+      setActiveResources(new Set(calendarResources.map((resource) => resource.id)));
+      setActiveStatuses(new Set(calendarStatuses));
+      const firstImportedDate = imported[0] ? new Date(imported[0].start) : null;
+      if (firstImportedDate && !Number.isNaN(firstImportedDate.getTime())) {
+        setCursor(firstImportedDate);
+      }
       setMessage(`Importováno ${imported.length} zápisů z Excel/CSV souboru.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Import se nepodařil.");
