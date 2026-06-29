@@ -3,10 +3,10 @@ export type NavigationItem = {
   href: string;
 };
 
-const loremShort = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-const loremMedium = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.";
-const loremLong =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.";
+const clubShort = "Klubový web pro fotbal, areál a program TJ Baník Rynholec.";
+const clubMedium = "Přehledné místo pro informace o klubu, týmech, areálu, článcích a obsazenosti hřiště.";
+const clubLong =
+  "Nový web má sloužit hráčům, rodičům, fanouškům i správcům areálu jako jednoduchý a rychlý přehled všeho důležitého kolem Baníku Rynholec.";
 
 export type Team = {
   id: "pripravka" | "zaci" | "a-tym" | "stara-garda";
@@ -50,7 +50,7 @@ export type CalendarDay = {
 
 export type NewsPreviewItem = {
   date: string;
-  category: "Klub" | "Areál" | "Týmy" | "Rezervace";
+  category: "Klub" | "Areál" | "Týmy" | "Kalendář";
   title: string;
   summary: string;
   href: string;
@@ -62,7 +62,7 @@ export type ReservationArea = {
   name: string;
   description: string;
   capacity: string;
-  status: "Read-only náhled";
+  status: "Informační přehled";
   requestExamples: readonly string[];
 };
 
@@ -71,6 +71,7 @@ export const navigation = [
   { label: "Klub", href: "/klub" },
   { label: "Týmy", href: "/tymy" },
   { label: "Novinky", href: "/novinky" },
+  { label: "Galerie", href: "/galerie" },
   { label: "Kalendář", href: "/kalendar" },
   { label: "Areál", href: "/areal" },
   { label: "Kontakt", href: "/kontakt" },
@@ -78,7 +79,7 @@ export const navigation = [
 
 export const club = {
   name: "TJ Baník Rynholec",
-  tagline: loremShort,
+  tagline: clubShort,
   address: "U hřiště, Rynholec",
   coordinates: {
     latitude: 50.1349364,
@@ -90,38 +91,38 @@ export const teams = [
   {
     id: "pripravka",
     name: "Přípravka",
-    description: loremShort,
-    ageGroup: "Lorem ipsum",
-    training: loremShort,
-    focus: "Lorem ipsum dolor sit amet",
-    contactNote: loremMedium,
+    description: "První fotbalové kroky, pohybová průprava a radost ze hry.",
+    ageGroup: "Nejmladší hráči",
+    training: "Tréninky budou doplněné podle aktuální sezóny.",
+    focus: "Základy pohybu, míčová technika a týmová hra",
+    contactNote: "Kontakty a přesné časy budou doplněné podle podkladů klubu.",
   },
   {
     id: "zaci",
     name: "Žáci",
-    description: loremShort,
-    ageGroup: "Dolor sit amet",
-    training: loremShort,
-    focus: "Consectetur adipiscing elit",
-    contactNote: loremMedium,
+    description: "Mládežnická kategorie pro pravidelný trénink a zápasovou praxi.",
+    ageGroup: "Žákovská kategorie",
+    training: "Rozpis tréninků bude navázaný na klubový kalendář.",
+    focus: "Rozvoj techniky, kondice a zápasových návyků",
+    contactNote: "Kontaktní osoba bude doplněná podle aktuální domluvy.",
   },
   {
     id: "a-tym",
     name: "A tým",
-    description: loremShort,
-    ageGroup: "Integer posuere",
-    training: loremShort,
-    focus: "Aenean lacinia bibendum nulla",
-    contactNote: loremMedium,
+    description: "Hlavní mužský tým Baníku Rynholec a program soutěžních zápasů.",
+    ageGroup: "Muži",
+    training: "Tréninky a zápasy budou viditelné v kalendáři.",
+    focus: "Soutěžní fotbal a reprezentace klubu",
+    contactNote: "Výsledky, články a tabulky půjde doplňovat v aktualitách.",
   },
   {
     id: "stara-garda",
     name: "Stará garda",
-    description: loremShort,
-    ageGroup: "Praesent commodo",
-    training: loremShort,
-    focus: "Cras mattis consectetur purus",
-    contactNote: loremMedium,
+    description: "Parta bývalých hráčů a přátel klubu kolem společných akcí a zápasů.",
+    ageGroup: "Veteráni a přátelé klubu",
+    training: "Program bude doplněný podle domluvených akcí.",
+    focus: "Klubová tradice, přátelské zápasy a komunita",
+    contactNote: "Další informace se doplní podle podkladů od klubu.",
   },
 ] as const satisfies readonly Team[];
 
@@ -129,52 +130,52 @@ export const facilities = [
   {
     id: "football",
     name: "Fotbalové hřiště",
-    description: loremShort,
-    capacity: "Lorem ipsum dolor sit amet",
+    description: "Hlavní plocha pro zápasy, tréninky a zimní rezervace hřiště.",
+    capacity: "Fotbalové zápasy a tréninkové bloky",
     bookingLabel: "Hřiště",
-    availability: loremMedium,
+    availability: "Obsazenost se bude zobrazovat v kalendáři jako informační přehled.",
     image: "/images/sportovni-areal-hero.jpg",
-    details: ["Lorem ipsum", "Dolor sit", "Amet elit", "Sed tempor"],
+    details: ["Zápasy", "Tréninky", "Obsazenost", "Zimní bloky"],
   },
   {
     id: "multifunction",
     name: "Multifunkční hřiště",
-    description: loremShort,
-    capacity: "Consectetur adipiscing elit",
+    description: "Doplňkový sportovní prostor v areálu pro další využití.",
+    capacity: "Menší sportovní aktivity",
     bookingLabel: "Multifunkční hřiště",
-    availability: loremMedium,
+    availability: "Dostupnost bude možné uvádět v kalendáři.",
     image: "/images/sportovni-areal-secondary.jpg",
-    details: ["Lorem ipsum", "Dolor sit", "Amet elit", "Sed tempor"],
+    details: ["Sport", "Volné bloky", "Areál", "Program"],
   },
   {
     id: "gym",
     name: "Posilovna",
-    description: loremShort,
-    capacity: "Integer posuere erat",
+    description: "Zázemí pro kondiční přípravu a doplňkový trénink.",
+    capacity: "Dle provozních pravidel areálu",
     bookingLabel: "Posilovna",
-    availability: loremMedium,
+    availability: "Informace o využití půjde doplnit podle pravidel klubu.",
     image: "/images/sportovni-areal-secondary.jpg",
-    details: ["Lorem ipsum", "Dolor sit", "Amet elit", "Sed tempor"],
+    details: ["Kondice", "Zázemí", "Provoz", "Správa"],
   },
   {
     id: "sauna",
     name: "Finská sauna",
-    description: loremShort,
-    capacity: "Aenean lacinia bibendum",
+    description: "Regenerační část areálu pro klubové i domluvené využití.",
+    capacity: "Dle provozní kapacity",
     bookingLabel: "Sauna",
-    availability: loremMedium,
+    availability: "Obsazenost lze vést v kalendáři stejně jako hřiště.",
     image: "/images/sportovni-areal-hero.jpg",
-    details: ["Lorem ipsum", "Dolor sit", "Amet elit", "Sed tempor"],
+    details: ["Regenerace", "Obsazenost", "Správa", "Kontakt"],
   },
   {
     id: "clubhouse",
     name: "Klubovna a zázemí",
-    description: loremShort,
-    capacity: "Praesent commodo cursus",
+    description: "Klubové zázemí pro schůzky, akce a běžný provoz.",
+    capacity: "Klubové akce a zázemí",
     bookingLabel: "Klubovna",
-    availability: loremMedium,
+    availability: "Využití klubovny lze uvádět v kalendáři.",
     image: "/images/sportovni-areal-secondary.jpg",
-    details: ["Lorem ipsum", "Dolor sit", "Amet elit", "Sed tempor"],
+    details: ["Schůzky", "Akce", "Zázemí", "Klub"],
   },
 ] as const satisfies readonly Facility[];
 
@@ -185,7 +186,7 @@ export const schedulePreview = [
     time: "17:00",
     type: "Zápas",
     team: "A tým",
-    opponent: "Lorem ipsum dolor sit amet",
+    opponent: "Ukázkový soupeř",
     venue: "Fotbalové hřiště",
     status: "Ukázka",
     preview: true,
@@ -196,7 +197,7 @@ export const schedulePreview = [
     time: "10:00",
     type: "Trénink",
     team: "Žáci",
-    opponent: "Consectetur adipiscing elit",
+    opponent: "Tréninkový blok",
     venue: "Areál Rynholec",
     status: "Ukázka",
     preview: true,
@@ -207,7 +208,7 @@ export const schedulePreview = [
     time: "16:30",
     type: "Trénink",
     team: "Přípravka",
-    opponent: "Integer posuere erat a ante",
+    opponent: "Mládežnický trénink",
     venue: "Fotbalové hřiště",
     status: "Ukázka",
     preview: true,
@@ -218,7 +219,7 @@ export const schedulePreview = [
     time: "18:00",
     type: "Regenerace",
     team: "Areál",
-    opponent: "Aenean lacinia bibendum nulla",
+    opponent: "Obsazenost sauny",
     venue: "Finská sauna",
     status: "Blokováno",
     preview: true,
@@ -229,13 +230,13 @@ export const calendarDays = [
   {
     label: "Tento týden",
     date: "27. 6. - 30. 6. 2026",
-    note: loremMedium,
+    note: clubMedium,
     events: schedulePreview.slice(0, 3),
   },
   {
     label: "Další blok",
     date: "2. 7. - 4. 7. 2026",
-    note: loremMedium,
+    note: clubMedium,
     events: [
       schedulePreview[3],
       {
@@ -244,7 +245,7 @@ export const calendarDays = [
         time: "09:00",
         type: "Areál",
         team: "Areál",
-        opponent: "Cras mattis consectetur purus",
+        opponent: "Volný blok areálu",
         venue: "Multifunkční hřiště",
         status: "Volno",
         preview: true,
@@ -258,7 +259,7 @@ export const newsPreview = [
     date: "23. 6. 2026",
     category: "Klub",
     title: "Nové místo pro Baník Rynholec vzniká",
-    summary: loremLong,
+    summary: clubLong,
     href: "/novinky#novy-web",
     image: "/images/sportovni-areal-hero.jpg",
   },
@@ -266,16 +267,16 @@ export const newsPreview = [
     date: "23. 6. 2026",
     category: "Areál",
     title: "Sportovní areál na jednom místě",
-    summary: loremLong,
+    summary: clubLong,
     href: "/areal",
     image: "/images/sportovni-areal-secondary.jpg",
   },
   {
     date: "23. 6. 2026",
-    category: "Rezervace",
-    title: "Read-only náhled budoucích rezervací",
-    summary: loremLong,
-    href: "/rezervace",
+    category: "Kalendář",
+    title: "Kalendář pro zápasy a obsazenost",
+    summary: clubLong,
+    href: "/kalendar",
     image: "/images/sportovni-areal-hero.jpg",
   },
 ] as const satisfies readonly NewsPreviewItem[];
@@ -285,10 +286,10 @@ export const reservationAreas = facilities.map((facility) => ({
   name: facility.bookingLabel,
   description: facility.description,
   capacity: facility.capacity,
-  status: "Read-only náhled",
+  status: "Informační přehled",
   requestExamples: [
-    "lorem ipsum dolor",
-    "consectetur adipiscing",
-    "integer posuere erat",
+    "zápas nebo trénink",
+    "obsazený blok hřiště",
+    "poznámka pro správce",
   ],
 })) as readonly ReservationArea[];

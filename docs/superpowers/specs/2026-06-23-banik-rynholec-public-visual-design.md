@@ -12,11 +12,11 @@ Accepted concept references:
 
 ## 2. First Viewport
 
-- A compact black header contains the supplied crest, club name, essential navigation, and one booking command.
+- A compact black header contains the supplied crest, club name, essential navigation, and one calendar command.
 - The real Rynholec pitch photograph is full-width and remains recognizable. The image has no green color wash or decorative blur.
 - The H1 is the literal name `TJ BANÍK RYNHOLEC` in a tall condensed display face.
 - Supporting copy is `Fotbal, sport a areál pro celý Rynholec`.
-- The primary command is `Rezervovat areál`.
+- The primary command is `Zobrazit kalendář`.
 - The upcoming-program band enters the first desktop and mobile viewport so visitors immediately see that the site is operational.
 
 ## 3. Section Order
@@ -68,7 +68,8 @@ Supporting routes reuse the same header, typography, band rhythm, rules, and com
 - `Areál`
 - `Kontakt`
 - `Fotbal, sport a areál pro celý Rynholec`
-- `Rezervovat areál`
+- `Kalendář areálu`
+- `Zobrazit kalendář`
 - `Nejbližší program`
 - `A tým`
 - `Žáci`
@@ -104,4 +105,3 @@ No eyebrow, badge, fake statistic, promotional claim, or invented trophy may be 
 - Browser renders are compared directly with all three accepted concept images.
 - Verification covers first-viewport balance, exact copy, typography, palette, image crop, schedule density, section order, icon treatment, and mobile overflow.
 - The implementation is not complete while a fixable visual mismatch, clipped element, missing image, inert menu, or placeholder route remains.
-

@@ -6,8 +6,8 @@ import { newsPreview } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
-<PublicLayout title="Novinky" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
-  <PageHero title="Z klubu" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
+<PublicLayout title="Novinky" description="Aktuality, články a odkazy na výsledky TJ Baník Rynholec.">
+  <PageHero title="Z klubu" description="Místo pro články k zápasům, klubové zprávy a odkazy na tabulky." />
 
   <section class="content-band">
     <div class="container news-feature" id="novy-web">
@@ -15,12 +15,9 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       <article>
         <span>{newsPreview[0].date} · {newsPreview[0].category}</span>
         <h2>{newsPreview[0].title}</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus
-          posuere velit aliquet.
-        </p>
-        <a class="text-link" href="/rezervace">
-          Zobrazit rezervační náhled <ArrowRight aria-hidden="true" size={18} />
+        <p>{newsPreview[0].summary}</p>
+        <a class="text-link" href="/kalendar">
+          Zobrazit kalendář <ArrowRight aria-hidden="true" size={18} />
         </a>
       </article>
     </div>
@@ -43,7 +40,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
   <section class="editorial-note">
     <div class="container editorial-inner">
       <h2>Placeholder obsah, ne vymyšlené reporty</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+      <p>Do ostré verze doplníme pouze reálné články, výsledky a odkazy dodané klubem.</p>
     </div>
   </section>
 </PublicLayout>

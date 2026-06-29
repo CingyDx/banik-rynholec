@@ -1,0 +1,79 @@
+---
+import PageHero from "../components/public/PageHero.astro";
+import PublicLayout from "../layouts/PublicLayout.astro";
+
+const galleryItems = [
+  {
+    src: "/images/sportovni-areal-hero.jpg",
+    alt: "Sportovní areál TJ Baník Rynholec",
+    title: "Hřiště a areál",
+  },
+  {
+    src: "/images/sportovni-areal-secondary.jpg",
+    alt: "Sportovní areál Rynholec - zázemí",
+    title: "Zázemí klubu",
+  },
+  {
+    src: "/images/sportovni-areal-hero.jpg",
+    alt: "Fotbalové hřiště v Rynholci",
+    title: "Program a zápasy",
+  },
+  {
+    src: "/images/sportovni-areal-secondary.jpg",
+    alt: "Areál TJ Baník Rynholec",
+    title: "Klubové prostředí",
+  },
+];
+---
+
+<PublicLayout title="Galerie" description="Fotky areálu a klubového zázemí TJ Baník Rynholec.">
+  <PageHero title="Galerie" description="Fotky areálu, hřiště a klubového zázemí. Další snímky půjde doplnit podle podkladů klubu." />
+
+  <section class="content-band">
+    <div class="container gallery-grid" aria-label="Galerie fotek">
+      {galleryItems.map((item) => (
+        <figure>
+          <img src={item.src} alt={item.alt} width="450" height="253" loading="lazy" />
+          <figcaption>{item.title}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+</PublicLayout>
+
+<style>
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  figure {
+    margin: 0;
+    border: 1px solid var(--color-line);
+    background: var(--color-white);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  figcaption {
+    padding: 1rem;
+    color: var(--color-green-deep);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 720px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

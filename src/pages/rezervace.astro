@@ -1,322 +1,91 @@
 ---
-import { Lock, Send } from "lucide-react";
+import { ArrowRight, CalendarDays } from "lucide-react";
 
 import PageHero from "../components/public/PageHero.astro";
-import { reservationAreas } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
-<PublicLayout title="Rezervace" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
-  <PageHero title="Rezervace areálu" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
+<PublicLayout title="Obsazenost areálu" description="Informativní přehled obsazenosti areálu TJ Baník Rynholec.">
+  <PageHero
+    title="Obsazenost areálu"
+    description="Pro první verzi webu je obsazenost vedená jako informativní kalendář bez online rezervačního formuláře."
+  />
 
   <section class="content-band">
-    <div class="container booking-intro">
+    <div class="container availability-page">
       <article>
-        <Lock aria-hidden="true" size={34} strokeWidth={1.8} />
-        <h2>Zatím pouze náhled</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+        <CalendarDays aria-hidden="true" size={34} strokeWidth={1.8} />
+        <h2>Vše najdete v kalendáři</h2>
+        <p>
+          Kalendář ukazuje zápasy, tréninky a obsazené bloky areálu. Nové zápisy spravuje klub přes jednoduchou
+          administraci nebo importem z Excelu.
+        </p>
+        <a class="command command--primary" href="/kalendar">
+          Otevřít kalendář <ArrowRight aria-hidden="true" size={18} />
+        </a>
       </article>
-      <div class="booking-flow">
-        <div>
-          <span>01</span>
-          <strong>Žadatel vybere prostor a čas</strong>
-        </div>
-        <div>
-          <span>02</span>
-          <strong>Správce zkontroluje kolizi v kalendáři</strong>
-        </div>
-        <div>
-          <span>03</span>
-          <strong>Rezervace platí až po schválení</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="container reservation-layout">
-      <section class="area-list" aria-labelledby="reservation-areas">
-        <div class="section-heading">
-          <h2 id="reservation-areas">Co půjde rezervovat</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </div>
-        <div class="area-grid">
-          {reservationAreas.map((area) => (
-            <article>
-              <span>{area.status}</span>
-              <h3>{area.name}</h3>
-              <p>{area.description}</p>
-              <small>{area.capacity}</small>
-              <ul>
-                {area.requestExamples.map((example) => <li>{example}</li>)}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <aside class="booking-mock-panel" aria-labelledby="booking-mock-title">
-        <h2 id="booking-mock-title">Ukázka žádosti</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <form class="booking-mock">
-          <fieldset disabled>
-            <label>
-              Prostor
-              <select>
-                <option>Fotbalové hřiště</option>
-                <option>Multifunkční hřiště</option>
-                <option>Posilovna</option>
-                <option>Sauna</option>
-                <option>Klubovna</option>
-              </select>
-            </label>
-            <label>
-              Datum
-              <input type="date" value="2026-07-04" />
-            </label>
-            <label>
-              Čas
-              <input type="text" value="09:00 - 11:00" />
-            </label>
-            <label>
-              Kontakt
-              <input type="text" value="+420 777 123 456 / info@banikrynholec.cz" />
-            </label>
-            <label>
-              Poznámka
-              <textarea rows="4">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</textarea>
-            </label>
-          </fieldset>
-          <button type="button" disabled>
-            Odesílání zatím vypnuto <Send aria-hidden="true" size={17} />
-          </button>
-        </form>
+      <aside>
+        <strong>V první verzi není online rezervační formulář.</strong>
+        <span>Je to záměrně jednodušší varianta podle aktuálního klubového rozpočtu.</span>
       </aside>
     </div>
   </section>
-
 </PublicLayout>
 
 <style>
-  .booking-intro {
+  .availability-page {
     display: grid;
-    grid-template-columns: minmax(260px, 0.45fr) minmax(0, 1fr);
-    gap: 2.5rem;
-    margin-bottom: 3rem;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.45fr);
+    gap: 2rem;
+    align-items: stretch;
   }
 
-  .booking-intro article {
+  article,
+  aside {
     padding: 2rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-white);
+  }
+
+  article svg {
+    color: var(--color-green);
+  }
+
+  h2 {
+    margin: 1rem 0;
+    font-family: var(--font-display);
+    font-size: 2.7rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  p,
+  aside span {
+    color: var(--color-muted);
+  }
+
+  aside {
+    display: grid;
+    align-content: center;
+    gap: 1rem;
     background: var(--color-black);
     color: var(--color-white);
   }
 
-  .booking-intro article svg {
-    color: var(--color-green-bright);
-  }
-
-  .booking-intro h2,
-  .section-heading h2,
-  .booking-mock-panel h2 {
-    margin: 0;
+  aside strong {
     font-family: var(--font-display);
+    font-size: 2rem;
     line-height: 1;
     text-transform: uppercase;
   }
 
-  .booking-intro h2 {
-    margin-top: 1.25rem;
-    font-size: 2.35rem;
-  }
-
-  .booking-intro article p {
+  aside span {
     color: #d2d7d3;
   }
 
-  .booking-flow {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 1px solid var(--color-line);
-    border-left: 1px solid var(--color-line);
-  }
-
-  .booking-flow div {
-    min-height: 190px;
-    padding: 1.5rem;
-    border-right: 1px solid var(--color-line);
-    border-bottom: 1px solid var(--color-line);
-  }
-
-  .booking-flow span {
-    display: block;
-    color: var(--color-green);
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 700;
-  }
-
-  .booking-flow strong {
-    display: block;
-    margin-top: 1rem;
-    font-family: var(--font-display);
-    font-size: 1.55rem;
-    line-height: 1;
-    text-transform: uppercase;
-  }
-
-  .reservation-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.42fr);
-    gap: 2.5rem;
-    align-items: start;
-  }
-
-  .section-heading {
-    display: grid;
-    grid-template-columns: minmax(220px, 0.5fr) minmax(0, 1fr);
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .section-heading h2,
-  .booking-mock-panel h2 {
-    font-size: 2.35rem;
-  }
-
-  .section-heading p,
-  .area-grid p,
-  .area-grid small,
-  .booking-mock-panel p {
-    color: var(--color-muted);
-  }
-
-  .area-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-top: 1px solid var(--color-line);
-    border-left: 1px solid var(--color-line);
-  }
-
-  .area-grid article {
-    min-height: 300px;
-    padding: 1.5rem;
-    border-right: 1px solid var(--color-line);
-    border-bottom: 1px solid var(--color-line);
-  }
-
-  .area-grid article > span {
-    color: var(--color-green);
-    font-family: var(--font-display);
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  .area-grid h3 {
-    margin: 0.75rem 0;
-    font-family: var(--font-display);
-    font-size: 2rem;
-    line-height: 1;
-    text-transform: uppercase;
-  }
-
-  .area-grid small {
-    display: block;
-    margin-bottom: 1rem;
-    font-weight: 700;
-  }
-
-  .area-grid ul {
-    display: grid;
-    gap: 0.35rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .area-grid li {
-    color: var(--color-muted);
-    font-size: 0.85rem;
-  }
-
-  .area-grid li::before {
-    color: var(--color-green);
-    content: "+ ";
-    font-weight: 700;
-  }
-
-  .booking-mock-panel {
-    position: sticky;
-    top: 1.5rem;
-    padding: 2rem;
-    border: 1px solid var(--color-line);
-    background: var(--color-paper);
-  }
-
-  .booking-mock fieldset {
-    display: grid;
-    gap: 1rem;
-    margin: 1.5rem 0;
-    padding: 0;
-    border: 0;
-  }
-
-  .booking-mock label {
-    display: grid;
-    gap: 0.35rem;
-    color: var(--color-green-deep);
-    font-family: var(--font-display);
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  .booking-mock input,
-  .booking-mock select,
-  .booking-mock textarea {
-    width: 100%;
-    min-height: 46px;
-    padding: 0.8rem;
-    border: 1px solid var(--color-line);
-    background: var(--color-white);
-    color: var(--color-muted);
-    font-family: var(--font-body);
-    text-transform: none;
-  }
-
-  .booking-mock button {
-    display: inline-flex;
-    width: 100%;
-    min-height: 48px;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    border: 1px solid #b9beb9;
-    background: #e1e4df;
-    color: #6f766f;
-    font-family: var(--font-display);
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: not-allowed;
-  }
-
-  @media (max-width: 980px) {
-    .booking-intro,
-    .booking-flow,
-    .reservation-layout,
-    .section-heading {
+  @media (max-width: 760px) {
+    .availability-page {
       grid-template-columns: 1fr;
-    }
-
-    .booking-mock-panel {
-      position: static;
-    }
-  }
-
-  @media (max-width: 620px) {
-    .area-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .booking-intro article,
-    .booking-mock-panel {
-      padding: 1.5rem;
     }
   }
 </style>

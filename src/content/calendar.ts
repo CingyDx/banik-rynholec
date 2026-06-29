@@ -51,7 +51,7 @@ export const calendarSeedEvents = [
     end: "2026-06-24T19:00",
     contactName: "Jan Novák",
     contactValue: "+420 777 123 456",
-    note: "Lorem ipsum dolor sit amet.",
+    note: "Ukázkový zápas v kalendáři.",
   },
   {
     id: "evt-002",
@@ -68,7 +68,7 @@ export const calendarSeedEvents = [
   },
   {
     id: "evt-003",
-    title: "Rezervace sauny",
+    title: "Obsazenost sauny",
     resourceId: "sauna",
     resourceLabel: "Sauna",
     resourceGroup: "Areál",
@@ -94,7 +94,7 @@ export const calendarSeedEvents = [
   },
   {
     id: "evt-005",
-    title: "Čekající rezervace klubovny",
+    title: "Klubovna blok",
     resourceId: "clubhouse",
     resourceLabel: "Klubovna",
     resourceGroup: "Areál",

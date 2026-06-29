@@ -24,8 +24,8 @@ const isActive = (href: string) => href === "/" ? currentPath === "/" : currentP
       ))}
     </nav>
 
-    <a class="command command--primary header-booking" href="/rezervace">
-      Rezervovat areál
+    <a class="command command--primary header-booking" href="/kalendar">
+      Kalendář areálu
       <ArrowRight aria-hidden="true" size={18} strokeWidth={2} />
     </a>
 
@@ -44,7 +44,7 @@ const isActive = (href: string) => href === "/" ? currentPath === "/" : currentP
         {navigation.map((item) => (
           <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</a>
         ))}
-        <a class="command command--primary" href="/rezervace">Rezervovat areál</a>
+        <a class="command command--primary" href="/kalendar">Kalendář areálu</a>
       </nav>
     </div>
   </div>

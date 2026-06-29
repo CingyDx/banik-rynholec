@@ -4,7 +4,7 @@
 
 **Goal:** Create a tested, responsive first release of the public TJ Banik Rynholec website and a deployment-ready application foundation.
 
-**Architecture:** Astro renders fast public pages while React is enabled only for future interactive islands and the administration application. Public content starts as typed local data so design review is not blocked by the database; later plans replace repositories behind stable interfaces with PostgreSQL-backed implementations. Netlify configuration is committed, but no live project or domain change is required to run locally.
+**Architecture:** Astro renders fast public pages while React is enabled only for interactive calendar/admin islands. Public content starts as typed local data so design review is not blocked by runtime services. Netlify configuration is committed, but no live project or domain change is required to run locally.
 
 **Tech Stack:** Astro, React, TypeScript, CSS custom properties, Lucide React, Vitest, Testing Library, Playwright, Netlify CLI
 
@@ -134,7 +134,7 @@
 
 - [x] Define a balanced palette based on club green and black, with neutral white/gray surfaces and a restrained contrasting accent; avoid a one-color green interface.
 - [x] Define spacing, typography, focus, border, and responsive container tokens without viewport-scaled font sizes.
-- [x] Implement a compact responsive header with visible club identity, desktop navigation, accessible mobile navigation, and a clear booking command.
+- [x] Implement a compact responsive header with visible club identity, desktop navigation, accessible mobile navigation, and a clear calendar command.
 - [x] Implement metadata, skip link, semantic landmarks, and footer contact/navigation content in the shared layout.
 - [x] Run `npm run check` and `npm run build`; both must pass.
 - [x] Include the public design system and shell in commit `b5f3cec`.
@@ -150,7 +150,7 @@
 - Create: `src/components/public/ContactBand.astro`
 - Create: `src/pages/index.astro`
 
-- [x] Build a first viewport centered on the real club/venue image, the literal club name, immediate upcoming activity, and one booking action; leave the next section visible on common desktop and mobile screens.
+- [x] Build a first viewport centered on the real club/venue image, the literal club name, immediate upcoming activity, and one calendar action; leave the next section visible on common desktop and mobile screens.
 - [x] Add a scan-friendly upcoming schedule, team navigation, facility overview, current-news preview, and contact band without nesting cards inside cards.
 - [x] Ensure image crops preserve the inspectable venue subject at mobile and desktop breakpoints.
 - [x] Run `npm run check`, `npm test -- --run`, and `npm run build`; all must pass.
@@ -165,7 +165,7 @@
 - Create: `src/pages/tymy/index.astro`
 
 - [x] Add concise club, teams, and contact pages using the shared layout and typed content.
-- [x] Add a reservation explainer page that clearly labels requests as manually approved and does not pretend the request backend exists yet.
+- [x] Add an availability explainer page that clearly labels the calendar as informational and does not pretend online booking exists in V1.
 - [x] Ensure every header/footer navigation target resolves without a placeholder error.
 - [x] Run `npm run check` and `npm run build`; both must pass.
 - [x] Include all eight public routes in commit `b5f3cec`.
@@ -176,7 +176,7 @@
 - Create: `tests/e2e/public-site.spec.ts`
 - Modify: `playwright.config.ts`
 
-- [x] Write Playwright tests for page title, primary navigation, booking route, mobile menu, image loading, and absence of horizontal overflow.
+- [x] Write Playwright tests for page title, primary navigation, calendar route, mobile menu, image loading, and absence of horizontal overflow.
 - [x] Run `npm run test:e2e` and fix failures without weakening assertions.
 - [x] Capture desktop at 1440x900 and mobile at 390x844; inspect hierarchy, crops, text wrapping, focus states, and overlap.
 - [x] Run final verification: `npm run check`, `npm test -- --run`, `npm run build`, and `npm run test:e2e`.
@@ -200,6 +200,6 @@
 - [x] A fresh clone installs with `npm ci` and passes all verification commands.
 - [x] The first look is visibly tailored to TJ Banik Rynholec and uses real supplied assets.
 - [x] Desktop and mobile screenshots show no overlap, clipped controls, missing images, or horizontal scroll.
-- [x] The public routes are honest about unfinished booking functionality.
+- [x] The public routes are honest about the read-only public calendar scope.
 - [x] Git history contains focused commits and no credentials.
 - [x] A Netlify preview is available while the production domain remains untouched.

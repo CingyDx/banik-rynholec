@@ -23,6 +23,48 @@ const workbookColumns = [
 
 type WorkbookColumn = (typeof workbookColumns)[number];
 
+export const calendarTemplateEvents: readonly CalendarEvent[] = [
+  {
+    id: "sablona-001",
+    title: "Trénink A tým",
+    resourceId: "team-a",
+    resourceLabel: "A tým",
+    resourceGroup: "Týmy",
+    status: "trénink",
+    start: "2026-07-01T17:00",
+    end: "2026-07-01T18:30",
+    contactName: "TJ Baník Rynholec",
+    contactValue: "info@banikrynholec.cz",
+    note: "Ukázkový řádek. Přepište název, datum, čas a poznámku podle skutečné akce.",
+  },
+  {
+    id: "sablona-002",
+    title: "Domácí zápas",
+    resourceId: "football",
+    resourceLabel: "Hřiště",
+    resourceGroup: "Areál",
+    status: "zápas",
+    start: "2026-07-04T10:00",
+    end: "2026-07-04T12:00",
+    contactName: "TJ Baník Rynholec",
+    contactValue: "info@banikrynholec.cz",
+    note: "Ukázkový zápas. Pro nový řádek zkopírujte formát a upravte hodnoty.",
+  },
+  {
+    id: "sablona-003",
+    title: "Obsazenost hřiště",
+    resourceId: "football",
+    resourceLabel: "Hřiště",
+    resourceGroup: "Areál",
+    status: "obsazeno",
+    start: "2026-07-06T18:00",
+    end: "2026-07-06T20:00",
+    contactName: "Správce areálu",
+    contactValue: "+420 777 123 456",
+    note: "Ukázková obsazenost hřiště. Stav ponechte jako obsazeno, pokud má být blok v kalendáři zabraný.",
+  },
+] as const;
+
 const resourceByLabel = new Map(calendarResources.map((resource) => [resource.label.toLowerCase(), resource]));
 const resourceById = new Map(calendarResources.map((resource) => [resource.id, resource]));
 const statusSet = new Set<CalendarStatus>(calendarStatuses);
@@ -56,6 +98,10 @@ export function exportCalendarEventsToXlsx(events: readonly CalendarEvent[]): Ui
   };
 
   return zipSync(files, { level: 6 });
+}
+
+export function exportCalendarTemplateToXlsx(): Uint8Array {
+  return exportCalendarEventsToXlsx(calendarTemplateEvents);
 }
 
 export async function importCalendarEventsFromFile(file: File): Promise<CalendarEvent[]> {
@@ -160,9 +206,9 @@ function rowsToEvents(rows: string[][]): CalendarEvent[] {
         status,
         start: normalizeDateTime(read("Začátek")),
         end: normalizeDateTime(read("Konec")),
-        contactName: read("Kontakt jméno") || "Lorem ipsum",
+        contactName: read("Kontakt jméno") || "TJ Baník Rynholec",
         contactValue: read("Kontakt") || "info@banikrynholec.cz",
-        note: read("Poznámka") || "Lorem ipsum dolor sit amet.",
+        note: read("Poznámka") || "Bez poznámky.",
       } satisfies CalendarEvent;
     })
     .filter((event) => event.start && event.end);

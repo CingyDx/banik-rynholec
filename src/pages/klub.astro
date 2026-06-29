@@ -6,20 +6,20 @@ import { facilities, teams } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
-<PublicLayout title="Klub" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
-  <PageHero title="Klub" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
+<PublicLayout title="Klub" description="Základní informace o TJ Baník Rynholec.">
+  <PageHero title="Klub" description="Základní informace o Baníku Rynholec, týmech a sportovním areálu." />
 
   <section class="content-band">
     <div class="container club-intro">
       <div class="club-copy">
         <h2>TJ Baník Rynholec</h2>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus
-          posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla.
+          Baník Rynholec je lokální fotbalový klub se zázemím pro tréninky, zápasy, mládežnické kategorie
+          a komunitní dění kolem sportovního areálu.
         </p>
         <p>
-          Curabitur blandit tempus porttitor. Maecenas faucibus mollis interdum. Praesent commodo cursus magna,
-          vel scelerisque nisl consectetur et.
+          Web má sloužit jako jednoduchý rozcestník pro hráče, rodiče, fanoušky i správce areálu. Najdou zde
+          program, týmy, aktuality, fotky a kontakty na jednom místě.
         </p>
       </div>
       <img src="/images/sportovni-areal-secondary.jpg" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
@@ -28,15 +28,15 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     <div class="container club-metrics" aria-label="Přehled klubu">
       <article>
         <strong>{teams.length}</strong>
-        <span>Lorem ipsum dolor</span>
+        <span>Klubové kategorie</span>
       </article>
       <article>
         <strong>{facilities.length}</strong>
-        <span>Consectetur elit</span>
+        <span>Části areálu</span>
       </article>
       <article>
         <strong>1</strong>
-        <span>Integer posuere</span>
+        <span>Společný kalendář</span>
       </article>
     </div>
   </section>
@@ -46,17 +46,17 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       <article>
         <Users aria-hidden="true" size={30} strokeWidth={1.8} />
         <h2>Klubový obsah</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+        <p>Informace o kategoriích, kontaktech, článcích a klubových novinkách.</p>
       </article>
       <article>
         <CalendarDays aria-hidden="true" size={30} strokeWidth={1.8} />
         <h2>Program areálu</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna vel scelerisque.</p>
+        <p>Informativní kalendář zápasů, tréninků a obsazenosti hřiště.</p>
       </article>
       <article>
         <ShieldCheck aria-hidden="true" size={30} strokeWidth={1.8} />
         <h2>Správa pod kontrolou</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper nulla non metus auctor.</p>
+        <p>Jednoduchý admin přístup pro ruční úpravy a Excel import/export.</p>
       </article>
     </div>
   </section>
@@ -65,10 +65,10 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     <div class="container next-content">
       <h2>Co doplníme před ostrým spuštěním</h2>
       <ul>
-        <li>Lorem ipsum dolor sit amet</li>
-        <li>Consectetur adipiscing elit</li>
-        <li>Integer posuere erat a ante</li>
-        <li>Praesent commodo cursus magna</li>
+        <li>Finální klubové texty a kontaktní osoby</li>
+        <li>Fotky týmů, zápasů a areálu</li>
+        <li>Aktuální rozpis zápasů a tréninků</li>
+        <li>Odkazy na soutěžní tabulky a výsledky</li>
       </ul>
     </div>
   </section>

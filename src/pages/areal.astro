@@ -14,8 +14,8 @@ const icons = {
 };
 ---
 
-<PublicLayout title="Sportovní areál" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
-  <PageHero title="Sportovní areál" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit." />
+<PublicLayout title="Sportovní areál" description="Přehled sportovního areálu TJ Baník Rynholec.">
+  <PageHero title="Sportovní areál" description="Hřiště, zázemí a další prostory klubu na jednom místě." />
 
   <section class="content-band">
     <div class="container areal-intro">
@@ -23,8 +23,8 @@ const icons = {
       <div>
         <h2>Areál pro sport i regeneraci</h2>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus
-          posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla.
+          Sportovní areál slouží pro fotbalové zápasy, tréninky, klubové akce i doplňkové využití zázemí.
+          Obsazenost hřiště a důležité bloky budou vidět v kalendáři.
         </p>
         <a class="text-link" href={`https://www.google.com/maps?q=${club.coordinates.latitude},${club.coordinates.longitude}`} target="_blank" rel="noreferrer">
           {club.address} <MapPin aria-hidden="true" size={18} />
@@ -35,18 +35,18 @@ const icons = {
     <div class="container operations-strip" aria-label="Budoucí provoz areálu">
       <article>
         <ShieldCheck aria-hidden="true" size={25} strokeWidth={1.8} />
-        <strong>Ruční schválení</strong>
-        <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+        <strong>Jasný přehled</strong>
+        <span>Program a obsazenost areálu budou dostupné z jednoho kalendáře.</span>
       </article>
       <article>
         <MapPin aria-hidden="true" size={25} strokeWidth={1.8} />
         <strong>Jedno místo</strong>
-        <span>Integer posuere erat a ante venenatis dapibus.</span>
+        <span>Hřiště, sauna, posilovna i klubovna budou popsané na webu.</span>
       </article>
       <article>
         <ArrowRight aria-hidden="true" size={25} strokeWidth={1.8} />
-        <strong>Excel později</strong>
-        <span>Praesent commodo cursus magna vel scelerisque.</span>
+        <strong>Excel správa</strong>
+        <span>Rozpis půjde připravit offline a později nahrát do webu.</span>
       </article>
     </div>
 
@@ -67,7 +67,7 @@ const icons = {
                 {facility.details.map((detail) => <li>{detail}</li>)}
               </ul>
               <small>{facility.availability}</small>
-              <a class="text-link" href="/rezervace">Rezervační náhled <ArrowRight aria-hidden="true" size={18} /></a>
+              <a class="text-link" href="/kalendar">Obsazenost v kalendáři <ArrowRight aria-hidden="true" size={18} /></a>
             </div>
           </article>
         );

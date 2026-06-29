@@ -17,6 +17,7 @@ describe("public site content", () => {
       { label: "Klub", href: "/klub" },
       { label: "Týmy", href: "/tymy" },
       { label: "Novinky", href: "/novinky" },
+      { label: "Galerie", href: "/galerie" },
       { label: "Kalendář", href: "/kalendar" },
       { label: "Areál", href: "/areal" },
       { label: "Kontakt", href: "/kontakt" },
@@ -64,7 +65,7 @@ describe("public site content", () => {
     expect(newsPreview).toHaveLength(3);
   });
 
-  it("offers read-only reservation areas for every public booking surface", () => {
+  it("keeps facility availability informational instead of active booking", () => {
     expect(reservationAreas.map(({ name }) => name)).toEqual([
       "Hřiště",
       "Multifunkční hřiště",
@@ -72,6 +73,6 @@ describe("public site content", () => {
       "Sauna",
       "Klubovna",
     ]);
-    expect(reservationAreas.every(({ status }) => status === "Read-only náhled")).toBe(true);
+    expect(reservationAreas.every(({ status }) => status === "Informační přehled")).toBe(true);
   });
 });

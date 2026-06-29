@@ -16,6 +16,8 @@
     "@astrojs/react": "^6.0.0",
     "@fontsource/barlow-condensed": "^5.2.8",
     "@fontsource/inter": "^5.2.8",
+    "@netlify/blobs": "^10.7.9",
+    "@netlify/functions": "^5.3.0",
     "astro": "^7.0.2",
     "fflate": "^0.8.3",
     "lucide-react": "^1.21.0",

@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { calendarSeedEvents } from "../../src/content/calendar";
-import { exportCalendarEventsToXlsx, importCalendarEventsFromFile } from "../../src/components/calendar/calendar-excel";
+import {
+  calendarTemplateEvents,
+  exportCalendarEventsToXlsx,
+  exportCalendarTemplateToXlsx,
+  importCalendarEventsFromFile,
+} from "../../src/components/calendar/calendar-excel";
 
 function bytesToBlobPart(bytes: Uint8Array): ArrayBuffer {
   return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
@@ -46,5 +51,24 @@ describe("calendar Excel import/export", () => {
         end: "2026-07-02T20:00",
       }),
     ]);
+  });
+
+  it("exports a prepared offline Excel template that can be imported later", async () => {
+    const bytes = exportCalendarTemplateToXlsx();
+    const file = new File([bytesToBlobPart(bytes)], "banik-rynholec-kalendar-sablona.xlsx", {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const imported = await importCalendarEventsFromFile(file);
+
+    expect(imported).toHaveLength(calendarTemplateEvents.length);
+    expect(imported[0]).toMatchObject({
+      title: "Trénink A tým",
+      resourceId: "team-a",
+      status: "trénink",
+      start: "2026-07-01T17:00",
+      end: "2026-07-01T18:30",
+    });
+    expect(imported.map((event) => event.resourceLabel)).toContain("Hřiště");
   });
 });

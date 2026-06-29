@@ -21,10 +21,14 @@ import {
   type CalendarResourceId,
   type CalendarStatus,
 } from "../../content/calendar";
-import { exportCalendarEventsToXlsx, importCalendarEventsFromFile } from "./calendar-excel";
+import { exportCalendarEventsToXlsx, exportCalendarTemplateToXlsx, importCalendarEventsFromFile } from "./calendar-excel";
 import "./calendar-ui.css";
 
 type CalendarView = "month" | "week" | "list";
+type CalendarMode = "public" | "admin";
+type CalendarAppProps = {
+  mode?: CalendarMode;
+};
 type EventDraft = Omit<CalendarEvent, "id" | "resourceLabel" | "resourceGroup">;
 
 const dayFormatter = new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "short" });
@@ -49,17 +53,18 @@ const statusTone: Record<CalendarStatus, string> = {
 };
 
 const defaultDraft: EventDraft = {
-  title: "Nová rezervace",
+  title: "Nový zápis",
   resourceId: "football",
   status: "čeká na schválení",
   start: "2026-06-29T14:00",
   end: "2026-06-29T16:00",
   contactName: "Jan Novák",
   contactValue: "+420 777 123 456",
-  note: "Lorem ipsum dolor sit amet.",
+  note: "Nový ruční zápis do kalendáře.",
 };
 
-export default function CalendarApp() {
+export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
+  const isAdmin = mode === "admin";
   const [events, setEvents] = useState<CalendarEvent[]>(() => [...calendarSeedEvents]);
   const [view, setView] = useState<CalendarView>("month");
   const [cursor, setCursor] = useState(() => new Date("2026-06-24T12:00:00"));
@@ -70,13 +75,40 @@ export default function CalendarApp() {
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState<EventDraft>(defaultDraft);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [message, setMessage] = useState("Kalendář připraven k úpravám.");
+  const [message, setMessage] = useState(() =>
+    isAdmin ? "Kalendář připraven k úpravám." : "Kalendář připraven k prohlížení.",
+  );
   const [isReady, setIsReady] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsReady(true);
-  }, []);
+    let isMounted = true;
+
+    async function loadEvents() {
+      try {
+        const response = await fetch("/api/calendar", { credentials: "same-origin" });
+        if (!response.ok) {
+          return;
+        }
+        const payload = (await response.json()) as { events?: CalendarEvent[] };
+        if (isMounted && Array.isArray(payload.events)) {
+          setEvents(payload.events);
+          setMessage("Kalendář načtený.");
+        }
+      } catch {
+        if (isMounted && isAdmin) {
+          setMessage("Kalendář běží lokálně. Online ukládání se ověří po nasazení.");
+        }
+      }
+    }
+
+    void loadEvents();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isAdmin]);
 
   const selectedEvent = events.find((event) => event.id === selectedId) ?? null;
   const visibleEvents = useMemo(
@@ -116,7 +148,38 @@ export default function CalendarApp() {
     setActiveStatuses((current) => toggleSet(current, status));
   }
 
+  async function persistEvents(nextEvents: CalendarEvent[], successMessage: string) {
+    setEvents(nextEvents);
+
+    if (!isAdmin) {
+      setMessage(successMessage);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/calendar", {
+        method: "PUT",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ events: nextEvents }),
+      });
+      const payload = (await response.json()) as { events?: CalendarEvent[]; error?: string };
+      if (!response.ok) {
+        throw new Error(payload.error ?? "Kalendář se nepodařilo uložit.");
+      }
+      if (Array.isArray(payload.events)) {
+        setEvents(payload.events);
+      }
+      setMessage(successMessage);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Kalendář se nepodařilo uložit.");
+    }
+  }
+
   function submitDraft() {
+    if (!isAdmin) {
+      return;
+    }
     const resource = calendarResources.find((item) => item.id === draft.resourceId) ?? calendarResources[0];
     const event: CalendarEvent = {
       ...draft,
@@ -124,30 +187,32 @@ export default function CalendarApp() {
       resourceLabel: resource.label,
       resourceGroup: resource.group,
     };
-    setEvents((current) => [...current, event]);
+    const nextEvents = [...events, event];
+    void persistEvents(nextEvents, "Zápis přidán a uložen.");
     setSelectedId(event.id);
-    setMessage("Zápis přidán.");
   }
 
   function updateSelectedEvent(updated: CalendarEvent) {
+    if (!isAdmin) {
+      return;
+    }
     const resource = calendarResources.find((item) => item.id === updated.resourceId) ?? calendarResources[0];
     const normalized = { ...updated, resourceLabel: resource.label, resourceGroup: resource.group };
-    setEvents((current) => current.map((event) => (event.id === normalized.id ? normalized : event)));
+    const nextEvents = events.map((event) => (event.id === normalized.id ? normalized : event));
+    void persistEvents(nextEvents, "Změna uložena.");
     setSelectedId(normalized.id);
-    setMessage("Změna uložena.");
   }
 
   function deleteSelectedEvent() {
-    if (!selectedEvent) {
+    if (!selectedEvent || !isAdmin) {
       return;
     }
-    setEvents((current) => current.filter((event) => event.id !== selectedEvent.id));
+    const nextEvents = events.filter((event) => event.id !== selectedEvent.id);
+    void persistEvents(nextEvents, "Zápis odstraněn.");
     setSelectedId(null);
-    setMessage("Zápis odstraněn.");
   }
 
-  function exportXlsx() {
-    const bytes = exportCalendarEventsToXlsx(events);
+  function downloadXlsx(bytes: Uint8Array, filename: string) {
     const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -155,12 +220,21 @@ export default function CalendarApp() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "banik-rynholec-kalendar.xlsx";
+    anchor.download = filename;
     document.body.append(anchor);
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
+  }
+
+  function exportXlsx() {
+    downloadXlsx(exportCalendarEventsToXlsx(events), "banik-rynholec-kalendar.xlsx");
     setMessage("Excel export stažený.");
+  }
+
+  function exportTemplateXlsx() {
+    downloadXlsx(exportCalendarTemplateToXlsx(), "banik-rynholec-kalendar-sablona.xlsx");
+    setMessage("Excel šablona stažená.");
   }
 
   async function importFile(file: File | undefined) {
@@ -169,7 +243,6 @@ export default function CalendarApp() {
     }
     try {
       const imported = await importCalendarEventsFromFile(file);
-      setEvents(imported);
       setSelectedId(null);
       setQuery("");
       setView("month");
@@ -179,7 +252,7 @@ export default function CalendarApp() {
       if (firstImportedDate && !Number.isNaN(firstImportedDate.getTime())) {
         setCursor(firstImportedDate);
       }
-      setMessage(`Importováno ${imported.length} zápisů z Excel/CSV souboru.`);
+      await persistEvents(imported, `Importováno ${imported.length} zápisů z Excel/CSV souboru.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Import se nepodařil.");
     } finally {
@@ -190,9 +263,8 @@ export default function CalendarApp() {
   }
 
   function resetData() {
-    setEvents([...calendarSeedEvents]);
+    void persistEvents([...calendarSeedEvents], "Ukázková data obnovena.");
     setSelectedId(null);
-    setMessage("Ukázková data obnovena.");
   }
 
   return (
@@ -268,37 +340,45 @@ export default function CalendarApp() {
               </button>
             </div>
 
-            <div className="calendar-actions">
-              <button className="utility-button" onClick={() => fileInputRef.current?.click()} type="button">
-                <FileUp aria-hidden="true" size={17} />
-                Import Excel
-              </button>
-              <button className="utility-button" onClick={exportXlsx} type="button">
-                <Download aria-hidden="true" size={17} />
-                Export Excel
-              </button>
-              <button className="utility-button" onClick={resetData} type="button">
-                <RotateCcw aria-hidden="true" size={17} />
-                Reset
-              </button>
-              <input
-                accept=".xlsx,.xls,.csv"
-                hidden
-                onChange={(event) => void importFile(event.target.files?.[0])}
-                ref={fileInputRef}
-                type="file"
-              />
-            </div>
+            {isAdmin && (
+              <div className="calendar-actions">
+                <button className="utility-button" onClick={exportTemplateXlsx} type="button">
+                  <Download aria-hidden="true" size={17} />
+                  Stáhnout šablonu
+                </button>
+                <button className="utility-button" onClick={() => fileInputRef.current?.click()} type="button">
+                  <FileUp aria-hidden="true" size={17} />
+                  Import Excel
+                </button>
+                <button className="utility-button" onClick={exportXlsx} type="button">
+                  <Download aria-hidden="true" size={17} />
+                  Export Excel
+                </button>
+                <button className="utility-button" onClick={resetData} type="button">
+                  <RotateCcw aria-hidden="true" size={17} />
+                  Reset
+                </button>
+                <input
+                  accept=".xlsx,.xls,.csv"
+                  hidden
+                  onChange={(event) => void importFile(event.target.files?.[0])}
+                  ref={fileInputRef}
+                  type="file"
+                />
+              </div>
+            )}
           </div>
 
           <div className="calendar-content">
-            <section className="booking-composer" aria-labelledby="new-booking">
-              <div>
-                <h2 id="new-booking">Nová rezervace</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              </div>
-              <DraftForm draft={draft} onChange={setDraft} onSubmit={submitDraft} />
-            </section>
+            {isAdmin && (
+              <section className="booking-composer" aria-labelledby="new-booking">
+                <div>
+                  <h2 id="new-booking">Nový zápis</h2>
+                  <p>Zadejte nový zápis ručně, nebo nahrajte připravený Excel od správce areálu.</p>
+                </div>
+                <DraftForm draft={draft} onChange={setDraft} onSubmit={submitDraft} />
+              </section>
+            )}
 
             {view === "month" && <MonthView days={monthDays} events={visibleEvents} onSelect={setSelectedId} />}
             {view === "week" && <WeekView days={weekDays} events={visibleEvents} onSelect={setSelectedId} />}
@@ -310,6 +390,7 @@ export default function CalendarApp() {
       {selectedEvent && (
         <EventDetail
           event={selectedEvent}
+          editable={isAdmin}
           onClose={() => setSelectedId(null)}
           onDelete={deleteSelectedEvent}
           onSave={updateSelectedEvent}
@@ -370,7 +451,7 @@ function DraftForm({
       </label>
       <button className="save-button" onClick={onSubmit} type="button">
         <Plus aria-hidden="true" size={18} />
-        Přidat rezervaci
+        Přidat zápis
       </button>
     </div>
   );
@@ -476,11 +557,13 @@ function EventPill({ event, onSelect }: { event: CalendarEvent; onSelect: (id: s
 }
 
 function EventDetail({
+  editable,
   event,
   onClose,
   onDelete,
   onSave,
 }: {
+  editable: boolean;
   event: CalendarEvent;
   onClose: () => void;
   onDelete: () => void;
@@ -502,39 +585,65 @@ function EventDetail({
         </header>
 
         <div className="detail-form">
-          <TextField label="Název" value={draft.title} onChange={(value) => setDraft({ ...draft, title: value })} />
+          <TextField
+            disabled={!editable}
+            label="Název"
+            value={draft.title}
+            onChange={(value) => setDraft({ ...draft, title: value })}
+          />
           <SelectField
+            disabled={!editable}
             label="Prostor / tým"
             value={draft.resourceId}
             onChange={(value) => setDraft({ ...draft, resourceId: value as CalendarResourceId })}
             options={calendarResources.map((resource) => ({ value: resource.id, label: resource.label }))}
           />
           <SelectField
+            disabled={!editable}
             label="Stav"
             value={draft.status}
             onChange={(value) => setDraft({ ...draft, status: value as CalendarStatus })}
             options={calendarStatuses.map((status) => ({ value: status, label: statusLabels[status] }))}
           />
-          <TextField label="Začátek" type="datetime-local" value={draft.start} onChange={(value) => setDraft({ ...draft, start: value })} />
-          <TextField label="Konec" type="datetime-local" value={draft.end} onChange={(value) => setDraft({ ...draft, end: value })} />
-          <TextField label="Jméno" value={draft.contactName} onChange={(value) => setDraft({ ...draft, contactName: value })} />
-          <TextField label="Kontakt" value={draft.contactValue} onChange={(value) => setDraft({ ...draft, contactValue: value })} />
+          <TextField
+            disabled={!editable}
+            label="Začátek"
+            type="datetime-local"
+            value={draft.start}
+            onChange={(value) => setDraft({ ...draft, start: value })}
+          />
+          <TextField
+            disabled={!editable}
+            label="Konec"
+            type="datetime-local"
+            value={draft.end}
+            onChange={(value) => setDraft({ ...draft, end: value })}
+          />
+          <TextField disabled={!editable} label="Jméno" value={draft.contactName} onChange={(value) => setDraft({ ...draft, contactName: value })} />
+          <TextField disabled={!editable} label="Kontakt" value={draft.contactValue} onChange={(value) => setDraft({ ...draft, contactValue: value })} />
           <label className="field field-wide">
             <span>Poznámka</span>
-            <textarea value={draft.note} onChange={(input) => setDraft({ ...draft, note: input.target.value })} rows={4} />
+            <textarea
+              disabled={!editable}
+              value={draft.note}
+              onChange={(input) => setDraft({ ...draft, note: input.target.value })}
+              rows={4}
+            />
           </label>
         </div>
 
-        <footer>
-          <button className="delete-button" onClick={onDelete} type="button">
-            <Trash2 aria-hidden="true" size={17} />
-            Smazat
-          </button>
-          <button className="save-button" onClick={() => onSave(draft)} type="button">
-            <Save aria-hidden="true" size={17} />
-            Uložit změny
-          </button>
-        </footer>
+        {editable && (
+          <footer>
+            <button className="delete-button" onClick={onDelete} type="button">
+              <Trash2 aria-hidden="true" size={17} />
+              Smazat
+            </button>
+            <button className="save-button" onClick={() => onSave(draft)} type="button">
+              <Save aria-hidden="true" size={17} />
+              Uložit změny
+            </button>
+          </footer>
+        )}
       </section>
     </div>
   );
@@ -543,9 +652,11 @@ function EventDetail({
 function TextField({
   label,
   onChange,
+  disabled = false,
   type = "text",
   value,
 }: {
+  disabled?: boolean;
   label: string;
   onChange: (value: string) => void;
   type?: string;
@@ -554,17 +665,19 @@ function TextField({
   return (
     <label className="field">
       <span>{label}</span>
-      <input type={type} value={value} onChange={(event) => onChange(event.target.value)} />
+      <input disabled={disabled} type={type} value={value} onChange={(event) => onChange(event.target.value)} />
     </label>
   );
 }
 
 function SelectField({
+  disabled = false,
   label,
   onChange,
   options,
   value,
 }: {
+  disabled?: boolean;
   label: string;
   onChange: (value: string) => void;
   options: { value: string; label: string }[];
@@ -573,7 +686,7 @@ function SelectField({
   return (
     <label className="field">
       <span>{label}</span>
-      <select value={value} onChange={(event) => onChange(event.target.value)}>
+      <select disabled={disabled} value={value} onChange={(event) => onChange(event.target.value)}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
