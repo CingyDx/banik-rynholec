@@ -1,6 +1,4 @@
 ---
-import { ClientRouter } from "astro:transitions";
-
 import Footer from "../components/public/Footer.astro";
 import Header from "../components/public/Header.astro";
 import "../styles/global.css";
@@ -26,7 +24,6 @@ const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník
     <meta name="theme-color" content="#090b09" />
     <link rel="icon" type="image/png" href="/images/club-logo.png" />
     <title>{pageTitle}</title>
-    <ClientRouter fallback="animate" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Přejít na obsah</a>
@@ -72,6 +69,7 @@ const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník
         document.documentElement.classList.add("has-motion-js");
 
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.querySelectorAll(revealSelector).forEach((target) => target.classList.add("is-visible"));
           return;
         }
 
@@ -103,6 +101,12 @@ const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník
 
           revealObserver.observe(target);
         }
+
+        window.setTimeout(() => {
+          document
+            .querySelectorAll(".reveal-ready:not(.is-visible)")
+            .forEach((target) => target.classList.add("is-visible"));
+        }, 900);
       }
 
       function initHeaderState() {
@@ -117,20 +121,6 @@ const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník
         window.removeEventListener("scroll", update);
         window.addEventListener("scroll", update, { passive: true });
       }
-
-      document.addEventListener("astro:before-preparation", () => {
-        document.documentElement.classList.add("is-routing");
-      });
-
-      document.addEventListener("astro:after-swap", () => {
-        document.documentElement.classList.remove("is-routing");
-        window.scrollTo(0, 0);
-      });
-
-      document.addEventListener("astro:page-load", () => {
-        initHeaderState();
-        initPageMotion();
-      });
 
       initHeaderState();
       initPageMotion();

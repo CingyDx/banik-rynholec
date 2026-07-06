@@ -43,10 +43,6 @@ body::before {
   transform: translateX(-8%);
 }
 
-.is-routing body::before {
-  animation: route-sweep 520ms var(--ease-premium) both;
-}
-
 ::selection {
   background: var(--color-yellow);
   color: var(--color-black);
@@ -528,14 +524,13 @@ a:hover .media-frame::after,
 }
 
 .has-motion-js .reveal-ready {
-  opacity: 0;
-  transform: translateY(28px) scale(0.985);
-  filter: blur(8px);
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .has-motion-js .reveal-ready.is-visible {
-  animation: reveal-luxury 820ms var(--ease-premium) both;
-  animation-delay: var(--reveal-delay, 0ms);
+  animation: none;
 }
 
 @keyframes soft-rise {
@@ -574,50 +569,6 @@ a:hover .media-frame::after,
   }
 }
 
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-    filter: blur(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-@keyframes page-out {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateY(-8px);
-    filter: blur(5px);
-  }
-}
-
-@keyframes route-sweep {
-  0% {
-    opacity: 0;
-    transform: translateX(-18%);
-  }
-
-  35% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(18%);
-  }
-}
-
 @keyframes mobile-menu-in {
   from {
     opacity: 0;
@@ -628,17 +579,6 @@ a:hover .media-frame::after,
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@supports (view-transition-name: root) {
-  ::view-transition-old(root) {
-    animation: page-out 180ms ease both;
-  }
-
-  ::view-transition-new(root) {
-    animation: page-in 520ms var(--ease-premium) both;
-  }
-
 }
 
 .prose {
