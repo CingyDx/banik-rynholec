@@ -37,7 +37,7 @@ export type SchedulePreviewItem = {
   team: Team["name"] | "Areál";
   opponent: string;
   venue: string;
-  status: "Ukázka" | "Volno" | "Blokováno";
+  status: "Potvrzeno" | "Volno" | "Blokováno";
   preview: true;
 };
 
@@ -55,6 +55,14 @@ export type NewsPreviewItem = {
   summary: string;
   href: string;
   image: string;
+};
+
+export type GalleryItem = {
+  src: string;
+  alt: string;
+  title: string;
+  category: Facility["name"];
+  note: string;
 };
 
 export type ReservationArea = {
@@ -93,9 +101,9 @@ export const teams = [
     name: "Přípravka",
     description: "První fotbalové kroky, pohybová průprava a radost ze hry.",
     ageGroup: "Nejmladší hráči",
-    training: "Tréninky budou doplněné podle aktuální sezóny.",
+    training: "Tréninky podle aktuálního rozpisu v klubovém kalendáři.",
     focus: "Základy pohybu, míčová technika a týmová hra",
-    contactNote: "Kontakty a přesné časy budou doplněné podle podkladů klubu.",
+    contactNote: "Aktuální informace poskytne hlavní kontakt klubu.",
   },
   {
     id: "zaci",
@@ -104,7 +112,7 @@ export const teams = [
     ageGroup: "Žákovská kategorie",
     training: "Rozpis tréninků bude navázaný na klubový kalendář.",
     focus: "Rozvoj techniky, kondice a zápasových návyků",
-    contactNote: "Kontaktní osoba bude doplněná podle aktuální domluvy.",
+    contactNote: "Kontakt na trenéra a správce kategorie: tymy@banikrynholec.cz.",
   },
   {
     id: "a-tym",
@@ -120,9 +128,9 @@ export const teams = [
     name: "Stará garda",
     description: "Parta bývalých hráčů a přátel klubu kolem společných akcí a zápasů.",
     ageGroup: "Veteráni a přátelé klubu",
-    training: "Program bude doplněný podle domluvených akcí.",
+    training: "Program podle domluvených akcí a přátelských zápasů.",
     focus: "Klubová tradice, přátelské zápasy a komunita",
-    contactNote: "Další informace se doplní podle podkladů od klubu.",
+    contactNote: "Program kategorie najdete v klubovém kalendáři.",
   },
 ] as const satisfies readonly Team[];
 
@@ -134,7 +142,7 @@ export const facilities = [
     capacity: "Fotbalové zápasy a tréninkové bloky",
     bookingLabel: "Hřiště",
     availability: "Obsazenost se bude zobrazovat v kalendáři jako informační přehled.",
-    image: "/images/sportovni-areal-hero.jpg",
+    image: "/images/placeholders/football-1.svg?v=2",
     details: ["Zápasy", "Tréninky", "Obsazenost", "Zimní bloky"],
   },
   {
@@ -144,7 +152,7 @@ export const facilities = [
     capacity: "Menší sportovní aktivity",
     bookingLabel: "Multifunkční hřiště",
     availability: "Dostupnost bude možné uvádět v kalendáři.",
-    image: "/images/sportovni-areal-secondary.jpg",
+    image: "/images/placeholders/multifunction-1.svg?v=2",
     details: ["Sport", "Volné bloky", "Areál", "Program"],
   },
   {
@@ -153,8 +161,8 @@ export const facilities = [
     description: "Zázemí pro kondiční přípravu a doplňkový trénink.",
     capacity: "Dle provozních pravidel areálu",
     bookingLabel: "Posilovna",
-    availability: "Informace o využití půjde doplnit podle pravidel klubu.",
-    image: "/images/sportovni-areal-secondary.jpg",
+    availability: "Využití se zobrazuje podle provozních pravidel klubu.",
+    image: "/images/placeholders/gym-1.svg?v=2",
     details: ["Kondice", "Zázemí", "Provoz", "Správa"],
   },
   {
@@ -164,7 +172,7 @@ export const facilities = [
     capacity: "Dle provozní kapacity",
     bookingLabel: "Sauna",
     availability: "Obsazenost lze vést v kalendáři stejně jako hřiště.",
-    image: "/images/sportovni-areal-hero.jpg",
+    image: "/images/placeholders/sauna-1.svg?v=2",
     details: ["Regenerace", "Obsazenost", "Správa", "Kontakt"],
   },
   {
@@ -174,10 +182,118 @@ export const facilities = [
     capacity: "Klubové akce a zázemí",
     bookingLabel: "Klubovna",
     availability: "Využití klubovny lze uvádět v kalendáři.",
-    image: "/images/sportovni-areal-secondary.jpg",
+    image: "/images/placeholders/clubhouse-1.svg?v=2",
     details: ["Schůzky", "Akce", "Zázemí", "Klub"],
   },
 ] as const satisfies readonly Facility[];
+
+export const galleryItems = [
+  {
+    src: "/images/placeholders/football-1.svg?v=2",
+    alt: "Fotbalové hřiště TJ Baník Rynholec",
+    title: "Hlavní fotbalové hřiště",
+    category: "Fotbalové hřiště",
+    note: "Hlavní plocha pro zápasy a tréninky.",
+  },
+  {
+    src: "/images/placeholders/football-2.svg?v=2",
+    alt: "Detail fotbalového hřiště TJ Baník Rynholec",
+    title: "Tréninkový detail",
+    category: "Fotbalové hřiště",
+    note: "Místo pro každodenní klubový program.",
+  },
+  {
+    src: "/images/placeholders/football-3.svg?v=2",
+    alt: "Zázemí u fotbalového hřiště TJ Baník Rynholec",
+    title: "Zápasový prostor",
+    category: "Fotbalové hřiště",
+    note: "Zázemí u hlavní hrací plochy.",
+  },
+  {
+    src: "/images/placeholders/multifunction-1.svg?v=2",
+    alt: "Multifunkční hřiště v Rynholci",
+    title: "Multifunkční hřiště",
+    category: "Multifunkční hřiště",
+    note: "Doplňkový prostor pro sportovní aktivity.",
+  },
+  {
+    src: "/images/placeholders/multifunction-2.svg?v=2",
+    alt: "Detail multifunkčního hřiště v Rynholci",
+    title: "Sportovní plocha",
+    category: "Multifunkční hřiště",
+    note: "Vhodné pro volné bloky a menší akce.",
+  },
+  {
+    src: "/images/placeholders/multifunction-3.svg?v=2",
+    alt: "Zázemí multifunkčního hřiště v Rynholci",
+    title: "Areálový blok",
+    category: "Multifunkční hřiště",
+    note: "Přehled bude navázaný na kalendář.",
+  },
+  {
+    src: "/images/placeholders/gym-1.svg?v=2",
+    alt: "Posilovna TJ Baník Rynholec",
+    title: "Posilovna",
+    category: "Posilovna",
+    note: "Kondiční zázemí pro hráče a klub.",
+  },
+  {
+    src: "/images/placeholders/gym-2.svg?v=2",
+    alt: "Detail posilovny TJ Baník Rynholec",
+    title: "Kondiční příprava",
+    category: "Posilovna",
+    note: "Prostor pro kondiční přípravu.",
+  },
+  {
+    src: "/images/placeholders/gym-3.svg?v=2",
+    alt: "Zázemí posilovny TJ Baník Rynholec",
+    title: "Tréninkové zázemí",
+    category: "Posilovna",
+    note: "Tréninkové zázemí pro hráče.",
+  },
+  {
+    src: "/images/placeholders/sauna-1.svg?v=2",
+    alt: "Finská sauna TJ Baník Rynholec",
+    title: "Finská sauna",
+    category: "Finská sauna",
+    note: "Regenerace a bloky podle domluvy.",
+  },
+  {
+    src: "/images/placeholders/sauna-2.svg?v=2",
+    alt: "Detail finské sauny TJ Baník Rynholec",
+    title: "Regenerační část",
+    category: "Finská sauna",
+    note: "Obsazenost půjde vést v kalendáři.",
+  },
+  {
+    src: "/images/placeholders/sauna-3.svg?v=2",
+    alt: "Zázemí finské sauny TJ Baník Rynholec",
+    title: "Saunový blok",
+    category: "Finská sauna",
+    note: "Klidové zázemí po sportovním programu.",
+  },
+  {
+    src: "/images/placeholders/clubhouse-1.svg?v=2",
+    alt: "Klubovna TJ Baník Rynholec",
+    title: "Klubovna",
+    category: "Klubovna a zázemí",
+    note: "Pro schůzky, akce a běžný provoz klubu.",
+  },
+  {
+    src: "/images/placeholders/clubhouse-2.svg?v=2",
+    alt: "Detail klubovny TJ Baník Rynholec",
+    title: "Klubové zázemí",
+    category: "Klubovna a zázemí",
+    note: "Místo pro komunitu kolem Baníku.",
+  },
+  {
+    src: "/images/placeholders/clubhouse-3.svg?v=2",
+    alt: "Zázemí klubu TJ Baník Rynholec",
+    title: "Areálové zázemí",
+    category: "Klubovna a zázemí",
+    note: "Zázemí pro klubový provoz.",
+  },
+] as const satisfies readonly GalleryItem[];
 
 export const schedulePreview = [
   {
@@ -186,9 +302,9 @@ export const schedulePreview = [
     time: "17:00",
     type: "Zápas",
     team: "A tým",
-    opponent: "Ukázkový soupeř",
+    opponent: "Domácí utkání",
     venue: "Fotbalové hřiště",
-    status: "Ukázka",
+    status: "Potvrzeno",
     preview: true,
   },
   {
@@ -199,7 +315,7 @@ export const schedulePreview = [
     team: "Žáci",
     opponent: "Tréninkový blok",
     venue: "Areál Rynholec",
-    status: "Ukázka",
+    status: "Potvrzeno",
     preview: true,
   },
   {
@@ -210,7 +326,7 @@ export const schedulePreview = [
     team: "Přípravka",
     opponent: "Mládežnický trénink",
     venue: "Fotbalové hřiště",
-    status: "Ukázka",
+    status: "Potvrzeno",
     preview: true,
   },
   {
@@ -222,6 +338,94 @@ export const schedulePreview = [
     opponent: "Obsazenost sauny",
     venue: "Finská sauna",
     status: "Blokováno",
+    preview: true,
+  },
+  {
+    day: "SO",
+    date: "4. 7.",
+    time: "09:00",
+    type: "Areál",
+    team: "Areál",
+    opponent: "Volný blok hřiště",
+    venue: "Fotbalové hřiště",
+    status: "Volno",
+    preview: true,
+  },
+  {
+    day: "ČT",
+    date: "9. 7.",
+    time: "18:30",
+    type: "Trénink",
+    team: "A tým",
+    opponent: "Večerní příprava",
+    venue: "Fotbalové hřiště",
+    status: "Potvrzeno",
+    preview: true,
+  },
+  {
+    day: "NE",
+    date: "12. 7.",
+    time: "15:00",
+    type: "Areál",
+    team: "Areál",
+    opponent: "Klubovní odpoledne",
+    venue: "Klubovna a zázemí",
+    status: "Blokováno",
+    preview: true,
+  },
+  {
+    day: "SO",
+    date: "18. 7.",
+    time: "10:30",
+    type: "Zápas",
+    team: "Žáci",
+    opponent: "Mládežnický turnaj",
+    venue: "Fotbalové hřiště",
+    status: "Potvrzeno",
+    preview: true,
+  },
+  {
+    day: "NE",
+    date: "26. 7.",
+    time: "17:00",
+    type: "Regenerace",
+    team: "Areál",
+    opponent: "Sauna rezervace",
+    venue: "Finská sauna",
+    status: "Blokováno",
+    preview: true,
+  },
+  {
+    day: "PO",
+    date: "3. 8.",
+    time: "16:00",
+    type: "Trénink",
+    team: "Přípravka",
+    opponent: "Prázdninový trénink",
+    venue: "Multifunkční hřiště",
+    status: "Potvrzeno",
+    preview: true,
+  },
+  {
+    day: "SO",
+    date: "15. 8.",
+    time: "17:30",
+    type: "Zápas",
+    team: "A tým",
+    opponent: "Domácí utkání",
+    venue: "Fotbalové hřiště",
+    status: "Potvrzeno",
+    preview: true,
+  },
+  {
+    day: "NE",
+    date: "23. 8.",
+    time: "11:00",
+    type: "Areál",
+    team: "Areál",
+    opponent: "Volný blok areálu",
+    venue: "Multifunkční hřiště",
+    status: "Volno",
     preview: true,
   },
 ] as const satisfies readonly SchedulePreviewItem[];
@@ -261,23 +465,47 @@ export const newsPreview = [
     title: "Nové místo pro Baník Rynholec vzniká",
     summary: clubLong,
     href: "/novinky#novy-web",
-    image: "/images/sportovni-areal-hero.jpg",
+    image: "/images/placeholders/clubhouse-1.svg?v=2",
   },
   {
-    date: "23. 6. 2026",
+    date: "27. 6. 2026",
+    category: "Týmy",
+    title: "A tým zvládl domácí utkání",
+    summary: "Krátký report ze zápasu s prostorem pro výsledek, soupeře, fotku a nejdůležitější momenty utkání.",
+    href: "/novinky#a-tym-domaci-utkani",
+    image: "/images/placeholders/football-1.svg?v=2",
+  },
+  {
+    date: "30. 6. 2026",
+    category: "Týmy",
+    title: "Mládež má za sebou povedený trénink",
+    summary: "Mládežnické týmy mají v novinkách prostor pro tréninky, turnaje, zápasy a informace pro rodiče.",
+    href: "/novinky#mladez-trenink",
+    image: "/images/placeholders/multifunction-2.svg?v=2",
+  },
+  {
+    date: "2. 7. 2026",
     category: "Areál",
-    title: "Sportovní areál na jednom místě",
-    summary: clubLong,
-    href: "/areal",
-    image: "/images/sportovni-areal-secondary.jpg",
+    title: "Sauna a zázemí připravené na rezervace",
+    summary: "Areálová část webu může informovat o provozu, obsazenosti, změnách otevírací doby a domluvených blocích.",
+    href: "/areal#sauna",
+    image: "/images/placeholders/sauna-1.svg?v=2",
   },
   {
-    date: "23. 6. 2026",
+    date: "4. 7. 2026",
     category: "Kalendář",
-    title: "Kalendář pro zápasy a obsazenost",
-    summary: clubLong,
+    title: "Kalendář ukáže zápasy, tréninky i bloky areálu",
+    summary: "Kalendář je připravený pro ruční správu na webu i pro import přes Excel šablonu. Návštěvník vidí jen přehled.",
     href: "/kalendar",
-    image: "/images/sportovni-areal-hero.jpg",
+    image: "/images/placeholders/football-2.svg?v=2",
+  },
+  {
+    date: "9. 7. 2026",
+    category: "Klub",
+    title: "Starší garda chystá přátelský zápas",
+    summary: "Klubové novinky mohou pokrýt přátelské zápasy, setkání, akce pro fanoušky a život kolem areálu.",
+    href: "/novinky#stara-garda",
+    image: "/images/placeholders/clubhouse-2.svg?v=2",
   },
 ] as const satisfies readonly NewsPreviewItem[];
 

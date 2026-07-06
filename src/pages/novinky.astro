@@ -11,7 +11,9 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
   <section class="content-band">
     <div class="container news-feature" id="novy-web">
-      <img src="/images/sportovni-areal-hero.jpg" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+      <div class="feature-image media-frame">
+        <img src={newsPreview[0].image} alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+      </div>
       <article>
         <span>{newsPreview[0].date} · {newsPreview[0].category}</span>
         <h2>{newsPreview[0].title}</h2>
@@ -22,10 +24,12 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       </article>
     </div>
 
-    <div class="container news-page-list" aria-label="Další ukázkové novinky">
+    <div class="container news-page-list" aria-label="Další novinky">
       {newsPreview.slice(1).map((item) => (
         <article class="news-page-item">
-          <img src={item.image} alt="" width="450" height="253" loading="lazy" />
+          <div class="item-image media-frame">
+            <img src={item.image} alt="" width="450" height="253" loading="lazy" />
+          </div>
           <span>{item.date} · {item.category}</span>
           <h2>{item.title}</h2>
           <p>{item.summary}</p>
@@ -39,8 +43,8 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
   <section class="editorial-note">
     <div class="container editorial-inner">
-      <h2>Placeholder obsah, ne vymyšlené reporty</h2>
-      <p>Do ostré verze doplníme pouze reálné články, výsledky a odkazy dodané klubem.</p>
+      <h2>Aktuality jednoduše</h2>
+      <p>Novinky mohou sloužit pro zápasové reporty, klubové zprávy, fotky z akcí a důležité odkazy pro fanoušky.</p>
     </div>
   </section>
 </PublicLayout>
@@ -54,10 +58,8 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     margin-bottom: 3rem;
   }
 
-  .news-feature img {
-    width: 100%;
+  .feature-image {
     min-height: 420px;
-    object-fit: cover;
   }
 
   .news-feature article {
@@ -87,23 +89,28 @@ import PublicLayout from "../layouts/PublicLayout.astro";
   .news-page-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
-    border-top: 1px solid var(--color-line);
-    border-left: 1px solid var(--color-line);
+    gap: 1rem;
   }
 
   .news-page-item {
+    display: grid;
     min-height: 440px;
-    padding: 1.5rem;
-    border-right: 1px solid var(--color-line);
-    border-bottom: 1px solid var(--color-line);
+    align-content: start;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-white);
+    box-shadow: 0 18px 50px rgb(9 11 9 / 7%);
   }
 
-  .news-page-item img {
-    width: 100%;
+  .item-image {
     aspect-ratio: 16 / 9;
-    margin-bottom: 1.25rem;
-    object-fit: cover;
+    border-color: var(--color-line);
+  }
+
+  .news-page-item h2,
+  .news-page-item p {
+    margin: 0;
   }
 
   .editorial-note {
@@ -135,7 +142,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       grid-template-columns: 1fr;
     }
 
-    .news-feature img {
+    .feature-image {
       min-height: 260px;
     }
 

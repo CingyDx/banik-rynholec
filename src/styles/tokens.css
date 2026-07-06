@@ -3,12 +3,18 @@
   --color-ink: #151815;
   --color-white: #ffffff;
   --color-paper: #f4f5f3;
+  --color-panel: #eef1ee;
   --color-line: #d5d9d4;
+  --color-line-strong: #bbc4bb;
   --color-muted: #69706a;
   --color-green-deep: #205f30;
   --color-green: #2f873f;
   --color-green-bright: #49ac55;
   --color-yellow: #f2c230;
+  --shadow-soft: 0 18px 50px rgb(9 11 9 / 10%);
+  --shadow-lift: 0 24px 70px rgb(9 11 9 / 16%);
+  --shadow-dark: 0 30px 80px rgb(0 0 0 / 28%);
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
   --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
   --font-body: "Inter", Arial, sans-serif;
   --container: 1260px;
@@ -22,7 +28,9 @@
   --space-6: 3rem;
   --space-7: 4.5rem;
   --space-8: 6rem;
-  --transition-fast: 160ms ease;
+  --transition-fast: 180ms var(--ease-premium);
+  --transition-medium: 420ms var(--ease-premium);
+  --transition-slow: 760ms var(--ease-premium);
 }
 
 @media (max-width: 760px) {

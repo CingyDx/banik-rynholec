@@ -18,11 +18,13 @@ import PublicLayout from "../layouts/PublicLayout.astro";
           a komunitní dění kolem sportovního areálu.
         </p>
         <p>
-          Web má sloužit jako jednoduchý rozcestník pro hráče, rodiče, fanoušky i správce areálu. Najdou zde
-          program, týmy, aktuality, fotky a kontakty na jednom místě.
+          Web slouží jako jednoduchý rozcestník pro hráče, rodiče, fanoušky i správce areálu. Na jednom místě
+          spojuje program, týmy, aktuality, fotky a kontakty.
         </p>
       </div>
-      <img src="/images/sportovni-areal-secondary.jpg" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+      <div class="club-image media-frame">
+        <img src="/images/placeholders/clubhouse-2.svg?v=2" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+      </div>
     </div>
 
     <div class="container club-metrics" aria-label="Přehled klubu">
@@ -56,19 +58,19 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       <article>
         <ShieldCheck aria-hidden="true" size={30} strokeWidth={1.8} />
         <h2>Správa pod kontrolou</h2>
-        <p>Jednoduchý admin přístup pro ruční úpravy a Excel import/export.</p>
+        <p>Jeden administrátorský přístup pro ruční úpravy a Excel import/export.</p>
       </article>
     </div>
   </section>
 
   <section class="content-band">
     <div class="container next-content">
-      <h2>Co doplníme před ostrým spuštěním</h2>
+      <h2>Klub pro hráče, rodiče i fanoušky</h2>
       <ul>
-        <li>Finální klubové texty a kontaktní osoby</li>
-        <li>Fotky týmů, zápasů a areálu</li>
-        <li>Aktuální rozpis zápasů a tréninků</li>
-        <li>Odkazy na soutěžní tabulky a výsledky</li>
+        <li>Přehledné informace o kategoriích a programu klubu</li>
+        <li>Kalendář zápasů, tréninků a obsazenosti areálu</li>
+        <li>Aktuality, galerie a základní kontakty na jednom místě</li>
+        <li>Jednoduchá správa kalendáře přes web i Excel</li>
       </ul>
     </div>
   </section>
@@ -101,10 +103,8 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     color: var(--color-muted);
   }
 
-  .club-intro img {
-    width: 100%;
+  .club-image {
     min-height: 390px;
-    object-fit: cover;
   }
 
   .club-metrics {
@@ -120,6 +120,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     padding: 1.5rem;
     border-right: 1px solid var(--color-line);
     border-bottom: 1px solid var(--color-line);
+    background: var(--color-white);
   }
 
   .club-metrics strong {
@@ -199,7 +200,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       grid-template-columns: 1fr;
     }
 
-    .club-intro img {
+    .club-image {
       min-height: 260px;
     }
 

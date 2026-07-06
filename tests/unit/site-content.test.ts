@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   club,
   facilities,
+  galleryItems,
   navigation,
   newsPreview,
   reservationAreas,
@@ -45,24 +46,37 @@ describe("public site content", () => {
     expect(club.coordinates).toEqual({ latitude: 50.1349364, longitude: 13.92615 });
   });
 
-  it("keeps preview schedule entries visibly non-production", () => {
-    expect(schedulePreview).toHaveLength(4);
+  it("keeps the homepage schedule as a longer preview carousel", () => {
+    expect(schedulePreview.length).toBeGreaterThanOrEqual(10);
     expect(schedulePreview.every(({ preview }) => preview)).toBe(true);
-    expect(schedulePreview.map(({ team }) => team)).toEqual([
+    expect(schedulePreview.slice(0, 4).map(({ team }) => team)).toEqual([
       "A tým",
       "Žáci",
       "Přípravka",
       "Areál",
     ]);
+    expect(schedulePreview.at(-1)).toMatchObject({
+      date: "23. 8.",
+      opponent: "Volný blok areálu",
+    });
   });
 
-  it("uses honest first-look news instead of invented match reports", () => {
+  it("uses prerelease-ready news items with temporary media", () => {
     expect(newsPreview[0]).toMatchObject({
       date: "23. 6. 2026",
       category: "Klub",
       title: "Nové místo pro Baník Rynholec vzniká",
     });
-    expect(newsPreview).toHaveLength(3);
+    expect(newsPreview.length).toBeGreaterThanOrEqual(6);
+    expect(newsPreview.map(({ title }) => title)).toContain("A tým zvládl domácí utkání");
+    expect(newsPreview.every(({ image }) => image.startsWith("/images/placeholders/"))).toBe(true);
+  });
+
+  it("provides three gallery images for every facility group", () => {
+    expect(galleryItems).toHaveLength(facilities.length * 3);
+    for (const facility of facilities) {
+      expect(galleryItems.filter(({ category }) => category === facility.name)).toHaveLength(3);
+    }
   });
 
   it("keeps facility availability informational instead of active booking", () => {

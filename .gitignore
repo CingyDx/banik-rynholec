@@ -8,6 +8,8 @@ coverage/
 playwright-report/
 test-results/
 tmp/
+.tmp/
+outputs/
 
 .env
 .env.*
@@ -16,4 +18,3 @@ tmp/
 *.log
 .DS_Store
 Thumbs.db
-

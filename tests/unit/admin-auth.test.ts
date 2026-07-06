@@ -7,6 +7,7 @@ import {
   shouldUseSecureCookie,
   verifySessionToken,
 } from "../../netlify/functions/_shared/admin-auth";
+import { jsonResponse } from "../../netlify/functions/_shared/http";
 
 const secret = "test-secret-that-is-long-enough";
 const now = new Date("2026-07-01T12:00:00Z");
@@ -47,5 +48,15 @@ describe("admin auth helpers", () => {
 
     await expect(verifySessionToken(tampered, secret, now)).resolves.toBeNull();
     await expect(verifySessionToken(token, secret, expiredAt)).resolves.toBeNull();
+  });
+
+  it("adds baseline security headers to JSON API responses", () => {
+    const response = jsonResponse({ ok: true });
+
+    expect(response.headers.get("Content-Type")).toBe("application/json; charset=utf-8");
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+    expect(response.headers.get("X-Content-Type-Options")).toBe("nosniff");
+    expect(response.headers.get("X-Frame-Options")).toBe("DENY");
+    expect(response.headers.get("Referrer-Policy")).toBe("no-referrer");
   });
 });

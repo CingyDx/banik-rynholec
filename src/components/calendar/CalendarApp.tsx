@@ -4,6 +4,7 @@ import {
   Download,
   FileUp,
   ListFilter,
+  LockKeyhole,
   Plus,
   RotateCcw,
   Save,
@@ -15,7 +16,6 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import {
   calendarResources,
-  calendarSeedEvents,
   calendarStatuses,
   type CalendarEvent,
   type CalendarResourceId,
@@ -56,8 +56,8 @@ const defaultDraft: EventDraft = {
   title: "Nový zápis",
   resourceId: "football",
   status: "čeká na schválení",
-  start: "2026-06-29T14:00",
-  end: "2026-06-29T16:00",
+  start: "2026-07-01T14:00",
+  end: "2026-07-01T16:00",
   contactName: "Jan Novák",
   contactValue: "+420 777 123 456",
   note: "Nový ruční zápis do kalendáře.",
@@ -65,9 +65,9 @@ const defaultDraft: EventDraft = {
 
 export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const isAdmin = mode === "admin";
-  const [events, setEvents] = useState<CalendarEvent[]>(() => [...calendarSeedEvents]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [view, setView] = useState<CalendarView>("month");
-  const [cursor, setCursor] = useState(() => new Date("2026-06-24T12:00:00"));
+  const [cursor, setCursor] = useState(() => new Date("2026-07-01T12:00:00"));
   const [activeResources, setActiveResources] = useState<Set<CalendarResourceId>>(
     () => new Set(calendarResources.map((resource) => resource.id)),
   );
@@ -79,6 +79,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
     isAdmin ? "Kalendář připraven k úpravám." : "Kalendář připraven k prohlížení.",
   );
   const [isReady, setIsReady] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -87,13 +88,18 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
 
     async function loadEvents() {
       try {
-        const response = await fetch("/api/calendar", { credentials: "same-origin" });
+        const response = await fetch("/api/calendar", { cache: "no-store", credentials: "same-origin" });
         if (!response.ok) {
           return;
         }
         const payload = (await response.json()) as { events?: CalendarEvent[] };
         if (isMounted && Array.isArray(payload.events)) {
           setEvents(payload.events);
+          const firstRelevantDate = pickRelevantCalendarDate(payload.events);
+          if (firstRelevantDate) {
+            setCursor(firstRelevantDate);
+            setDraft((current) => createDraftForDate(firstRelevantDate, current));
+          }
           setMessage("Kalendář načtený.");
         }
       } catch {
@@ -148,13 +154,17 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
     setActiveStatuses((current) => toggleSet(current, status));
   }
 
-  async function persistEvents(nextEvents: CalendarEvent[], successMessage: string) {
+  async function persistEvents(nextEvents: CalendarEvent[], successMessage: string): Promise<boolean> {
+    const previousEvents = events;
     setEvents(nextEvents);
 
     if (!isAdmin) {
       setMessage(successMessage);
-      return;
+      return true;
     }
+
+    setIsSaving(true);
+    setMessage("Ukládám změny...");
 
     try {
       const response = await fetch("/api/calendar", {
@@ -170,13 +180,19 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
       if (Array.isArray(payload.events)) {
         setEvents(payload.events);
       }
+      notifyCalendarUpdated();
       setMessage(successMessage);
+      return true;
     } catch (error) {
+      setEvents(previousEvents);
       setMessage(error instanceof Error ? error.message : "Kalendář se nepodařilo uložit.");
+      return false;
+    } finally {
+      setIsSaving(false);
     }
   }
 
-  function submitDraft() {
+  async function submitDraft() {
     if (!isAdmin) {
       return;
     }
@@ -188,28 +204,34 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
       resourceGroup: resource.group,
     };
     const nextEvents = [...events, event];
-    void persistEvents(nextEvents, "Zápis přidán a uložen.");
-    setSelectedId(event.id);
+    const saved = await persistEvents(nextEvents, "Zápis přidán a uložen.");
+    if (saved) {
+      setSelectedId(null);
+    }
   }
 
-  function updateSelectedEvent(updated: CalendarEvent) {
+  async function updateSelectedEvent(updated: CalendarEvent) {
     if (!isAdmin) {
       return;
     }
     const resource = calendarResources.find((item) => item.id === updated.resourceId) ?? calendarResources[0];
     const normalized = { ...updated, resourceLabel: resource.label, resourceGroup: resource.group };
     const nextEvents = events.map((event) => (event.id === normalized.id ? normalized : event));
-    void persistEvents(nextEvents, "Změna uložena.");
-    setSelectedId(normalized.id);
+    const saved = await persistEvents(nextEvents, "Změna uložena.");
+    if (saved) {
+      setSelectedId(null);
+    }
   }
 
-  function deleteSelectedEvent() {
+  async function deleteSelectedEvent() {
     if (!selectedEvent || !isAdmin) {
       return;
     }
     const nextEvents = events.filter((event) => event.id !== selectedEvent.id);
-    void persistEvents(nextEvents, "Zápis odstraněn.");
-    setSelectedId(null);
+    const saved = await persistEvents(nextEvents, "Zápis odstraněn.");
+    if (saved) {
+      setSelectedId(null);
+    }
   }
 
   function downloadXlsx(bytes: Uint8Array, filename: string) {
@@ -233,8 +255,8 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   }
 
   function exportTemplateXlsx() {
-    downloadXlsx(exportCalendarTemplateToXlsx(), "banik-rynholec-kalendar-sablona.xlsx");
-    setMessage("Excel šablona stažená.");
+    downloadXlsx(exportCalendarTemplateToXlsx(), "banik-rynholec-kalendar-rocni-sablona.xlsx");
+    setMessage("Roční Excel šablona stažená.");
   }
 
   async function importFile(file: File | undefined) {
@@ -243,16 +265,18 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
     }
     try {
       const imported = await importCalendarEventsFromFile(file);
-      setSelectedId(null);
-      setQuery("");
-      setView("month");
-      setActiveResources(new Set(calendarResources.map((resource) => resource.id)));
-      setActiveStatuses(new Set(calendarStatuses));
       const firstImportedDate = imported[0] ? new Date(imported[0].start) : null;
-      if (firstImportedDate && !Number.isNaN(firstImportedDate.getTime())) {
-        setCursor(firstImportedDate);
+      const saved = await persistEvents(imported, `Importováno ${imported.length} zápisů z Excel/CSV souboru.`);
+      if (saved) {
+        setSelectedId(null);
+        setQuery("");
+        setView("month");
+        setActiveResources(new Set(calendarResources.map((resource) => resource.id)));
+        setActiveStatuses(new Set(calendarStatuses));
+        if (firstImportedDate && !Number.isNaN(firstImportedDate.getTime())) {
+          setCursor(firstImportedDate);
+        }
       }
-      await persistEvents(imported, `Importováno ${imported.length} zápisů z Excel/CSV souboru.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Import se nepodařil.");
     } finally {
@@ -263,7 +287,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   }
 
   function resetData() {
-    void persistEvents([...calendarSeedEvents], "Ukázková data obnovena.");
+    void persistEvents([], "Kalendář byl vyčištěn.");
     setSelectedId(null);
   }
 
@@ -340,11 +364,11 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
               </button>
             </div>
 
-            {isAdmin && (
+            {isAdmin ? (
               <div className="calendar-actions">
                 <button className="utility-button" onClick={exportTemplateXlsx} type="button">
                   <Download aria-hidden="true" size={17} />
-                  Stáhnout šablonu
+                  Stáhnout roční šablonu
                 </button>
                 <button className="utility-button" onClick={() => fileInputRef.current?.click()} type="button">
                   <FileUp aria-hidden="true" size={17} />
@@ -354,7 +378,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
                   <Download aria-hidden="true" size={17} />
                   Export Excel
                 </button>
-                <button className="utility-button" onClick={resetData} type="button">
+                <button className="utility-button" disabled={isSaving} onClick={resetData} type="button">
                   <RotateCcw aria-hidden="true" size={17} />
                   Reset
                 </button>
@@ -366,6 +390,13 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
                   type="file"
                 />
               </div>
+            ) : (
+              <div className="calendar-actions calendar-actions-public">
+                <a className="utility-button calendar-admin-link" href="/admin">
+                  <LockKeyhole aria-hidden="true" size={17} />
+                  Administrace
+                </a>
+              </div>
             )}
           </div>
 
@@ -376,7 +407,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
                   <h2 id="new-booking">Nový zápis</h2>
                   <p>Zadejte nový zápis ručně, nebo nahrajte připravený Excel od správce areálu.</p>
                 </div>
-                <DraftForm draft={draft} onChange={setDraft} onSubmit={submitDraft} />
+                <DraftForm draft={draft} isSaving={isSaving} onChange={setDraft} onSubmit={() => void submitDraft()} />
               </section>
             )}
 
@@ -392,8 +423,9 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
           event={selectedEvent}
           editable={isAdmin}
           onClose={() => setSelectedId(null)}
-          onDelete={deleteSelectedEvent}
-          onSave={updateSelectedEvent}
+          isSaving={isSaving}
+          onDelete={() => void deleteSelectedEvent()}
+          onSave={(event) => void updateSelectedEvent(event)}
         />
       )}
     </section>
@@ -411,13 +443,25 @@ function FilterGroup({ children, title }: { children: ReactNode; title: string }
 
 function DraftForm({
   draft,
+  isSaving,
   onChange,
   onSubmit,
 }: {
   draft: EventDraft;
+  isSaving: boolean;
   onChange: (draft: EventDraft) => void;
   onSubmit: () => void;
 }) {
+  const durationHours = getDurationHours(draft.start, draft.end);
+
+  function updateStart(start: string) {
+    onChange({ ...draft, start, end: addHoursToDateTime(start, durationHours) });
+  }
+
+  function updateDuration(hours: number) {
+    onChange({ ...draft, end: addHoursToDateTime(draft.start, hours) });
+  }
+
   return (
     <div className="draft-grid">
       <TextField label="Název" value={draft.title} onChange={(value) => onChange({ ...draft, title: value })} />
@@ -433,8 +477,8 @@ function DraftForm({
         onChange={(value) => onChange({ ...draft, status: value as CalendarStatus })}
         options={calendarStatuses.map((status) => ({ value: status, label: statusLabels[status] }))}
       />
-      <TextField label="Začátek" type="datetime-local" value={draft.start} onChange={(value) => onChange({ ...draft, start: value })} />
-      <TextField label="Konec" type="datetime-local" value={draft.end} onChange={(value) => onChange({ ...draft, end: value })} />
+      <DateTimeField label="Začátek" value={draft.start} onChange={updateStart} />
+      <DurationField value={durationHours} onChange={updateDuration} />
       <TextField
         label="Kontakt"
         value={draft.contactValue}
@@ -449,9 +493,9 @@ function DraftForm({
         <span>Poznámka</span>
         <textarea value={draft.note} onChange={(event) => onChange({ ...draft, note: event.target.value })} rows={3} />
       </label>
-      <button className="save-button" onClick={onSubmit} type="button">
+      <button className="save-button" disabled={isSaving} onClick={onSubmit} type="button">
         <Plus aria-hidden="true" size={18} />
-        Přidat zápis
+        {isSaving ? "Ukládám..." : "Přidat zápis"}
       </button>
     </div>
   );
@@ -559,17 +603,28 @@ function EventPill({ event, onSelect }: { event: CalendarEvent; onSelect: (id: s
 function EventDetail({
   editable,
   event,
+  isSaving,
   onClose,
   onDelete,
   onSave,
 }: {
   editable: boolean;
   event: CalendarEvent;
+  isSaving: boolean;
   onClose: () => void;
   onDelete: () => void;
   onSave: (event: CalendarEvent) => void;
 }) {
   const [draft, setDraft] = useState(event);
+  const durationHours = getDurationHours(draft.start, draft.end);
+
+  function updateStart(start: string) {
+    setDraft({ ...draft, start, end: addHoursToDateTime(start, durationHours) });
+  }
+
+  function updateDuration(hours: number) {
+    setDraft({ ...draft, end: addHoursToDateTime(draft.start, hours) });
+  }
 
   return (
     <div className="event-overlay" role="presentation">
@@ -605,20 +660,8 @@ function EventDetail({
             onChange={(value) => setDraft({ ...draft, status: value as CalendarStatus })}
             options={calendarStatuses.map((status) => ({ value: status, label: statusLabels[status] }))}
           />
-          <TextField
-            disabled={!editable}
-            label="Začátek"
-            type="datetime-local"
-            value={draft.start}
-            onChange={(value) => setDraft({ ...draft, start: value })}
-          />
-          <TextField
-            disabled={!editable}
-            label="Konec"
-            type="datetime-local"
-            value={draft.end}
-            onChange={(value) => setDraft({ ...draft, end: value })}
-          />
+          <DateTimeField disabled={!editable} label="Začátek" value={draft.start} onChange={updateStart} />
+          <DurationField disabled={!editable} value={durationHours} onChange={updateDuration} />
           <TextField disabled={!editable} label="Jméno" value={draft.contactName} onChange={(value) => setDraft({ ...draft, contactName: value })} />
           <TextField disabled={!editable} label="Kontakt" value={draft.contactValue} onChange={(value) => setDraft({ ...draft, contactValue: value })} />
           <label className="field field-wide">
@@ -634,13 +677,13 @@ function EventDetail({
 
         {editable && (
           <footer>
-            <button className="delete-button" onClick={onDelete} type="button">
+            <button className="delete-button" disabled={isSaving} onClick={onDelete} type="button">
               <Trash2 aria-hidden="true" size={17} />
-              Smazat
+              {isSaving ? "Mazání..." : "Smazat"}
             </button>
-            <button className="save-button" onClick={() => onSave(draft)} type="button">
+            <button className="save-button" disabled={isSaving} onClick={() => onSave(draft)} type="button">
               <Save aria-hidden="true" size={17} />
-              Uložit změny
+              {isSaving ? "Ukládám..." : "Uložit změny"}
             </button>
           </footer>
         )}
@@ -667,6 +710,84 @@ function TextField({
       <span>{label}</span>
       <input disabled={disabled} type={type} value={value} onChange={(event) => onChange(event.target.value)} />
     </label>
+  );
+}
+
+function DateTimeField({
+  disabled = false,
+  label,
+  onChange,
+  value,
+}: {
+  disabled?: boolean;
+  label: string;
+  onChange: (value: string) => void;
+  value: string;
+}) {
+  const [text, setText] = useState(() => formatCzechDateTime(value));
+
+  useEffect(() => {
+    setText(formatCzechDateTime(value));
+  }, [value]);
+
+  function commit(nextText: string) {
+    const parsed = parseCzechDateTime(nextText);
+    if (parsed) {
+      onChange(parsed);
+      setText(formatCzechDateTime(parsed));
+      return;
+    }
+    setText(formatCzechDateTime(value));
+  }
+
+  return (
+    <label className="field">
+      <span>{label}</span>
+      <input
+        disabled={disabled}
+        inputMode="numeric"
+        onBlur={(event) => commit(event.target.value)}
+        onChange={(event) => {
+          const nextText = event.target.value;
+          setText(nextText);
+          const parsed = parseCzechDateTime(nextText);
+          if (parsed) {
+            onChange(parsed);
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            commit(event.currentTarget.value);
+          }
+        }}
+        placeholder="01.07.2026 14:00"
+        type="text"
+        value={text}
+      />
+    </label>
+  );
+}
+
+function DurationField({
+  disabled = false,
+  onChange,
+  value,
+}: {
+  disabled?: boolean;
+  onChange: (value: number) => void;
+  value: number;
+}) {
+  return (
+    <SelectField
+      disabled={disabled}
+      label="Délka"
+      value={String(value)}
+      onChange={(nextValue) => onChange(Number(nextValue))}
+      options={Array.from({ length: 10 }, (_, index) => {
+        const hours = index + 1;
+        return { value: String(hours), label: `+${hours} h` };
+      })}
+    />
   );
 }
 
@@ -729,6 +850,131 @@ function sameDay(left: Date, right: Date): boolean {
 function createWeekLabel(date: Date): string {
   const days = getWeekDays(date);
   return `${dayFormatter.format(days[0]!)} - ${fullDateFormatter.format(days[6]!)}`;
+}
+
+function pickRelevantCalendarDate(events: readonly CalendarEvent[]): Date | null {
+  const dates = events
+    .map((event) => dateFromInputDateTime(event.start))
+    .filter((date): date is Date => date !== null)
+    .sort((a, b) => a.getTime() - b.getTime());
+  if (dates.length === 0) {
+    return null;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return dates.find((date) => date.getTime() >= today.getTime()) ?? dates[0] ?? null;
+}
+
+function createDraftForDate(date: Date, current: EventDraft = defaultDraft): EventDraft {
+  const startDate = new Date(date);
+  startDate.setHours(14, 0, 0, 0);
+  const start = toInputDateTime(startDate);
+  const duration = getDurationHours(current.start, current.end);
+  return {
+    ...current,
+    start,
+    end: addHoursToDateTime(start, duration),
+  };
+}
+
+function formatCzechDateTime(value: string): string {
+  const date = dateFromInputDateTime(value);
+  if (!date) {
+    return value;
+  }
+  return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function parseCzechDateTime(value: string): string | null {
+  const trimmed = value.trim().replace(/\s+/g, " ");
+  const czechMatch = /^(\d{1,2})\.(\d{1,2})\.?\s*(\d{4})\s+(\d{1,2}):(\d{2})$/.exec(trimmed);
+  if (czechMatch) {
+    const [, day, month, year, hour, minute] = czechMatch;
+    return datePartsToInputDateTime(Number(year), Number(month), Number(day), Number(hour), Number(minute));
+  }
+
+  const isoMatch = /^(\d{4})-(\d{1,2})-(\d{1,2})[ T](\d{1,2}):(\d{2})/.exec(trimmed);
+  if (isoMatch) {
+    const [, year, month, day, hour, minute] = isoMatch;
+    return datePartsToInputDateTime(Number(year), Number(month), Number(day), Number(hour), Number(minute));
+  }
+
+  return null;
+}
+
+function getDurationHours(start: string, end: string): number {
+  const startDate = dateFromInputDateTime(start);
+  const endDate = dateFromInputDateTime(end);
+  if (!startDate || !endDate) {
+    return 2;
+  }
+
+  const diffHours = Math.round((endDate.getTime() - startDate.getTime()) / 3_600_000);
+  return clampDuration(diffHours);
+}
+
+function addHoursToDateTime(start: string, hours: number): string {
+  const startDate = dateFromInputDateTime(start) ?? new Date();
+  const next = new Date(startDate);
+  next.setHours(next.getHours() + clampDuration(hours), next.getMinutes(), 0, 0);
+  return toInputDateTime(next);
+}
+
+function dateFromInputDateTime(value: string): Date | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(value);
+  if (!match) {
+    return null;
+  }
+  const [, year, month, day, hour, minute] = match;
+  return datePartsToDate(Number(year), Number(month), Number(day), Number(hour), Number(minute));
+}
+
+function datePartsToInputDateTime(year: number, month: number, day: number, hour: number, minute: number): string | null {
+  const date = datePartsToDate(year, month, day, hour, minute);
+  return date ? toInputDateTime(date) : null;
+}
+
+function datePartsToDate(year: number, month: number, day: number, hour: number, minute: number): Date | null {
+  if (month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+    return null;
+  }
+
+  const date = new Date(year, month - 1, day, hour, minute, 0, 0);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day ||
+    date.getHours() !== hour ||
+    date.getMinutes() !== minute
+  ) {
+    return null;
+  }
+  return date;
+}
+
+function toInputDateTime(date: Date): string {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function clampDuration(hours: number): number {
+  if (!Number.isFinite(hours)) {
+    return 2;
+  }
+  return Math.min(10, Math.max(1, hours));
+}
+
+function pad(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+function notifyCalendarUpdated() {
+  try {
+    window.localStorage.setItem("banik-calendar-updated", String(Date.now()));
+    window.dispatchEvent(new Event("banik-calendar-updated"));
+  } catch {
+    // Local storage can be blocked; saving still succeeded on the server.
+  }
 }
 
 function formatTimeRange(event: CalendarEvent): string {

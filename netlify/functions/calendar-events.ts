@@ -10,10 +10,8 @@ export default async (req: Request, _context: Context) => {
     try {
       return jsonResponse({ events: await readCalendarEventsFromStore() });
     } catch (error) {
-      return jsonResponse(
-        { error: error instanceof Error ? error.message : "Kalendář se nepodařilo načíst." },
-        { status: 500 },
-      );
+      console.error("Calendar read failed", error);
+      return jsonResponse({ error: "Kalendář se nepodařilo načíst." }, { status: 500 });
     }
   }
 
@@ -36,10 +34,8 @@ export default async (req: Request, _context: Context) => {
 
     return jsonResponse({ events: await writeCalendarEventsToStore(normalized) });
   } catch (error) {
-    return jsonResponse(
-      { error: error instanceof Error ? error.message : "Kalendář se nepodařilo uložit." },
-      { status: 500 },
-    );
+    console.error("Calendar write failed", error);
+    return jsonResponse({ error: "Kalendář se nepodařilo uložit." }, { status: 500 });
   }
 };
 

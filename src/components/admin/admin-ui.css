@@ -1,6 +1,8 @@
 .admin-app {
   width: 100%;
-  background: var(--color-paper);
+  background:
+    linear-gradient(180deg, #eef2ee 0%, var(--color-white) 360px),
+    var(--color-white);
 }
 
 .admin-login-shell {
@@ -23,6 +25,7 @@
   padding: clamp(1.4rem, 4vw, 2rem);
   border: 1px solid var(--color-line);
   background: var(--color-white);
+  box-shadow: var(--shadow-soft);
 }
 
 .admin-eyebrow {
@@ -105,11 +108,11 @@
 }
 
 .admin-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 3rem max(1rem, calc((100vw - var(--container-width)) / 2)) 2rem;
+  gap: 2rem;
+  padding: 3.5rem max(1.5rem, calc((100vw - var(--container)) / 2)) 2.75rem;
   background: var(--color-black);
   color: var(--color-white);
 }
@@ -120,26 +123,63 @@
 
 .admin-section-heading {
   display: grid;
-  grid-template-columns: minmax(240px, 0.45fr) minmax(0, 1fr);
-  gap: 2rem;
-  padding: 2rem max(1rem, calc((100vw - var(--container-width)) / 2));
+  grid-template-columns: minmax(260px, 0.38fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  width: min(calc(100% - 3rem), 1500px);
+  margin-inline: auto;
+  padding-block: 2.5rem 1.5rem;
 }
 
 .admin-section-heading h2 {
   font-size: clamp(2.2rem, 5vw, 4rem);
 }
 
+.admin-app .calendar-app {
+  padding-block: 1.5rem var(--space-8);
+  background: transparent;
+}
+
+.admin-app .calendar-shell-v2 {
+  width: min(calc(100% - 3rem), 1500px);
+  grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+  gap: 2.25rem;
+}
+
 @media (max-width: 760px) {
-  .admin-header,
+  .admin-login-shell {
+    min-height: auto;
+    place-items: start center;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  .admin-header {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 1.25rem;
+    padding: 2.25rem 1rem;
+  }
+
   .admin-section-heading {
-    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-block: 2rem 1rem;
   }
 
   .admin-logout {
-    width: 100%;
+    width: fit-content;
   }
 
   .admin-login h1 {
     font-size: clamp(2.45rem, 16vw, 3.4rem);
+  }
+
+  .admin-section-heading,
+  .admin-app .calendar-shell-v2 {
+    width: min(calc(100% - 2rem), var(--container));
+  }
+
+  .admin-app .calendar-shell-v2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }

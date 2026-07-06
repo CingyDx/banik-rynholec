@@ -16,6 +16,7 @@ describe("CalendarApp modes", () => {
     render(<CalendarApp mode="public" />);
 
     expect(await screen.findByLabelText("Správa kalendáře")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Administrace/i })).toHaveAttribute("href", "/admin");
     expect(screen.queryByRole("button", { name: /Import Excel/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Export Excel/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Nový zápis" })).not.toBeInTheDocument();
@@ -25,7 +26,7 @@ describe("CalendarApp modes", () => {
     render(<CalendarApp mode="admin" />);
 
     expect(await screen.findByLabelText("Správa kalendáře")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Stáhnout šablonu/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Stáhnout roční šablonu/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Import Excel/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Export Excel/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Nový zápis" })).toBeInTheDocument();

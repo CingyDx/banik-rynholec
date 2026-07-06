@@ -1,4 +1,6 @@
 ---
+import { ClientRouter } from "astro:transitions";
+
 import Footer from "../components/public/Footer.astro";
 import Header from "../components/public/Header.astro";
 import "../styles/global.css";
@@ -24,6 +26,7 @@ const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník
     <meta name="theme-color" content="#090b09" />
     <link rel="icon" type="image/png" href="/images/club-logo.png" />
     <title>{pageTitle}</title>
+    <ClientRouter fallback="animate" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Přejít na obsah</a>
@@ -32,6 +35,106 @@ const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník
       <slot />
     </main>
     <Footer />
+    <script>
+      const revealSelector = [
+        ".page-hero .container > *",
+        ".schedule-heading",
+        ".schedule-card",
+        ".team-heading",
+        ".team-item",
+        ".facility-copy",
+        ".facility-collage",
+        ".facility-item",
+        ".news-heading",
+        ".news-item",
+        ".contact-layout > *",
+        ".footer-main > *",
+        ".club-intro > *",
+        ".club-metrics article",
+        ".system-grid article",
+        ".next-content > *",
+        ".team-page-item",
+        ".note-inner > *",
+        ".areal-intro > *",
+        ".operations-strip article",
+        ".areal-list article",
+        ".gallery-grid figure",
+        ".news-feature > *",
+        ".news-page-item",
+        ".editorial-inner > *",
+        ".contact-page > *",
+        ".contact-grid article",
+      ].join(",");
+
+      let revealObserver: IntersectionObserver | null = null;
+
+      function initPageMotion() {
+        document.documentElement.classList.add("has-motion-js");
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          return;
+        }
+
+        revealObserver?.disconnect();
+        revealObserver = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                revealObserver?.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
+        );
+
+        const targets = Array.from(document.querySelectorAll(revealSelector));
+        for (const [index, target] of targets.entries()) {
+          if (!(target instanceof HTMLElement) || target.dataset.revealReady === "true") continue;
+          target.dataset.revealReady = "true";
+          target.style.setProperty("--reveal-delay", `${Math.min((index % 8) * 55, 330)}ms`);
+          target.classList.add("reveal-ready");
+
+          const rect = target.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            target.classList.add("is-visible");
+            continue;
+          }
+
+          revealObserver.observe(target);
+        }
+      }
+
+      function initHeaderState() {
+        const header = document.querySelector(".site-header");
+        if (!(header instanceof HTMLElement)) return;
+
+        const update = () => {
+          header.classList.toggle("is-scrolled", window.scrollY > 24);
+        };
+
+        update();
+        window.removeEventListener("scroll", update);
+        window.addEventListener("scroll", update, { passive: true });
+      }
+
+      document.addEventListener("astro:before-preparation", () => {
+        document.documentElement.classList.add("is-routing");
+      });
+
+      document.addEventListener("astro:after-swap", () => {
+        document.documentElement.classList.remove("is-routing");
+        window.scrollTo(0, 0);
+      });
+
+      document.addEventListener("astro:page-load", () => {
+        initHeaderState();
+        initPageMotion();
+      });
+
+      initHeaderState();
+      initPageMotion();
+    </script>
   </body>
 </html>
 

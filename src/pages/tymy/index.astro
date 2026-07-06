@@ -57,10 +57,10 @@ const icons = {
 
   <section class="team-note">
     <div class="container note-inner">
-      <h2>Obsah týmů je připravený na reálná data</h2>
-      <p>Jakmile klub dodá přesné trenéry, časy a kontakty, doplní se do jednotlivých kategorií.</p>
-      <a class="command" href="/kontakt">
-        Poslat podklady <ArrowRight aria-hidden="true" size={18} />
+      <h2>Program týmů v kalendáři</h2>
+      <p>Zápasy, tréninky a obsazenost areálu jsou vedené v jednom společném přehledu.</p>
+      <a class="command" href="/kalendar">
+        Otevřít kalendář <ArrowRight aria-hidden="true" size={18} />
       </a>
     </div>
   </section>
@@ -78,6 +78,7 @@ const icons = {
     min-height: 380px;
     border: 1px solid var(--color-line);
     background: var(--color-white);
+    box-shadow: 0 18px 50px rgb(9 11 9 / 7%);
   }
 
   .team-visual {
@@ -87,8 +88,8 @@ const icons = {
     place-items: center;
     overflow: hidden;
     background:
-      linear-gradient(135deg, rgba(47, 135, 63, 0.92), rgba(32, 95, 48, 0.92)),
-      url("/images/sportovni-areal-secondary.jpg") center / cover;
+      linear-gradient(135deg, rgba(47, 135, 63, 0.9), rgba(32, 95, 48, 0.92)),
+      url("/images/placeholders/football-2.svg?v=2") center / cover;
   }
 
   .team-visual::after {

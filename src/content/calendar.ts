@@ -42,7 +42,7 @@ export const calendarStatuses = [
 export const calendarSeedEvents = [
   {
     id: "evt-001",
-    title: "A tým vs. Lorem FC",
+    title: "A tým vs. SK Lány",
     resourceId: "team-a",
     resourceLabel: "A tým",
     resourceGroup: "Týmy",
@@ -51,7 +51,7 @@ export const calendarSeedEvents = [
     end: "2026-06-24T19:00",
     contactName: "Jan Novák",
     contactValue: "+420 777 123 456",
-    note: "Ukázkový zápas v kalendáři.",
+    note: "Domácí mistrovské utkání.",
   },
   {
     id: "evt-002",
@@ -64,7 +64,7 @@ export const calendarSeedEvents = [
     end: "2026-06-25T18:00",
     contactName: "Petr Svoboda",
     contactValue: "mladez@banikrynholec.cz",
-    note: "Integer posuere erat a ante.",
+    note: "Pravidelný trénink mládežnické kategorie.",
   },
   {
     id: "evt-003",
@@ -77,7 +77,7 @@ export const calendarSeedEvents = [
     end: "2026-06-26T20:00",
     contactName: "Klára Veselá",
     contactValue: "+420 777 654 321",
-    note: "Consectetur adipiscing elit.",
+    note: "Soukromý blok sauny.",
   },
   {
     id: "evt-004",
@@ -90,7 +90,7 @@ export const calendarSeedEvents = [
     end: "2026-06-27T12:00",
     contactName: "TJ Baník Rynholec",
     contactValue: "info@banikrynholec.cz",
-    note: "Praesent commodo cursus magna.",
+    note: "Volný blok pro domluvu se správcem.",
   },
   {
     id: "evt-005",
@@ -102,8 +102,8 @@ export const calendarSeedEvents = [
     start: "2026-06-28T15:00",
     end: "2026-06-28T18:00",
     contactName: "Martin Dvořák",
-    contactValue: "martin@example.com",
-    note: "Aenean lacinia bibendum nulla sed consectetur.",
+    contactValue: "spravce@banikrynholec.cz",
+    note: "Klubové zázemí rezervované pro domluvenou akci.",
   },
   {
     id: "evt-006",
@@ -116,7 +116,7 @@ export const calendarSeedEvents = [
     end: "2026-06-30T19:00",
     contactName: "Lucie Horáková",
     contactValue: "+420 777 987 654",
-    note: "Donec ullamcorper nulla non metus auctor.",
+    note: "Kondiční příprava.",
   },
   {
     id: "evt-007",
@@ -129,6 +129,6 @@ export const calendarSeedEvents = [
     end: "2026-07-04T12:00",
     contactName: "TJ Baník Rynholec",
     contactValue: "info@banikrynholec.cz",
-    note: "Cras mattis consectetur purus sit amet.",
+    note: "Přátelský zápas A týmu.",
   },
 ] as const satisfies readonly CalendarEvent[];

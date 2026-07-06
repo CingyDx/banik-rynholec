@@ -2,7 +2,6 @@ import { getStore } from "@netlify/blobs";
 
 import {
   calendarResources,
-  calendarSeedEvents,
   calendarStatuses,
   type CalendarEvent,
   type CalendarResource,
@@ -30,8 +29,7 @@ export function normalizeCalendarEventsForStorage(input: unknown): CalendarEvent
 export async function readCalendarEventsFromStore(): Promise<CalendarEvent[]> {
   const store = getStore({ name: calendarStore, consistency: "strong" });
   const stored = await store.get(calendarKey, { type: "json" });
-  const events = normalizeCalendarEventsForStorage(readStoredEvents(stored));
-  return events.length > 0 ? events : [...calendarSeedEvents];
+  return normalizeCalendarEventsForStorage(readStoredEvents(stored));
 }
 
 export async function writeCalendarEventsToStore(events: readonly CalendarEvent[]): Promise<CalendarEvent[]> {

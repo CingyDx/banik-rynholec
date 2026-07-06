@@ -12,7 +12,9 @@ import PublicLayout from "../layouts/PublicLayout.astro";
   <section class="content-band">
     <div class="container contact-page">
       <article class="map-card">
-        <img src="/images/sportovni-areal-secondary.jpg" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+        <div class="map-image media-frame">
+          <img src="/images/placeholders/football-3.svg?v=2" alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
+        </div>
         <div>
           <span class="contact-label">Adresa</span>
           <h2>{club.address}</h2>
@@ -28,19 +30,19 @@ import PublicLayout from "../layouts/PublicLayout.astro";
           <Phone aria-hidden="true" size={26} strokeWidth={1.8} />
           <span class="contact-label">Telefon</span>
           <h2>+420 777 123 456</h2>
-          <p>Kontaktní telefon bude nahrazený finálním číslem správce nebo klubu.</p>
+          <p>Hlavní kontakt pro dotazy ke klubu, týmům a domluvě v areálu.</p>
         </article>
         <article>
           <Mail aria-hidden="true" size={26} strokeWidth={1.8} />
           <span class="contact-label">E-mail</span>
           <h2>info@banikrynholec.cz</h2>
-          <p>Klubový e-mail bude doplněný podle finální domluvy.</p>
+          <p>E-mail pro zprávy klubu, fotky do galerie a podklady k aktualitám.</p>
         </article>
         <article class="wide">
           <ShieldCheck aria-hidden="true" size={26} strokeWidth={1.8} />
           <span class="contact-label">Správa areálu</span>
-          <h2>Kontaktní místo</h2>
-          <p>Provozní informace a obsazenost areálu budou navázané na klubový kalendář.</p>
+          <h2>Správce areálu</h2>
+          <p>Provozní informace a obsazenost hřiště najdete v klubovém kalendáři.</p>
         </article>
       </div>
     </div>
@@ -57,15 +59,16 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
   .map-card {
     border: 1px solid var(--color-line);
+    background: var(--color-white);
+    box-shadow: 0 18px 50px rgb(9 11 9 / 7%);
   }
 
-  .map-card img {
-    width: 100%;
+  .map-image {
     min-height: 360px;
-    object-fit: cover;
+    border: 0;
   }
 
-  .map-card div {
+  .map-card div:not(.map-image) {
     padding: 2rem;
   }
 
@@ -81,6 +84,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
     padding: 1.5rem;
     border-right: 1px solid var(--color-line);
     border-bottom: 1px solid var(--color-line);
+    background: var(--color-white);
   }
 
   .contact-grid .wide {
@@ -123,7 +127,7 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       grid-column: auto;
     }
 
-    .map-card img {
+    .map-image {
       min-height: 240px;
     }
   }

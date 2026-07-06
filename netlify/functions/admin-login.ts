@@ -34,10 +34,8 @@ export default async (req: Request, _context: Context) => {
       },
     );
   } catch (error) {
-    return jsonResponse(
-      { error: error instanceof Error ? error.message : "Přihlášení se nepodařilo." },
-      { status: 500 },
-    );
+    console.error("Admin login failed", error);
+    return jsonResponse({ error: "Přihlášení se nepodařilo." }, { status: 500 });
   }
 };
 

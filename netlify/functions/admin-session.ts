@@ -29,10 +29,8 @@ export default async (req: Request, _context: Context) => {
       { status: session ? 200 : 401 },
     );
   } catch (error) {
-    return jsonResponse(
-      { error: error instanceof Error ? error.message : "Session nejde ověřit." },
-      { status: 500 },
-    );
+    console.error("Admin session check failed", error);
+    return jsonResponse({ error: "Session nejde ověřit." }, { status: 500 });
   }
 };
 

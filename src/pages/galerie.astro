@@ -1,79 +1,174 @@
 ---
+import { ArrowRight } from "lucide-react";
+
 import PageHero from "../components/public/PageHero.astro";
+import { facilities, galleryItems } from "../content/site";
 import PublicLayout from "../layouts/PublicLayout.astro";
 
-const galleryItems = [
-  {
-    src: "/images/sportovni-areal-hero.jpg",
-    alt: "Sportovní areál TJ Baník Rynholec",
-    title: "Hřiště a areál",
-  },
-  {
-    src: "/images/sportovni-areal-secondary.jpg",
-    alt: "Sportovní areál Rynholec - zázemí",
-    title: "Zázemí klubu",
-  },
-  {
-    src: "/images/sportovni-areal-hero.jpg",
-    alt: "Fotbalové hřiště v Rynholci",
-    title: "Program a zápasy",
-  },
-  {
-    src: "/images/sportovni-areal-secondary.jpg",
-    alt: "Areál TJ Baník Rynholec",
-    title: "Klubové prostředí",
-  },
-];
+const galleryGroups = facilities.map((facility) => ({
+  facility,
+  items: galleryItems.filter((item) => item.category === facility.name),
+}));
 ---
 
 <PublicLayout title="Galerie" description="Fotky areálu a klubového zázemí TJ Baník Rynholec.">
-  <PageHero title="Galerie" description="Fotky areálu, hřiště a klubového zázemí. Další snímky půjde doplnit podle podkladů klubu." />
+  <PageHero title="Galerie" description="Fotky areálu, hřiště a klubového zázemí přehledně rozdělené podle prostor." />
 
-  <section class="content-band">
-    <div class="container gallery-grid" aria-label="Galerie fotek">
-      {galleryItems.map((item) => (
-        <figure>
-          <img src={item.src} alt={item.alt} width="450" height="253" loading="lazy" />
-          <figcaption>{item.title}</figcaption>
-        </figure>
-      ))}
-    </div>
+  <section class="content-band gallery-band">
+    {galleryGroups.map(({ facility, items }) => (
+      <section class="container gallery-group" id={facility.id} aria-labelledby={`gallery-${facility.id}`}>
+        <div class="group-heading">
+          <div>
+            <span>{facility.bookingLabel}</span>
+            <h2 id={`gallery-${facility.id}`}>{facility.name}</h2>
+          </div>
+          <p>{facility.description}</p>
+          <a class="text-link" href={`/areal#${facility.id}`}>
+            Detail prostoru
+            <ArrowRight aria-hidden="true" size={18} />
+          </a>
+        </div>
+
+        <div class="gallery-grid" aria-label={`${facility.name} - fotky`}>
+          {items.map((item, index) => (
+            <figure class:list={["gallery-card", { "is-featured": index === 0 }]}>
+              <img src={item.src} alt={item.alt} width="1200" height="750" loading={index === 0 ? "eager" : "lazy"} />
+              <figcaption>
+                <span>{facility.bookingLabel}</span>
+                <strong>{item.title}</strong>
+                <small>{item.note}</small>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    ))}
   </section>
 </PublicLayout>
 
 <style>
-  .gallery-grid {
+  .gallery-band {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    gap: clamp(3rem, 6vw, 5rem);
   }
 
-  figure {
-    margin: 0;
-    border: 1px solid var(--color-line);
-    background: var(--color-white);
+  .gallery-group {
+    display: grid;
+    gap: 1.4rem;
   }
 
-  img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
+  .group-heading {
+    display: grid;
+    grid-template-columns: minmax(250px, 0.55fr) minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: end;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--color-line);
   }
 
-  figcaption {
-    padding: 1rem;
-    color: var(--color-green-deep);
+  .group-heading span,
+  .gallery-card span {
+    color: var(--color-green);
     font-family: var(--font-display);
-    font-size: 1.4rem;
     font-weight: 700;
-    line-height: 1;
     text-transform: uppercase;
   }
 
-  @media (max-width: 720px) {
+  .group-heading h2 {
+    margin: 0.55rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4.3rem);
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+
+  .group-heading p {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) repeat(2, minmax(0, 0.92fr));
+    gap: 1rem;
+  }
+
+  .gallery-card {
+    position: relative;
+    min-height: 320px;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    background: var(--color-black);
+    box-shadow: 0 18px 50px rgb(9 11 9 / 8%);
+    transition:
+      box-shadow var(--transition-medium),
+      transform var(--transition-medium);
+  }
+
+  .gallery-card.is-featured {
+    min-height: 390px;
+  }
+
+  .gallery-card:hover {
+    box-shadow: 0 28px 76px rgb(9 11 9 / 18%);
+    transform: translateY(-5px);
+  }
+
+  .gallery-card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.92;
+    transform: scale(1.01);
+    transition:
+      opacity var(--transition-medium),
+      transform var(--transition-medium);
+  }
+
+  .gallery-card:hover img {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+
+  .gallery-card figcaption {
+    position: absolute;
+    inset: auto 0 0;
+    display: grid;
+    gap: 0.45rem;
+    padding: 1.2rem;
+    background: linear-gradient(180deg, transparent, rgb(4 7 5 / 92%) 24%, #040705);
+    color: var(--color-white);
+  }
+
+  .gallery-card strong {
+    font-family: var(--font-display);
+    font-size: clamp(1.55rem, 2.4vw, 2.25rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .gallery-card small {
+    color: #c8d0ca;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 980px) {
+    .group-heading,
     .gallery-grid {
       grid-template-columns: 1fr;
+    }
+
+    .group-heading .text-link {
+      justify-self: start;
+    }
+
+    .gallery-card,
+    .gallery-card.is-featured {
+      min-height: 280px;
     }
   }
 </style>

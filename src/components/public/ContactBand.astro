@@ -26,12 +26,29 @@ import { club } from "../../content/site";
 
 <style>
   .contact-band {
+    position: relative;
+    overflow: hidden;
     padding-block: var(--space-5);
-    background: var(--color-green-deep);
+    background:
+      linear-gradient(90deg, var(--color-green-deep), var(--color-green)),
+      var(--color-green-deep);
     color: var(--color-white);
   }
 
+  .contact-band::after {
+    position: absolute;
+    right: -4rem;
+    bottom: -5rem;
+    width: 240px;
+    height: 260px;
+    background: linear-gradient(90deg, transparent 0 28%, rgb(255 255 255 / 16%) 28% 48%, transparent 48% 58%, rgb(255 255 255 / 10%) 58% 78%, transparent 78%);
+    content: "";
+    transform: skewX(-30deg);
+  }
+
   .contact-layout {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;

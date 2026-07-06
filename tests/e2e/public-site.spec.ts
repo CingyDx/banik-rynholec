@@ -37,31 +37,30 @@ test("gallery and creator credit are visible", async ({ page }) => {
   await page.goto("/galerie");
 
   await expect(page.getByRole("heading", { name: "Galerie" })).toBeVisible();
-  await expect(page.getByRole("img", { name: /Sportovní areál/i }).first()).toBeVisible();
+  await expect(page.getByRole("img", { name: /Fotbalové hřiště/i }).first()).toBeVisible();
 
   const creator = page.getByRole("link", { name: /Cingy\.Tech/ });
   await expect(creator).toHaveAttribute("href", "https://cingy.tech");
 });
 
-test("calendar supports public read-only views and event details", async ({ page }) => {
+test("calendar supports public read-only empty views", async ({ page }) => {
   await page.goto("/kalendar");
 
   await expect(page.getByRole("heading", { level: 1, name: "Kalendář" })).toBeVisible();
   await expect(page.getByLabel("Správa kalendáře")).toBeVisible();
   await expect(page.locator(".calendar-app[data-ready='true']")).toBeVisible();
+  await expect(page.locator(".filter-count")).toContainText("0");
   await expect(page.getByRole("heading", { name: "Nový zápis" })).toBeHidden();
   await expect(page.getByRole("button", { name: "Import Excel" })).toBeHidden();
   await expect(page.getByRole("button", { name: "Export Excel" })).toBeHidden();
+  await expect(page.getByRole("link", { name: "Administrace" })).toHaveAttribute("href", "/admin");
 
   await page.getByRole("button", { name: "Týden" }).click();
   await expect(page.getByLabel("Týdenní zobrazení")).toBeVisible();
 
   await page.getByRole("button", { name: "Seznam" }).click();
   await expect(page.getByLabel("Seznamové zobrazení")).toBeVisible();
-
-  await page.getByRole("button", { name: /A tým vs\. Lorem FC/ }).first().click();
-  await expect(page.getByRole("dialog", { name: "Detail události" })).toBeVisible();
-  await page.getByRole("button", { name: "Zavřít detail" }).click();
+  await expect(page.getByText("Žádný zápis neodpovídá aktuálním filtrům.")).toBeVisible();
 });
 
 test("navigation and layout work at the current viewport", async ({ page }, testInfo) => {

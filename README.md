@@ -4,7 +4,7 @@ Public club website and simple calendar administration for TJ Banik Rynholec.
 
 ## Status
 
-The project is in the local prototype phase. The current target is a lightweight club website with an informational calendar, one shared admin login, manual web edits, and Excel import/export.
+The project is in the local prerelease 0.1 phase. The current target is a lightweight club website with an informational calendar, one shared admin login, manual calendar edits, and Excel import/export.
 
 ## Links
 
@@ -28,9 +28,10 @@ npm run test:e2e
 For local testing with Netlify Functions and the `/admin` login, run Netlify Dev with local-only credentials:
 
 ```powershell
-$env:BANIK_ADMIN_USERNAME="admin"
-$env:BANIK_ADMIN_PASSWORD="admin"
+$env:BANIK_ADMIN_USERNAME="banikrynholec"
+$env:BANIK_ADMIN_PASSWORD="local-only-password"
 $env:BANIK_SESSION_SECRET="local-development-secret-change-in-netlify"
+$env:ASTRO_DEV_BACKGROUND="0"
 npx netlify dev --offline --no-open --command "npx astro dev --host 127.0.0.1 --port 4321" --target-port 4321 --port 8888 --functions netlify/functions
 ```
 
@@ -41,7 +42,7 @@ Open `http://localhost:8888` for the full local app. The plain Astro server is u
 The `/admin` area uses one shared administrator account configured in Netlify environment variables:
 
 ```bash
-BANIK_ADMIN_USERNAME=admin
+BANIK_ADMIN_USERNAME=banikrynholec
 BANIK_ADMIN_PASSWORD=change-me
 BANIK_SESSION_SECRET=replace-with-a-long-random-secret
 ```

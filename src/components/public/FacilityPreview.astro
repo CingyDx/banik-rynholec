@@ -12,31 +12,45 @@ const icons = {
 };
 ---
 
-<section class="facility-section">
+<section class="facility-section section-surface">
   <div class="container facility-lead">
     <div class="facility-copy">
       <h2 class="section-title">Sportovní areál</h2>
       <div class="section-rule"></div>
-      <p>Přehled hřiště, zázemí, posilovny, sauny a klubovny pro návštěvníky i členy klubu.</p>
+      <p class="section-copy">
+        Hřiště, zázemí, posilovna, sauna a klubovna v jednom přehledu pro návštěvníky i správce areálu.
+      </p>
       <a class="command" href="/areal">Prohlédnout areál <ArrowRight aria-hidden="true" size={18} /></a>
     </div>
-    <img
-      src="/images/sportovni-areal-secondary.jpg"
-      alt="Sportovní areál TJ Baník Rynholec"
-      width="450"
-      height="253"
-      loading="lazy"
-    />
+
+    <div class="facility-collage" aria-label="Fotky sportovního areálu">
+      <figure class="collage-main media-frame">
+        <img
+          src="/images/placeholders/football-2.svg?v=2"
+          alt="Sportovní areál TJ Baník Rynholec"
+          width="450"
+          height="253"
+          loading="lazy"
+        />
+      </figure>
+      <figure class="collage-side media-frame">
+        <img src="/images/placeholders/sauna-2.svg?v=2" alt="" width="450" height="253" loading="lazy" />
+      </figure>
+      <figure class="collage-side media-frame">
+        <img src="/images/placeholders/clubhouse-2.svg?v=2" alt="" width="450" height="253" loading="lazy" />
+      </figure>
+    </div>
   </div>
+
   <div class="container facility-list">
     {facilities.map((facility) => {
       const Icon = icons[facility.id];
       return (
         <a class="facility-item" href={`/areal#${facility.id}`}>
           <Icon aria-hidden="true" size={27} strokeWidth={1.8} />
+          <span>{facility.bookingLabel}</span>
           <h3>{facility.name}</h3>
           <p>{facility.description}</p>
-          <span>{facility.capacity}</span>
           <ArrowRight aria-hidden="true" size={18} />
         </a>
       );
@@ -46,123 +60,151 @@ const icons = {
 
 <style>
   .facility-section {
-    padding-block: var(--space-7);
-    background: var(--color-white);
+    padding-block: var(--space-8);
+    background:
+      linear-gradient(180deg, #0b0f0b 0%, #070907 100%);
+    color: var(--color-white);
+  }
+
+  .facility-section .section-copy {
+    color: #c4ccc6;
   }
 
   .facility-lead {
     display: grid;
-    grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.6fr);
-    align-items: stretch;
-    gap: 3rem;
+    grid-template-columns: minmax(260px, 0.56fr) minmax(0, 1fr);
+    gap: 3.5rem;
+    align-items: center;
   }
 
-  .facility-copy {
-    padding-block: 1rem;
+  .facility-copy .command {
+    margin-top: 2rem;
+    color: var(--color-white);
   }
 
-  .facility-copy p {
-    max-width: 340px;
-    margin: 1.5rem 0 2rem;
-    color: var(--color-muted);
+  .facility-collage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(160px, 0.65fr);
+    grid-template-rows: repeat(2, minmax(160px, 1fr));
+    gap: 1rem;
+    min-height: 470px;
   }
 
-  .facility-lead > img {
-    width: 100%;
-    min-height: 360px;
-    object-fit: cover;
+  .facility-collage figure {
+    margin: 0;
+  }
+
+  .collage-main {
+    grid-row: 1 / span 2;
   }
 
   .facility-list {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    margin-top: 2.5rem;
-    border-top: 1px solid var(--color-line);
+    gap: 0;
+    margin-top: 3.5rem;
+    border-top: 1px solid #283029;
+    border-left: 1px solid #283029;
   }
 
   .facility-item {
-    min-height: 230px;
-    padding: 1.75rem 1.5rem 1.25rem;
-    border-right: 1px solid var(--color-line);
+    display: grid;
+    min-height: 250px;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border-right: 1px solid #283029;
+    border-bottom: 1px solid #283029;
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 4%), rgb(255 255 255 / 1%)),
+      #0f140f;
+    transition:
+      background var(--transition-fast),
+      transform var(--transition-medium),
+      box-shadow var(--transition-medium);
   }
 
-  .facility-item:first-child {
-    border-left: 1px solid var(--color-line);
+  .facility-item:hover {
+    background: #111811;
+    box-shadow: 0 22px 60px rgb(0 0 0 / 24%);
+    transform: translateY(-4px);
   }
 
   .facility-item > svg {
-    color: var(--color-green);
+    color: var(--color-green-bright);
   }
 
-  .facility-item h3 {
-    margin: 1.2rem 0 0.65rem;
+  .facility-item span {
+    color: var(--color-green-bright);
     font-family: var(--font-display);
-    font-size: 1.55rem;
+    font-size: 0.95rem;
+    font-weight: 700;
     line-height: 1;
     text-transform: uppercase;
   }
 
-  .facility-item p {
-    min-height: 92px;
-    margin: 0 0 1rem;
-    color: var(--color-muted);
-    font-size: 0.86rem;
-  }
-
-  .facility-item span {
-    display: block;
-    min-height: 36px;
-    margin-bottom: 1rem;
-    color: var(--color-green-deep);
-    font-size: 0.75rem;
-    font-weight: 700;
-    line-height: 1.35;
+  .facility-item h3 {
+    margin: 0;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 0.95;
     text-transform: uppercase;
   }
 
-  @media (max-width: 900px) {
-    .facility-lead {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
+  .facility-item p {
+    margin: 0 0 0.5rem;
+    color: #b9c2bb;
+    font-size: 0.9rem;
+  }
 
-    .facility-lead > img {
-      min-height: 260px;
-    }
+  .facility-item > svg:last-child {
+    margin-top: auto;
+    transition: transform var(--transition-fast);
+  }
 
+  .facility-item:hover > svg:last-child {
+    transform: translateX(5px);
+  }
+
+  @media (max-width: 1050px) {
     .facility-list {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+  }
 
-    .facility-item:nth-child(odd) {
-      border-left: 1px solid var(--color-line);
+  @media (max-width: 820px) {
+    .facility-section {
+      padding-block: var(--space-6);
+    }
+
+    .facility-lead,
+    .facility-collage {
+      grid-template-columns: 1fr;
+    }
+
+    .facility-collage {
+      min-height: 0;
+      grid-template-rows: auto;
+    }
+
+    .collage-main {
+      grid-row: auto;
+      min-height: 290px;
+    }
+
+    .collage-side {
+      min-height: 190px;
     }
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 560px) {
     .facility-list {
       grid-template-columns: 1fr;
     }
 
-    .facility-item,
-    .facility-item:nth-child(odd) {
-      min-height: 0;
-      border-right: 0;
-      border-bottom: 1px solid var(--color-line);
-      border-left: 0;
-    }
-
-    .facility-item:first-child {
-      border-left: 0;
-    }
-
-    .facility-item p {
-      min-height: 0;
-    }
-
-    .facility-item span {
+    .facility-item {
       min-height: 0;
     }
   }
 </style>
-

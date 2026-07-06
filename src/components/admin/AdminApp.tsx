@@ -5,6 +5,13 @@ import CalendarApp from "../calendar/CalendarApp";
 import "./admin-ui.css";
 
 type AuthState = "checking" | "anonymous" | "authenticated";
+type AdminApiPayload = {
+  error?: string;
+  username?: string;
+};
+
+const localAdminApiMessage =
+  "Administrace se připojí po spuštění Netlify režimu nebo na nasazeném webu.";
 
 export default function AdminApp() {
   const [authState, setAuthState] = useState<AuthState>("checking");
@@ -47,7 +54,10 @@ export default function AdminApp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-      const payload = (await response.json()) as { error?: string };
+      const payload = await readAdminApiPayload(response);
+      if (!payload) {
+        throw new Error(localAdminApiMessage);
+      }
       if (!response.ok) {
         throw new Error(payload.error ?? "Přihlášení se nepodařilo.");
       }
@@ -127,11 +137,25 @@ export default function AdminApp() {
       <div className="admin-section-heading">
         <h2>Kalendář a Excel</h2>
         <p>
-          Rudla může stáhnout šablonu, vyplnit ji mimo internet a později ji tady nahrát zpět přes Import Excel.
+          Rudla může stáhnout roční šablonu, zapisovat akce po měsících mimo internet a později ji tady nahrát
+          zpět přes Import Excel.
         </p>
       </div>
 
       <CalendarApp mode="admin" />
     </section>
   );
+}
+
+async function readAdminApiPayload(response: Response): Promise<AdminApiPayload | null> {
+  const contentType = response.headers.get("Content-Type") ?? "";
+  if (contentType.toLowerCase().includes("text/html")) {
+    return null;
+  }
+
+  try {
+    return (await response.json()) as AdminApiPayload;
+  } catch {
+    return null;
+  }
 }
