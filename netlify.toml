@@ -11,6 +11,66 @@
   targetPort = 4321
   framework = "#custom"
 
+[[redirects]]
+  from = "/.env"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.env/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.env.*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.aws/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.git/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/wp-admin/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/wp-login.php"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/xmlrpc.php"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/composer.json"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/composer.lock"
+  to = "/"
+  status = 404
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
