@@ -19,7 +19,6 @@ describe("public site content", () => {
       { label: "Týmy", href: "/tymy" },
       { label: "Novinky", href: "/novinky" },
       { label: "Galerie", href: "/galerie" },
-      { label: "Kalendář", href: "/kalendar" },
       { label: "Areál", href: "/areal" },
       { label: "Kontakt", href: "/kontakt" },
     ]);

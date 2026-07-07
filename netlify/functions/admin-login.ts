@@ -3,6 +3,12 @@ import type { Config, Context } from "@netlify/functions";
 import { createSessionCookie, createSessionToken, shouldUseSecureCookie } from "./_shared/admin-auth";
 import { getRequiredEnv } from "./_shared/env";
 import { jsonResponse, methodNotAllowed } from "./_shared/http";
+import {
+  checkLoginRateLimit,
+  clearLoginRateLimit,
+  getRetryAfterMessage,
+  recordFailedLogin,
+} from "./_shared/login-rate-limit";
 
 const maxAgeSeconds = 60 * 60 * 8;
 
@@ -20,10 +26,25 @@ export default async (req: Request, _context: Context) => {
     const expectedPassword = getRequiredEnv("BANIK_ADMIN_PASSWORD");
     const sessionSecret = getRequiredEnv("BANIK_SESSION_SECRET");
 
+    const rateLimit = await checkLoginRateLimit(req, username, sessionSecret);
+    if (!rateLimit.allowed) {
+      return jsonResponse(
+        { error: getRetryAfterMessage(rateLimit.retryAfterSeconds) },
+        {
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
+          status: 429,
+        },
+      );
+    }
+
     if (username !== expectedUsername || password !== expectedPassword) {
+      await recordFailedLogin(req, username, sessionSecret);
       return jsonResponse({ error: "Neplatné přihlašovací údaje." }, { status: 401 });
     }
 
+    await clearLoginRateLimit(req, username, sessionSecret);
     const token = await createSessionToken({ username, secret: sessionSecret, maxAgeSeconds });
     return jsonResponse(
       { username },

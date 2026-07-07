@@ -227,6 +227,10 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
     if (!selectedEvent || !isAdmin) {
       return;
     }
+    const confirmed = window.confirm(`Opravdu smazat záznam „${selectedEvent.title}“? Tato změna se hned uloží do kalendáře.`);
+    if (!confirmed) {
+      return;
+    }
     const nextEvents = events.filter((event) => event.id !== selectedEvent.id);
     const saved = await persistEvents(nextEvents, "Zápis odstraněn.");
     if (saved) {
@@ -633,6 +637,7 @@ function EventDetail({
           <div>
             <span className={`status-badge ${statusTone[draft.status]}`}>{statusLabels[draft.status]}</span>
             <h2 id="event-detail-title">Detail události</h2>
+            {editable && <p className="detail-hint">Tady může admin záznam upravit, uložit nebo smazat.</p>}
           </div>
           <button aria-label="Zavřít detail" onClick={onClose} type="button">
             <X aria-hidden="true" size={22} />

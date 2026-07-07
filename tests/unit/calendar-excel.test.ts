@@ -77,8 +77,8 @@ describe("calendar Excel import/export", () => {
     expect(firstMonthXml).toContain("Prostor");
     expect(firstMonthXml).toContain("Stav");
     expect(firstMonthXml).toContain("Poznámka");
-    expect(julyXml).toContain("2026-07-01");
-    expect(julyXml).toContain("2026-07-31");
+    expect(julyXml).toContain("01.07.2026");
+    expect(julyXml).toContain("31.07.2026");
   });
 
   it("keeps the blank full-year template import-safe until real rows are filled", async () => {
@@ -117,7 +117,7 @@ describe("calendar Excel import/export", () => {
         "2 ID",
       ].join(";"),
       [
-        "2026-07-01",
+        "01.07.2026",
         "st",
         "",
         "",
@@ -185,6 +185,27 @@ describe("calendar Excel import/export", () => {
         status: "zápas",
         start: "2026-07-03T08:00",
         end: "2026-07-03T10:00",
+      }),
+    ]);
+  });
+
+  it("imports Czech date values from flat table exports", async () => {
+    const csv = [
+      "ID;Název;Prostor;Skupina;Stav;Začátek;Konec;Kontakt jméno;Kontakt;Poznámka",
+      "cz-1;Sauna večer;Sauna;Areál;obsazeno;07.08.2026 18:00;07.08.2026 20:00;Rudla;+420 777 123 456;Český zápis data",
+    ].join("\n");
+    const file = new File([csv], "kalendar-cesky-datum.csv", { type: "text/csv" });
+
+    const imported = await importCalendarEventsFromFile(file);
+
+    expect(imported).toEqual([
+      expect.objectContaining({
+        id: "cz-1",
+        title: "Sauna večer",
+        resourceId: "sauna",
+        status: "obsazeno",
+        start: "2026-08-07T18:00",
+        end: "2026-08-07T20:00",
       }),
     ]);
   });

@@ -204,7 +204,7 @@ function createMonthWorksheet(monthIndex: number, sheetName: string, days: numbe
 
   for (let day = 1; day <= days; day += 1) {
     const date = new Date(calendarTemplateYear, monthIndex, day);
-    const dateValue = toDateOnly(date);
+    const dateValue = toCzechDateOnly(date);
     rows.push([dateValue, weekdays[date.getDay()], ...Array.from({ length: totalColumns - dayColumnCount }, () => "")]);
   }
 
@@ -560,6 +560,11 @@ function normalizeDateTime(value: string): string {
     return trimmed.slice(0, 16);
   }
 
+  const czechDateTime = parseCzechDateTime(trimmed);
+  if (czechDateTime) {
+    return czechDateTime;
+  }
+
   const parsed = new Date(trimmed);
   if (!Number.isNaN(parsed.getTime())) {
     return toInputDateTime(parsed);
@@ -578,6 +583,10 @@ function normalizeDateOnly(value: string): string {
   const trimmed = value.trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
     return trimmed;
+  }
+  const czechDate = parseCzechDateOnly(trimmed);
+  if (czechDate) {
+    return czechDate;
   }
   const parsed = new Date(trimmed);
   if (!Number.isNaN(parsed.getTime())) {
@@ -601,6 +610,40 @@ function toInputDateTime(date: Date): string {
 
 function toDateOnly(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function toCzechDateOnly(date: Date): string {
+  return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`;
+}
+
+function parseCzechDateTime(value: string): string {
+  const match = /^(\d{1,2})\.\s*(\d{1,2})\.?\s*(\d{4})\s+(\d{1,2}):(\d{2})/.exec(value);
+  if (!match) {
+    return "";
+  }
+  const date = buildDateOnly(match[1]!, match[2]!, match[3]!);
+  const hour = Number(match[4]);
+  const minute = Number(match[5]);
+  if (!date || hour > 23 || minute > 59) {
+    return "";
+  }
+  return `${date}T${pad(hour)}:${pad(minute)}`;
+}
+
+function parseCzechDateOnly(value: string): string {
+  const match = /^(\d{1,2})\.\s*(\d{1,2})\.?\s*(\d{4})$/.exec(value);
+  return match ? buildDateOnly(match[1]!, match[2]!, match[3]!) : "";
+}
+
+function buildDateOnly(dayValue: string, monthValue: string, yearValue: string): string {
+  const day = Number(dayValue);
+  const month = Number(monthValue);
+  const year = Number(yearValue);
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return "";
+  }
+  return `${year}-${pad(month)}-${pad(day)}`;
 }
 
 function pad(value: number): string {

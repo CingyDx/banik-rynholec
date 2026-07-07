@@ -137,7 +137,8 @@
   width: 11px;
   height: 11px;
   border-radius: 999px;
-  background: currentColor;
+  background: var(--status-color, currentColor);
+  box-shadow: 0 0 0 3px var(--status-ring, transparent);
 }
 
 .filter-count {
@@ -559,8 +560,10 @@ a.utility-button {
   align-items: center;
   justify-content: center;
   padding-inline: 0.55rem;
-  border: 1px solid currentColor;
+  border: 1px solid var(--status-color, currentColor);
   border-radius: var(--radius-small);
+  background: var(--status-bg, transparent);
+  color: var(--status-color, currentColor);
   font-family: var(--font-display);
   font-size: 0.78rem;
   font-style: normal;
@@ -571,43 +574,53 @@ a.utility-button {
 }
 
 .is-free {
-  color: var(--color-green);
+  --status-bg: #e8f8ee;
+  --status-border: #24a34a;
+  --status-color: #168039;
+  --status-ring: rgb(36 163 74 / 18%);
+  color: var(--status-color);
 }
 
 .is-booked {
-  color: #7d382d;
+  --status-bg: #fff0ed;
+  --status-border: #df3f2f;
+  --status-color: #b51f17;
+  --status-ring: rgb(223 63 47 / 18%);
+  color: var(--status-color);
 }
 
 .is-training {
-  color: #235f89;
+  --status-bg: #eaf5ff;
+  --status-border: #1479bf;
+  --status-color: #075d95;
+  --status-ring: rgb(20 121 191 / 18%);
+  color: var(--status-color);
 }
 
 .is-match {
-  color: #735c00;
+  --status-bg: #fff7d6;
+  --status-border: #d7a100;
+  --status-color: #8a6200;
+  --status-ring: rgb(215 161 0 / 20%);
+  color: var(--status-color);
 }
 
 .is-pending {
-  color: #8b5d13;
+  --status-bg: #f5edff;
+  --status-border: #8b45d9;
+  --status-color: #6720a8;
+  --status-ring: rgb(139 69 217 / 18%);
+  color: var(--status-color);
 }
 
-.event-pill.is-free {
-  background: #f2faf1;
-}
-
-.event-pill.is-booked {
-  background: #fff6f3;
-}
-
-.event-pill.is-training {
-  background: #f1f7fb;
-}
-
-.event-pill.is-match {
-  background: #fff9df;
-}
-
+.event-pill.is-free,
+.event-pill.is-booked,
+.event-pill.is-training,
+.event-pill.is-match,
 .event-pill.is-pending {
-  background: #fff8ec;
+  border-color: var(--status-border);
+  border-left-color: var(--status-color);
+  background: var(--status-bg);
 }
 
 .empty-state {
@@ -653,6 +666,12 @@ a.utility-button {
 .event-detail h2 {
   margin-top: 0.75rem;
   font-size: 2.35rem;
+}
+
+.detail-hint {
+  margin: 0.55rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.92rem;
 }
 
 .event-detail > header > button {

@@ -80,7 +80,6 @@ export const navigation = [
   { label: "Týmy", href: "/tymy" },
   { label: "Novinky", href: "/novinky" },
   { label: "Galerie", href: "/galerie" },
-  { label: "Kalendář", href: "/kalendar" },
   { label: "Areál", href: "/areal" },
   { label: "Kontakt", href: "/kontakt" },
 ] as const satisfies readonly NavigationItem[];
