@@ -3,6 +3,10 @@ import AdminApp from "../components/admin/AdminApp";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
-<PublicLayout title="Administrace" description="Jednoduchá správa kalendáře TJ Baník Rynholec.">
+<PublicLayout
+  title="Administrace"
+  description="Jednoduchá správa kalendáře TJ Baník Rynholec."
+  robots="noindex,nofollow"
+>
   <AdminApp client:load />
 </PublicLayout>

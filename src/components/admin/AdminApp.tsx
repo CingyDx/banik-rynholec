@@ -136,10 +136,6 @@ export default function AdminApp() {
 
       <div className="admin-section-heading">
         <h2>Kalendář a Excel</h2>
-        <p>
-          Rudla může stáhnout roční šablonu, zapisovat akce po měsících mimo internet a později ji tady nahrát
-          zpět přes Import Excel.
-        </p>
       </div>
 
       <CalendarApp mode="admin" />

@@ -52,28 +52,17 @@ const statusTone: Record<CalendarStatus, string> = {
   "čeká na schválení": "is-pending",
 };
 
-const defaultDraft: EventDraft = {
-  title: "Nový zápis",
-  resourceId: "football",
-  status: "čeká na schválení",
-  start: "2026-07-01T14:00",
-  end: "2026-07-01T16:00",
-  contactName: "Jan Novák",
-  contactValue: "+420 777 123 456",
-  note: "Nový ruční zápis do kalendáře.",
-};
-
 export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const isAdmin = mode === "admin";
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [view, setView] = useState<CalendarView>("month");
-  const [cursor, setCursor] = useState(() => new Date("2026-07-01T12:00:00"));
+  const [cursor, setCursor] = useState(createInitialCalendarDate);
   const [activeResources, setActiveResources] = useState<Set<CalendarResourceId>>(
     () => new Set(calendarResources.map((resource) => resource.id)),
   );
   const [activeStatuses, setActiveStatuses] = useState<Set<CalendarStatus>>(() => new Set(calendarStatuses));
   const [query, setQuery] = useState("");
-  const [draft, setDraft] = useState<EventDraft>(defaultDraft);
+  const [draft, setDraft] = useState<EventDraft>(() => createDefaultDraft());
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [message, setMessage] = useState(() =>
     isAdmin ? "Kalendář připraven k úpravám." : "Kalendář připraven k prohlížení.",
@@ -95,11 +84,6 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
         const payload = (await response.json()) as { events?: CalendarEvent[] };
         if (isMounted && Array.isArray(payload.events)) {
           setEvents(payload.events);
-          const firstRelevantDate = pickRelevantCalendarDate(payload.events);
-          if (firstRelevantDate) {
-            setCursor(firstRelevantDate);
-            setDraft((current) => createDraftForDate(firstRelevantDate, current));
-          }
           setMessage("Kalendář načtený.");
         }
       } catch {
@@ -518,8 +502,9 @@ function MonthView({
     <section className="month-view" aria-label="Měsíční zobrazení">
       {days.map((day) => {
         const dayEvents = events.filter((event) => sameDay(new Date(event.start), day));
+        const cellClassName = sameDay(day, new Date()) ? "month-cell is-today" : "month-cell";
         return (
-          <article className="month-cell" key={day.toISOString()}>
+          <article className={cellClassName} key={day.toISOString()}>
             <header>
               <span>{weekdayFormatter.format(day)}</span>
               <strong>{day.getDate()}</strong>
@@ -549,8 +534,9 @@ function WeekView({
     <section className="week-view" aria-label="Týdenní zobrazení">
       {days.map((day) => {
         const dayEvents = events.filter((event) => sameDay(new Date(event.start), day));
+        const columnClassName = sameDay(day, new Date()) ? "week-column is-today" : "week-column";
         return (
-          <article className="week-column" key={day.toISOString()}>
+          <article className={columnClassName} key={day.toISOString()}>
             <header>
               <span>{weekdayFormatter.format(day)}</span>
               <strong>{dayFormatter.format(day)}</strong>
@@ -765,7 +751,7 @@ function DateTimeField({
             commit(event.currentTarget.value);
           }
         }}
-        placeholder="01.07.2026 14:00"
+        placeholder="DD.MM.RRRR 14:00"
         type="text"
         value={text}
       />
@@ -857,29 +843,25 @@ function createWeekLabel(date: Date): string {
   return `${dayFormatter.format(days[0]!)} - ${fullDateFormatter.format(days[6]!)}`;
 }
 
-function pickRelevantCalendarDate(events: readonly CalendarEvent[]): Date | null {
-  const dates = events
-    .map((event) => dateFromInputDateTime(event.start))
-    .filter((date): date is Date => date !== null)
-    .sort((a, b) => a.getTime() - b.getTime());
-  if (dates.length === 0) {
-    return null;
-  }
-
+function createInitialCalendarDate(): Date {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return dates.find((date) => date.getTime() >= today.getTime()) ?? dates[0] ?? null;
+  today.setHours(12, 0, 0, 0);
+  return today;
 }
 
-function createDraftForDate(date: Date, current: EventDraft = defaultDraft): EventDraft {
+function createDefaultDraft(date = new Date()): EventDraft {
   const startDate = new Date(date);
   startDate.setHours(14, 0, 0, 0);
   const start = toInputDateTime(startDate);
-  const duration = getDurationHours(current.start, current.end);
   return {
-    ...current,
+    title: "Nový zápis",
+    resourceId: "football",
+    status: "čeká na schválení",
     start,
-    end: addHoursToDateTime(start, duration),
+    end: addHoursToDateTime(start, 2),
+    contactName: "Jan Novák",
+    contactValue: "+420 777 123 456",
+    note: "Nový ruční zápis do kalendáře.",
   };
 }
 

@@ -30,5 +30,16 @@ describe("CalendarApp modes", () => {
     expect(screen.getByRole("button", { name: /Import Excel/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Export Excel/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Nový zápis" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Začátek")).toHaveValue(formatExpectedTodayStart());
+    expect(document.querySelector(".month-cell.is-today strong")).toHaveTextContent(String(new Date().getDate()));
   });
 });
+
+function formatExpectedTodayStart(): string {
+  const today = new Date();
+  return `${pad(today.getDate())}.${pad(today.getMonth() + 1)}.${today.getFullYear()} 14:00`;
+}
+
+function pad(value: number): string {
+  return String(value).padStart(2, "0");
+}

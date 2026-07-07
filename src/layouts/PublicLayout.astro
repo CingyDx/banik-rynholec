@@ -4,15 +4,39 @@ import Header from "../components/public/Header.astro";
 import "../styles/global.css";
 
 type Props = {
+  canonical?: string;
   title?: string;
   description?: string;
+  image?: string;
+  robots?: string;
 };
 
 const {
+  canonical,
   title = "TJ Baník Rynholec",
-  description = "Fotbal, sport a areál pro celý Rynholec.",
+  description = "Oficiální web TJ Baník Rynholec. Fotbalový klub, sportovní areál, týmy, novinky, galerie a aktuální program v kalendáři.",
+  image = "/images/sportovni-areal-hero.jpg",
+  robots = "index,follow",
 } = Astro.props;
 const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník Rynholec`;
+const siteUrl = Astro.site ?? new URL("https://banikrynholec.cz");
+const canonicalUrl = new URL(canonical ?? Astro.url.pathname, siteUrl);
+const imageUrl = new URL(image, siteUrl);
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "SportsOrganization",
+  name: "TJ Baník Rynholec",
+  url: "https://banikrynholec.cz/",
+  logo: "https://banikrynholec.cz/images/club-logo.png",
+  image: imageUrl.toString(),
+  sport: "Football",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "U hřiště",
+    addressLocality: "Rynholec",
+    addressCountry: "CZ",
+  },
+};
 ---
 
 <!doctype html>
@@ -21,8 +45,24 @@ const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
     <meta name="theme-color" content="#090b09" />
+    <link rel="canonical" href={canonicalUrl.toString()} />
+    <link rel="image_src" href={imageUrl.toString()} />
     <link rel="icon" type="image/png" href="/images/club-logo.png" />
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TJ Baník Rynholec" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl.toString()} />
+    <meta property="og:image" content={imageUrl.toString()} />
+    <meta property="og:image:alt" content="Sportovní areál TJ Baník Rynholec" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl.toString()} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
     <title>{pageTitle}</title>
   </head>
   <body>

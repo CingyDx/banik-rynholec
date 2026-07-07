@@ -28,7 +28,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock, MapPin } from "lucide-react
         <ArrowRight aria-hidden="true" size={26} />
       </button>
       <div class="schedule-list" data-schedule-track aria-label="Nejbližší program TJ Baník Rynholec">
-        <a class="schedule-card" href="/kalendar" aria-label="Kalendář bude doplněn">
+        <a class="schedule-card" href="/kalendar" aria-label="Program klubu bude zveřejněn">
           <span class="date-block">
             <strong>TJ</strong>
             <span>Brzy</span>
@@ -39,8 +39,8 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock, MapPin } from "lucide-react
               <span><MapPin aria-hidden="true" size={15} />TJ Baník Rynholec</span>
             </span>
             <span class="event-type">Kalendář</span>
-            <strong>Program bude doplněn</strong>
-            <small>Po importu Excelu se tady zobrazí nejbližší akce</small>
+            <strong>Program bude zveřejněn</strong>
+            <small>Program klubu bude doplněn po zveřejnění rozpisu</small>
           </span>
           <ArrowRight className="row-arrow" aria-hidden="true" size={22} />
         </a>
@@ -142,7 +142,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock, MapPin } from "lucide-react
       const link = template instanceof HTMLAnchorElement ? (template.cloneNode(true) as HTMLAnchorElement) : document.createElement("a");
       link.classList.add("schedule-card");
       link.href = "/kalendar";
-      link.setAttribute("aria-label", "Kalendář bude doplněn");
+      link.setAttribute("aria-label", "Program klubu bude zveřejněn");
 
       const day = link.querySelector(".date-block strong");
       const date = link.querySelector(".date-block span");
@@ -156,8 +156,8 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock, MapPin } from "lucide-react
       if (metaItems[0]) metaItems[0].textContent = "čeká na rozpis";
       if (metaItems[1]) metaItems[1].textContent = "TJ Baník Rynholec";
       if (eventType) eventType.textContent = "Kalendář";
-      if (title) title.textContent = "Program bude doplněn";
-      if (small) small.textContent = "Po importu Excelu se tady zobrazí nejbližší akce";
+      if (title) title.textContent = "Program bude zveřejněn";
+      if (small) small.textContent = "Program klubu bude doplněn po zveřejnění rozpisu";
 
       return link;
     };

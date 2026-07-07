@@ -33,6 +33,20 @@ test("every primary public route resolves", async ({ request }) => {
   }
 });
 
+test("seo metadata points crawlers at the public homepage", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://banikrynholec.cz/");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /Oficiální web TJ Baník Rynholec/);
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "TJ Baník Rynholec");
+
+  await page.goto("/kalendar");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://banikrynholec.cz/");
+
+  await page.goto("/admin");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex,nofollow");
+});
+
 test("gallery and creator credit are visible", async ({ page }) => {
   await page.goto("/galerie");
 
