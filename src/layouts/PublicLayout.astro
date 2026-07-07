@@ -11,31 +11,53 @@ type Props = {
   robots?: string;
 };
 
+const siteName = "TJ Baník Rynholec";
+const defaultTitle = `${siteName} | Fotbalový klub a sportovní areál`;
+const defaultDescription =
+  "Oficiální web TJ Baník Rynholec. Fotbalový klub, sportovní areál v Rynholci, týmy, novinky, galerie a aktuální program areálu.";
+
 const {
   canonical,
-  title = "TJ Baník Rynholec",
-  description = "Oficiální web TJ Baník Rynholec. Fotbalový klub, sportovní areál, týmy, novinky, galerie a aktuální program v kalendáři.",
+  title = defaultTitle,
+  description = defaultDescription,
   image = "/images/sportovni-areal-hero.jpg",
   robots = "index,follow",
 } = Astro.props;
-const pageTitle = title === "TJ Baník Rynholec" ? title : `${title} | TJ Baník Rynholec`;
+const pageTitle = title === siteName || title === defaultTitle ? title : `${title} | ${siteName}`;
 const siteUrl = Astro.site ?? new URL("https://banikrynholec.cz");
 const canonicalUrl = new URL(canonical ?? Astro.url.pathname, siteUrl);
 const imageUrl = new URL(image, siteUrl);
-const organizationSchema = {
+const faviconUrl = new URL("/favicon.ico", siteUrl);
+const icon192Url = new URL("/icon-192.png", siteUrl);
+const icon512Url = new URL("/icon-512.png", siteUrl);
+const structuredData = {
   "@context": "https://schema.org",
-  "@type": "SportsOrganization",
-  name: "TJ Baník Rynholec",
-  url: "https://banikrynholec.cz/",
-  logo: "https://banikrynholec.cz/images/club-logo.png",
-  image: imageUrl.toString(),
-  sport: "Football",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "U hřiště",
-    addressLocality: "Rynholec",
-    addressCountry: "CZ",
-  },
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://banikrynholec.cz/#website",
+      name: siteName,
+      alternateName: ["Baník Rynholec", "banikrynholec.cz"],
+      url: "https://banikrynholec.cz/",
+    },
+    {
+      "@type": "SportsOrganization",
+      "@id": "https://banikrynholec.cz/#organization",
+      name: siteName,
+      alternateName: "Baník Rynholec",
+      description: defaultDescription,
+      url: "https://banikrynholec.cz/",
+      logo: icon512Url.toString(),
+      image: imageUrl.toString(),
+      sport: "Football",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "U hřiště",
+        addressLocality: "Rynholec",
+        addressCountry: "CZ",
+      },
+    },
+  ],
 };
 ---
 
@@ -49,10 +71,13 @@ const organizationSchema = {
     <meta name="theme-color" content="#090b09" />
     <link rel="canonical" href={canonicalUrl.toString()} />
     <link rel="image_src" href={imageUrl.toString()} />
-    <link rel="icon" type="image/png" href="/images/club-logo.png" />
+    <link rel="icon" href={faviconUrl.toString()} sizes="any" />
+    <link rel="icon" type="image/png" sizes="192x192" href={icon192Url.toString()} />
+    <link rel="apple-touch-icon" sizes="180x180" href={icon192Url.toString()} />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta property="og:locale" content="cs_CZ" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="TJ Baník Rynholec" />
+    <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl.toString()} />
@@ -62,7 +87,7 @@ const organizationSchema = {
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl.toString()} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <title>{pageTitle}</title>
   </head>
   <body>

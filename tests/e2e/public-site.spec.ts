@@ -38,10 +38,16 @@ test("seo metadata points crawlers at the public homepage", async ({ page }) => 
 
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://banikrynholec.cz/");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /Oficiální web TJ Baník Rynholec/);
-  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "TJ Baník Rynholec");
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+    "content",
+    "TJ Baník Rynholec | Fotbalový klub a sportovní areál",
+  );
+  await expect(page.locator('link[rel="icon"][href="https://banikrynholec.cz/favicon.ico"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/site.webmanifest");
 
   await page.goto("/kalendar");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://banikrynholec.cz/");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex,follow");
 
   await page.goto("/admin");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex,nofollow");

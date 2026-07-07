@@ -4,7 +4,12 @@ import PageHero from "../components/public/PageHero.astro";
 import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
-<PublicLayout canonical="/" title="Kalendář" description="Program zápasů, tréninků a obsazenosti areálu TJ Baník Rynholec.">
+<PublicLayout
+  canonical="/"
+  title="Kalendář"
+  description="Program zápasů, tréninků a obsazenosti areálu TJ Baník Rynholec."
+  robots="noindex,follow"
+>
   <PageHero title="Kalendář" description="Informativní přehled toho, co se v areálu děje v konkrétní den." />
   <CalendarApp client:load />
 </PublicLayout>

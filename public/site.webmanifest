@@ -1,0 +1,22 @@
+{
+  "name": "TJ Baník Rynholec",
+  "short_name": "Baník Rynholec",
+  "description": "Oficiální web TJ Baník Rynholec, fotbalového klubu a sportovního areálu v Rynholci.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#090b09",
+  "theme_color": "#2e8f42",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
