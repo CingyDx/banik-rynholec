@@ -42,7 +42,8 @@ test("seo metadata points crawlers at the public homepage", async ({ page }) => 
     "content",
     "TJ Baník Rynholec | Fotbalový klub a sportovní areál",
   );
-  await expect(page.locator('link[rel="icon"][href="https://banikrynholec.cz/favicon.ico"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="icon"][href="/favicon.ico"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="icon"][href="/icon-192.png"]')).toHaveCount(1);
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/site.webmanifest");
 
   await page.goto("/kalendar");

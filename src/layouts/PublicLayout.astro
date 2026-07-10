@@ -27,8 +27,6 @@ const pageTitle = title === siteName || title === defaultTitle ? title : `${titl
 const siteUrl = Astro.site ?? new URL("https://banikrynholec.cz");
 const canonicalUrl = new URL(canonical ?? Astro.url.pathname, siteUrl);
 const imageUrl = new URL(image, siteUrl);
-const faviconUrl = new URL("/favicon.ico", siteUrl);
-const icon192Url = new URL("/icon-192.png", siteUrl);
 const icon512Url = new URL("/icon-512.png", siteUrl);
 const structuredData = {
   "@context": "https://schema.org",
@@ -71,9 +69,10 @@ const structuredData = {
     <meta name="theme-color" content="#090b09" />
     <link rel="canonical" href={canonicalUrl.toString()} />
     <link rel="image_src" href={imageUrl.toString()} />
-    <link rel="icon" href={faviconUrl.toString()} sizes="any" />
-    <link rel="icon" type="image/png" sizes="192x192" href={icon192Url.toString()} />
-    <link rel="apple-touch-icon" sizes="180x180" href={icon192Url.toString()} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta property="og:locale" content="cs_CZ" />
     <meta property="og:type" content="website" />
