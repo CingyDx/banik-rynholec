@@ -247,6 +247,11 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
     setMessage("Roční Excel šablona stažená.");
   }
 
+  function exportFilledTemplateXlsx() {
+    downloadXlsx(exportCalendarTemplateToXlsx(events), "banik-rynholec-kalendar-vyplneny.xlsx");
+    setMessage("Vyplněný roční kalendář stažený.");
+  }
+
   async function importFile(file: File | undefined) {
     if (!file) {
       return;
@@ -354,22 +359,30 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
 
             {isAdmin ? (
               <div className="calendar-actions">
-                <button className="utility-button" onClick={exportTemplateXlsx} type="button">
-                  <Download aria-hidden="true" size={17} />
-                  Stáhnout roční šablonu
-                </button>
-                <button className="utility-button" onClick={() => fileInputRef.current?.click()} type="button">
-                  <FileUp aria-hidden="true" size={17} />
-                  Import Excel
-                </button>
-                <button className="utility-button" onClick={exportXlsx} type="button">
-                  <Download aria-hidden="true" size={17} />
-                  Export Excel
-                </button>
-                <button className="utility-button" disabled={isSaving} onClick={resetData} type="button">
-                  <RotateCcw aria-hidden="true" size={17} />
-                  Reset
-                </button>
+                <div className="calendar-action-row">
+                  <button className="utility-button" onClick={exportTemplateXlsx} type="button">
+                    <Download aria-hidden="true" size={17} />
+                    Stáhnout roční šablonu
+                  </button>
+                  <button className="utility-button utility-button-strong" onClick={exportFilledTemplateXlsx} type="button">
+                    <Download aria-hidden="true" size={17} />
+                    Stáhnout vyplněný kalendář
+                  </button>
+                </div>
+                <div className="calendar-action-row">
+                  <button className="utility-button" onClick={() => fileInputRef.current?.click()} type="button">
+                    <FileUp aria-hidden="true" size={17} />
+                    Import Excel
+                  </button>
+                  <button className="utility-button" onClick={exportXlsx} type="button">
+                    <Download aria-hidden="true" size={17} />
+                    Export Excel
+                  </button>
+                  <button className="utility-button utility-button-danger" disabled={isSaving} onClick={resetData} type="button">
+                    <RotateCcw aria-hidden="true" size={17} />
+                    Reset
+                  </button>
+                </div>
                 <input
                   accept=".xlsx,.xls,.csv"
                   hidden
@@ -399,7 +412,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
               </section>
             )}
 
-            {view === "month" && <MonthView days={monthDays} events={visibleEvents} onSelect={setSelectedId} />}
+            {view === "month" && <MonthView cursor={cursor} days={monthDays} events={visibleEvents} onSelect={setSelectedId} />}
             {view === "week" && <WeekView days={weekDays} events={visibleEvents} onSelect={setSelectedId} />}
             {view === "list" && <ListView events={visibleEvents} onSelect={setSelectedId} />}
           </div>
@@ -490,24 +503,37 @@ function DraftForm({
 }
 
 function MonthView({
+  cursor,
   days,
   events,
   onSelect,
 }: {
+  cursor: Date;
   days: Date[];
   events: CalendarEvent[];
   onSelect: (id: string) => void;
 }) {
+  const activeYear = cursor.getFullYear();
+  const activeMonth = cursor.getMonth();
+
   return (
     <section className="month-view" aria-label="Měsíční zobrazení">
       {days.map((day) => {
         const dayEvents = events.filter((event) => sameDay(new Date(event.start), day));
-        const cellClassName = sameDay(day, new Date()) ? "month-cell is-today" : "month-cell";
+        const isOutsideMonth = day.getFullYear() !== activeYear || day.getMonth() !== activeMonth;
+        const cellClassName = [
+          "month-cell",
+          sameDay(day, new Date()) ? "is-today" : "",
+          isOutsideMonth ? "is-outside-month" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
+        const dayNumberLabel = isOutsideMonth ? `${day.getDate()}. ${day.getMonth() + 1}.` : String(day.getDate());
         return (
           <article className={cellClassName} key={day.toISOString()}>
             <header>
               <span>{weekdayFormatter.format(day)}</span>
-              <strong>{day.getDate()}</strong>
+              <strong>{dayNumberLabel}</strong>
             </header>
             <div>
               {dayEvents.map((event) => (

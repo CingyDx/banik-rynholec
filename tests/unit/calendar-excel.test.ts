@@ -92,6 +92,29 @@ describe("calendar Excel import/export", () => {
     expect(imported).toEqual([]);
   });
 
+  it("exports current events into the full-year monthly template shape", async () => {
+    const bytes = exportCalendarTemplateToXlsx(calendarSeedEvents);
+    const file = new File([bytesToBlobPart(bytes)], "banik-rynholec-kalendar-vyplneny.xlsx", {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const imported = await importCalendarEventsFromFile(file);
+
+    expect(imported).toHaveLength(calendarSeedEvents.length);
+    expect(imported).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "evt-007",
+          title: "Přátelské utkání",
+          resourceId: "team-a",
+          status: "zápas",
+          start: "2026-07-04T10:00",
+          end: "2026-07-04T12:00",
+        }),
+      ]),
+    );
+  });
+
   it("imports rows written into the day-per-row monthly template shape", async () => {
     const csv = [
       [

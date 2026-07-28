@@ -178,8 +178,8 @@
 
 .calendar-toolbar {
   display: grid;
-  grid-template-columns: auto minmax(220px, 1fr) auto;
-  gap: 1rem;
+  grid-template-columns: minmax(230px, auto) minmax(280px, 0.8fr) minmax(360px, 1.2fr);
+  gap: 1.25rem;
   align-items: center;
   padding: 1rem;
   background: var(--color-black);
@@ -188,8 +188,7 @@
 }
 
 .view-switch,
-.period-control,
-.calendar-actions {
+.period-control {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -228,10 +227,14 @@
 
 .period-control {
   justify-content: center;
+  min-height: 50px;
+  padding: 0.25rem;
+  border: 1px solid #303630;
+  background: rgb(255 255 255 / 3%);
 }
 
 .period-control strong {
-  min-width: 210px;
+  min-width: 190px;
   text-align: center;
   font-size: 1.55rem;
 }
@@ -244,7 +247,15 @@
 }
 
 .calendar-actions {
+  display: grid;
+  gap: 0.55rem;
+  justify-items: end;
+}
+
+.calendar-action-row {
+  display: flex;
   flex-wrap: wrap;
+  gap: 0.5rem;
   justify-content: flex-end;
 }
 
@@ -260,6 +271,16 @@
   font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.utility-button-strong {
+  border-color: rgb(46 143 66 / 72%);
+  background: rgb(46 143 66 / 18%);
+}
+
+.utility-button-danger {
+  border-color: rgb(223 63 47 / 54%);
+  color: #ffd6d1;
 }
 
 a.utility-button {
@@ -430,6 +451,22 @@ a.utility-button {
 .month-cell.is-today header strong,
 .week-column.is-today header strong {
   color: var(--color-green);
+}
+
+.month-cell.is-outside-month {
+  background:
+    linear-gradient(180deg, rgb(9 11 9 / 3%), rgb(9 11 9 / 3%)),
+    var(--color-paper);
+  color: #717971;
+}
+
+.month-cell.is-outside-month header strong {
+  color: #8d948d;
+  font-size: 1.12rem;
+}
+
+.month-cell.is-outside-month .event-pill {
+  opacity: 0.78;
 }
 
 .month-cell header,
@@ -713,6 +750,7 @@ a.utility-button {
 
   .calendar-actions {
     grid-column: 1 / -1;
+    justify-items: start;
   }
 }
 
@@ -773,6 +811,7 @@ a.utility-button {
   }
 
   .calendar-actions,
+  .calendar-action-row,
   .view-switch {
     width: 100%;
   }
@@ -804,7 +843,7 @@ a.utility-button {
 
 @media (max-width: 480px) {
   .view-switch,
-  .calendar-actions {
+  .calendar-action-row {
     align-items: stretch;
     flex-direction: column;
   }

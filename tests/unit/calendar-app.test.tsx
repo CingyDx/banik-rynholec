@@ -27,11 +27,13 @@ describe("CalendarApp modes", () => {
 
     expect(await screen.findByLabelText("Správa kalendáře")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Stáhnout roční šablonu/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Stáhnout vyplněný kalendář/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Import Excel/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Export Excel/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Nový zápis" })).toBeInTheDocument();
     expect(screen.getByLabelText("Začátek")).toHaveValue(formatExpectedTodayStart());
     expect(document.querySelector(".month-cell.is-today strong")).toHaveTextContent(String(new Date().getDate()));
+    expect(document.querySelector(".month-cell.is-outside-month strong")).toHaveTextContent(/\d+\. \d+\./);
   });
 });
 

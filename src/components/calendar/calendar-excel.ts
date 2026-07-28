@@ -126,8 +126,8 @@ export function exportCalendarEventsToXlsx(events: readonly CalendarEvent[]): Ui
   ]);
 }
 
-export function exportCalendarTemplateToXlsx(): Uint8Array {
-  return createWorkbook(createTemplateWorksheets());
+export function exportCalendarTemplateToXlsx(events: readonly CalendarEvent[] = []): Uint8Array {
+  return createWorkbook(createTemplateWorksheets(events));
 }
 
 export async function importCalendarEventsFromFile(file: File): Promise<CalendarEvent[]> {
@@ -153,9 +153,10 @@ export async function importCalendarEventsFromFile(file: File): Promise<Calendar
   throw new Error("Soubor musí být ve formátu .xlsx, .xls nebo .csv.");
 }
 
-function createTemplateWorksheets(): WorksheetDefinition[] {
+function createTemplateWorksheets(events: readonly CalendarEvent[] = []): WorksheetDefinition[] {
   const resourceRows = calendarResources.map((resource) => [resource.label, resource.group]);
   const statusRows = calendarStatuses.map((status) => [status]);
+  const eventsByDate = groupEventsByDate(events);
 
   return [
     {
@@ -188,11 +189,16 @@ function createTemplateWorksheets(): WorksheetDefinition[] {
       frozenRows: 1,
       autoFilter: "A1:C7",
     },
-    ...calendarTemplateMonthSheets.map((month) => createMonthWorksheet(month.index, month.label, month.days)),
+    ...calendarTemplateMonthSheets.map((month) => createMonthWorksheet(month.index, month.label, month.days, eventsByDate)),
   ];
 }
 
-function createMonthWorksheet(monthIndex: number, sheetName: string, days: number): WorksheetDefinition {
+function createMonthWorksheet(
+  monthIndex: number,
+  sheetName: string,
+  days: number,
+  eventsByDate: ReadonlyMap<string, readonly CalendarEvent[]>,
+): WorksheetDefinition {
   const totalColumns = dayColumnCount + daySlotCount * daySlotFields.length;
   const lastColumn = columnIndexToName(totalColumns - 1);
   const rows: string[][] = [
@@ -205,7 +211,8 @@ function createMonthWorksheet(monthIndex: number, sheetName: string, days: numbe
   for (let day = 1; day <= days; day += 1) {
     const date = new Date(calendarTemplateYear, monthIndex, day);
     const dateValue = toCzechDateOnly(date);
-    rows.push([dateValue, weekdays[date.getDay()], ...Array.from({ length: totalColumns - dayColumnCount }, () => "")]);
+    const dayEvents = eventsByDate.get(toDateOnly(date)) ?? [];
+    rows.push(createMonthDayRow(dateValue, weekdays[date.getDay()], dayEvents, totalColumns));
   }
 
   const dataStartRow = 5;
@@ -249,6 +256,54 @@ function createMonthWorksheet(monthIndex: number, sheetName: string, days: numbe
     },
     validations,
   };
+}
+
+function createMonthDayRow(
+  dateValue: string,
+  weekday: string,
+  events: readonly CalendarEvent[],
+  totalColumns: number,
+): string[] {
+  const row = [dateValue, weekday, ...Array.from({ length: totalColumns - dayColumnCount }, () => "")];
+
+  events.slice(0, daySlotCount).forEach((event, eventIndex) => {
+    const slotStart = dayColumnCount + eventIndex * daySlotFields.length;
+    row[slotStart] = event.start.slice(11, 16);
+    row[slotStart + 1] = event.end.slice(11, 16);
+    row[slotStart + 2] = event.title;
+    row[slotStart + 3] = event.resourceLabel;
+    row[slotStart + 4] = event.status;
+    row[slotStart + 5] = event.contactName;
+    row[slotStart + 6] = event.contactValue;
+    row[slotStart + 7] = event.note;
+    row[slotStart + 8] = event.id;
+  });
+
+  return row;
+}
+
+function groupEventsByDate(events: readonly CalendarEvent[]): Map<string, CalendarEvent[]> {
+  const grouped = new Map<string, CalendarEvent[]>();
+
+  for (const event of events) {
+    const date = normalizeDateTime(event.start).slice(0, 10);
+    if (!date) {
+      continue;
+    }
+    const year = Number(date.slice(0, 4));
+    if (year !== calendarTemplateYear) {
+      continue;
+    }
+    const current = grouped.get(date) ?? [];
+    current.push(event);
+    grouped.set(date, current);
+  }
+
+  for (const entries of grouped.values()) {
+    entries.sort((left, right) => normalizeDateTime(left.start).localeCompare(normalizeDateTime(right.start)));
+  }
+
+  return grouped;
 }
 
 function fillRow(length: number, firstValue: string): string[] {
