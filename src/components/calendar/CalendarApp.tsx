@@ -54,6 +54,7 @@ const statusTone: Record<CalendarStatus, string> = {
 
 export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const isAdmin = mode === "admin";
+  const [today, setToday] = useState(createInitialCalendarDate);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [view, setView] = useState<CalendarView>("month");
   const [cursor, setCursor] = useState(createInitialCalendarDate);
@@ -70,6 +71,19 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const [isReady, setIsReady] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const liveToday = createInitialCalendarDate();
+    setToday(liveToday);
+    setCursor(liveToday);
+    setDraft(createDefaultDraft(liveToday));
+
+    const interval = window.setInterval(() => {
+      setToday(createInitialCalendarDate());
+    }, 60_000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     setIsReady(true);
@@ -131,7 +145,9 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   }
 
   function jumpToToday() {
-    setCursor(createInitialCalendarDate());
+    const liveToday = createInitialCalendarDate();
+    setToday(liveToday);
+    setCursor(liveToday);
   }
 
   function toggleResource(resourceId: CalendarResourceId) {
@@ -419,8 +435,8 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
               </section>
             )}
 
-            {view === "month" && <MonthView cursor={cursor} days={monthDays} events={visibleEvents} onSelect={setSelectedId} />}
-            {view === "week" && <WeekView days={weekDays} events={visibleEvents} onSelect={setSelectedId} />}
+            {view === "month" && <MonthView cursor={cursor} days={monthDays} events={visibleEvents} onSelect={setSelectedId} today={today} />}
+            {view === "week" && <WeekView days={weekDays} events={visibleEvents} onSelect={setSelectedId} today={today} />}
             {view === "list" && <ListView events={visibleEvents} onSelect={setSelectedId} />}
           </div>
         </div>
@@ -514,11 +530,13 @@ function MonthView({
   days,
   events,
   onSelect,
+  today,
 }: {
   cursor: Date;
   days: Date[];
   events: CalendarEvent[];
   onSelect: (id: string) => void;
+  today: Date;
 }) {
   const activeYear = cursor.getFullYear();
   const activeMonth = cursor.getMonth();
@@ -530,7 +548,7 @@ function MonthView({
         const isOutsideMonth = day.getFullYear() !== activeYear || day.getMonth() !== activeMonth;
         const cellClassName = [
           "month-cell",
-          sameDay(day, new Date()) ? "is-today" : "",
+          sameDay(day, today) ? "is-today" : "",
           isOutsideMonth ? "is-outside-month" : "",
         ]
           .filter(Boolean)
@@ -558,16 +576,18 @@ function WeekView({
   days,
   events,
   onSelect,
+  today,
 }: {
   days: Date[];
   events: CalendarEvent[];
   onSelect: (id: string) => void;
+  today: Date;
 }) {
   return (
     <section className="week-view" aria-label="Týdenní zobrazení">
       {days.map((day) => {
         const dayEvents = events.filter((event) => sameDay(new Date(event.start), day));
-        const columnClassName = sameDay(day, new Date()) ? "week-column is-today" : "week-column";
+        const columnClassName = sameDay(day, today) ? "week-column is-today" : "week-column";
         return (
           <article className={columnClassName} key={day.toISOString()}>
             <header>
