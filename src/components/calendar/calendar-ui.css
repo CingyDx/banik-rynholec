@@ -246,6 +246,14 @@
   border-color: #303630;
 }
 
+.period-control .today-button {
+  width: auto;
+  padding-inline: 0.85rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
 .calendar-actions {
   display: grid;
   gap: 0.55rem;

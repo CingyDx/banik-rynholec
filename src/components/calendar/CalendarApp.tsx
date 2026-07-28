@@ -130,6 +130,10 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
     });
   }
 
+  function jumpToToday() {
+    setCursor(createInitialCalendarDate());
+  }
+
   function toggleResource(resourceId: CalendarResourceId) {
     setActiveResources((current) => toggleSet(current, resourceId));
   }
@@ -355,6 +359,9 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
               <button aria-label="Další období" onClick={() => movePeriod(1)} type="button">
                 <ChevronRight aria-hidden="true" size={18} />
               </button>
+              <button className="today-button" onClick={jumpToToday} type="button">
+                Dnes
+              </button>
             </div>
 
             {isAdmin ? (
@@ -528,7 +535,7 @@ function MonthView({
         ]
           .filter(Boolean)
           .join(" ");
-        const dayNumberLabel = isOutsideMonth ? `${day.getDate()}. ${day.getMonth() + 1}.` : String(day.getDate());
+        const dayNumberLabel = `${day.getDate()}. ${day.getMonth() + 1}.`;
         return (
           <article className={cellClassName} key={day.toISOString()}>
             <header>
@@ -835,7 +842,7 @@ function SelectField({
   );
 }
 
-function getMonthGrid(cursor: Date): Date[] {
+export function getMonthGrid(cursor: Date): Date[] {
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const start = startOfWeek(first);
   return Array.from({ length: 42 }, (_, index) => addDays(start, index));
