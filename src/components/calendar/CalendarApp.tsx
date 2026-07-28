@@ -54,7 +54,7 @@ const statusTone: Record<CalendarStatus, string> = {
 
 export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const isAdmin = mode === "admin";
-  const [today, setToday] = useState(createInitialCalendarDate);
+  const [today, setToday] = useState<Date | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [view, setView] = useState<CalendarView>("month");
   const [cursor, setCursor] = useState(createInitialCalendarDate);
@@ -536,7 +536,7 @@ function MonthView({
   days: Date[];
   events: CalendarEvent[];
   onSelect: (id: string) => void;
-  today: Date;
+  today: Date | null;
 }) {
   const activeYear = cursor.getFullYear();
   const activeMonth = cursor.getMonth();
@@ -548,7 +548,7 @@ function MonthView({
         const isOutsideMonth = day.getFullYear() !== activeYear || day.getMonth() !== activeMonth;
         const cellClassName = [
           "month-cell",
-          sameDay(day, today) ? "is-today" : "",
+          today && sameDay(day, today) ? "is-today" : "",
           isOutsideMonth ? "is-outside-month" : "",
         ]
           .filter(Boolean)
@@ -581,13 +581,13 @@ function WeekView({
   days: Date[];
   events: CalendarEvent[];
   onSelect: (id: string) => void;
-  today: Date;
+  today: Date | null;
 }) {
   return (
     <section className="week-view" aria-label="Týdenní zobrazení">
       {days.map((day) => {
         const dayEvents = events.filter((event) => sameDay(new Date(event.start), day));
-        const columnClassName = sameDay(day, today) ? "week-column is-today" : "week-column";
+        const columnClassName = today && sameDay(day, today) ? "week-column is-today" : "week-column";
         return (
           <article className={columnClassName} key={day.toISOString()}>
             <header>
