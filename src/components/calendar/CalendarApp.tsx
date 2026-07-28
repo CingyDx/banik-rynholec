@@ -544,8 +544,8 @@ function MonthView({
   return (
     <section className="month-view" aria-label="Měsíční zobrazení">
       {days.map((day) => {
-        const dayEvents = events.filter((event) => sameDay(new Date(event.start), day));
         const isOutsideMonth = day.getFullYear() !== activeYear || day.getMonth() !== activeMonth;
+        const dayEvents = isOutsideMonth ? [] : events.filter((event) => sameDay(new Date(event.start), day));
         const cellClassName = [
           "month-cell",
           today && sameDay(day, today) ? "is-today" : "",
@@ -553,7 +553,7 @@ function MonthView({
         ]
           .filter(Boolean)
           .join(" ");
-        const dayNumberLabel = `${day.getDate()}. ${day.getMonth() + 1}.`;
+        const dayNumberLabel = isOutsideMonth ? "" : `${day.getDate()}. ${day.getMonth() + 1}.`;
         return (
           <article className={cellClassName} key={day.toISOString()}>
             <header>

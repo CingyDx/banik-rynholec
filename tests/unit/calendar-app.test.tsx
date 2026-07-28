@@ -41,7 +41,7 @@ describe("CalendarApp modes", () => {
     expect(screen.getByLabelText("Začátek")).toHaveValue(formatExpectedTodayStart());
     expect(screen.getByRole("button", { name: /Dnes/i })).toBeInTheDocument();
     expect(document.querySelector(".month-cell.is-today strong")).toHaveTextContent("29. 7.");
-    expect(document.querySelector(".month-cell.is-outside-month strong")).toHaveTextContent("29. 6.");
+    expect(document.querySelector(".month-cell.is-outside-month strong")).toHaveTextContent("");
   });
 
   it("generates the 2026 month grid from real calendar rules", () => {
