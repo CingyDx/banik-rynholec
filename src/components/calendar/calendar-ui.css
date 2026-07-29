@@ -234,19 +234,23 @@
 }
 
 .period-control strong {
-  min-width: 190px;
+  flex: 1 1 160px;
+  min-width: 0;
   text-align: center;
   font-size: 1.55rem;
+  white-space: nowrap;
 }
 
 .period-control button {
   display: grid;
+  flex: 0 0 42px;
   width: 42px;
   place-items: center;
   border-color: #303630;
 }
 
 .period-control .today-button {
+  flex: 0 0 auto;
   width: auto;
   padding-inline: 0.85rem;
   font-family: var(--font-display);
@@ -878,6 +882,11 @@ a.utility-button {
   .period-control {
     display: grid;
     grid-template-columns: 42px minmax(0, 1fr) 42px;
+  }
+
+  .period-control .today-button {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 
   .utility-button {
