@@ -461,6 +461,25 @@ a.utility-button {
   color: var(--color-green);
 }
 
+.month-cell-date {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.month-cell-date small {
+  padding: 0.18rem 0.38rem;
+  border: 1px solid rgb(46 143 66 / 42%);
+  background: rgb(46 143 66 / 10%);
+  color: var(--color-green);
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .month-cell.is-outside-month {
   background:
     linear-gradient(180deg, rgb(9 11 9 / 3%), rgb(9 11 9 / 3%)),

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import CalendarApp, { getMonthGrid } from "../../src/components/calendar/CalendarApp";
@@ -6,7 +6,7 @@ import { calendarSeedEvents } from "../../src/content/calendar";
 
 describe("CalendarApp modes", () => {
   beforeEach(() => {
-    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.useFakeTimers({ toFake: ["Date", "setInterval", "clearInterval"] });
     vi.setSystemTime(new Date("2026-07-29T12:00:00+02:00"));
     vi.stubGlobal(
       "fetch",
@@ -41,7 +41,31 @@ describe("CalendarApp modes", () => {
     expect(screen.getByLabelText("Začátek")).toHaveValue(formatExpectedTodayStart());
     expect(screen.getByRole("button", { name: /Dnes/i })).toBeInTheDocument();
     expect(document.querySelector(".month-cell.is-today strong")).toHaveTextContent("29. 7.");
-    expect(document.querySelector(".month-cell.is-outside-month strong")).toHaveTextContent("");
+    expect(document.querySelector(".month-cell.is-today")).toHaveAttribute("aria-current", "date");
+    expect(document.querySelector(".month-cell.is-today small")).toHaveTextContent("Dnes");
+
+    const cells = Array.from(document.querySelectorAll<HTMLElement>(".month-cell"));
+    expect(cells).toHaveLength(42);
+    expect(cells.every((cell) => Boolean(cell.querySelector("strong")?.textContent?.trim()))).toBe(true);
+    expect(cells[0]).toHaveAttribute("data-date", "2026-06-29");
+    expect(cells[0]?.querySelector("strong")).toHaveTextContent("29. 6.");
+    expect(cells[41]).toHaveAttribute("data-date", "2026-08-09");
+    expect(cells[41]?.querySelector("strong")).toHaveTextContent("9. 8.");
+  });
+
+  it("automatically follows the real local date across a month boundary", async () => {
+    vi.setSystemTime(new Date("2026-07-31T23:59:30+02:00"));
+    render(<CalendarApp mode="public" />);
+
+    expect(await screen.findByText("červenec 2026")).toBeInTheDocument();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(60_000);
+    });
+
+    expect(screen.getByText("srpen 2026")).toBeInTheDocument();
+    expect(document.querySelector(".month-cell.is-today strong")).toHaveTextContent("1. 8.");
+    expect(document.querySelector(".month-cell.is-today")).toHaveAttribute("data-date", "2026-08-01");
   });
 
   it("generates the 2026 month grid from real calendar rules", () => {

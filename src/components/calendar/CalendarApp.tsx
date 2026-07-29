@@ -33,6 +33,12 @@ type EventDraft = Omit<CalendarEvent, "id" | "resourceLabel" | "resourceGroup">;
 
 const dayFormatter = new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "short" });
 const fullDateFormatter = new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "long", year: "numeric" });
+const calendarCellFormatter = new Intl.DateTimeFormat("cs-CZ", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
 const weekdayFormatter = new Intl.DateTimeFormat("cs-CZ", { weekday: "short" });
 const monthFormatter = new Intl.DateTimeFormat("cs-CZ", { month: "long", year: "numeric" });
 
@@ -71,6 +77,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const [isReady, setIsReady] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const followsTodayRef = useRef(true);
 
   useEffect(() => {
     const liveToday = createInitialCalendarDate();
@@ -79,7 +86,17 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
     setDraft(createDefaultDraft(liveToday));
 
     const interval = window.setInterval(() => {
-      setToday(createInitialCalendarDate());
+      const nextToday = createInitialCalendarDate();
+      setToday((currentToday) => {
+        if (currentToday && sameDay(currentToday, nextToday)) {
+          return currentToday;
+        }
+        if (followsTodayRef.current) {
+          setCursor(nextToday);
+          setDraft(createDefaultDraft(nextToday));
+        }
+        return nextToday;
+      });
     }, 60_000);
 
     return () => window.clearInterval(interval);
@@ -133,6 +150,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const weekDays = useMemo(() => getWeekDays(cursor), [cursor]);
 
   function movePeriod(direction: -1 | 1) {
+    followsTodayRef.current = false;
     setCursor((current) => {
       const next = new Date(current);
       if (view === "month") {
@@ -146,6 +164,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
 
   function jumpToToday() {
     const liveToday = createInitialCalendarDate();
+    followsTodayRef.current = true;
     setToday(liveToday);
     setCursor(liveToday);
   }
@@ -287,6 +306,7 @@ export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
         setActiveResources(new Set(calendarResources.map((resource) => resource.id)));
         setActiveStatuses(new Set(calendarStatuses));
         if (firstImportedDate && !Number.isNaN(firstImportedDate.getTime())) {
+          followsTodayRef.current = false;
           setCursor(firstImportedDate);
         }
       }
@@ -545,20 +565,30 @@ function MonthView({
     <section className="month-view" aria-label="Měsíční zobrazení">
       {days.map((day) => {
         const isOutsideMonth = day.getFullYear() !== activeYear || day.getMonth() !== activeMonth;
-        const dayEvents = isOutsideMonth ? [] : events.filter((event) => sameDay(new Date(event.start), day));
+        const dayEvents = events.filter((event) => sameDay(new Date(event.start), day));
+        const isToday = Boolean(today && sameDay(day, today));
         const cellClassName = [
           "month-cell",
-          today && sameDay(day, today) ? "is-today" : "",
+          isToday ? "is-today" : "",
           isOutsideMonth ? "is-outside-month" : "",
         ]
           .filter(Boolean)
           .join(" ");
-        const dayNumberLabel = isOutsideMonth ? "" : `${day.getDate()}. ${day.getMonth() + 1}.`;
+        const dayNumberLabel = `${day.getDate()}. ${day.getMonth() + 1}.`;
         return (
-          <article className={cellClassName} key={day.toISOString()}>
+          <article
+            aria-current={isToday ? "date" : undefined}
+            aria-label={calendarCellFormatter.format(day)}
+            className={cellClassName}
+            data-date={toLocalDateKey(day)}
+            key={toLocalDateKey(day)}
+          >
             <header>
               <span>{weekdayFormatter.format(day)}</span>
-              <strong>{dayNumberLabel}</strong>
+              <div className="month-cell-date">
+                {isToday && <small>Dnes</small>}
+                <strong>{dayNumberLabel}</strong>
+              </div>
             </header>
             <div>
               {dayEvents.map((event) => (
@@ -889,6 +919,10 @@ function addDays(date: Date, days: number): Date {
 
 function sameDay(left: Date, right: Date): boolean {
   return left.getFullYear() === right.getFullYear() && left.getMonth() === right.getMonth() && left.getDate() === right.getDate();
+}
+
+function toLocalDateKey(date: Date): string {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
 function createWeekLabel(date: Date): string {
