@@ -1,14 +1,21 @@
 import type { Config, Context } from "@netlify/functions";
 
 import { readSessionFromRequest } from "./_shared/admin-auth";
-import { normalizeCalendarEventsForStorage, readCalendarEventsFromStore, writeCalendarEventsToStore } from "./_shared/calendar-data";
+import {
+  normalizeCalendarEventsForStorage,
+  readCalendarEventsFromStore,
+  sanitizeCalendarEventsForPublic,
+  writeCalendarEventsToStore,
+} from "./_shared/calendar-data";
 import { getRequiredEnv } from "./_shared/env";
 import { jsonResponse, methodNotAllowed } from "./_shared/http";
 
 export default async (req: Request, _context: Context) => {
   if (req.method === "GET") {
     try {
-      return jsonResponse({ events: await readCalendarEventsFromStore() });
+      const events = await readCalendarEventsFromStore();
+      const session = await readSessionFromRequest(req, getRequiredEnv("BANIK_SESSION_SECRET"));
+      return jsonResponse({ events: session ? events : sanitizeCalendarEventsForPublic(events) });
     } catch (error) {
       console.error("Calendar read failed", error);
       return jsonResponse({ error: "Kalendář se nepodařilo načíst." }, { status: 500 });

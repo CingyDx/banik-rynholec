@@ -441,9 +441,9 @@ function eventTableRowsToEvents(bodyRows: string[][], headerIndexes: Map<string,
         status,
         start: normalizeDateTime(read("Začátek")),
         end: normalizeDateTime(read("Konec")),
-        contactName: read("Kontakt jméno") || "TJ Baník Rynholec",
-        contactValue: read("Kontakt") || "info@banikrynholec.cz",
-        note: read("Poznámka") || "Bez poznámky.",
+        contactName: read("Kontakt jméno"),
+        contactValue: read("Kontakt"),
+        note: read("Poznámka"),
       } satisfies CalendarEvent;
     })
     .filter((event) => event.start && event.end);
@@ -470,9 +470,9 @@ function yearRowsToEvents(bodyRows: string[][], headerIndexes: Map<string, numbe
         status,
         start,
         end,
-        contactName: read("Kontakt jméno") || "TJ Baník Rynholec",
-        contactValue: read("Kontakt") || "info@banikrynholec.cz",
-        note: read("Poznámka") || "Bez poznámky.",
+        contactName: read("Kontakt jméno"),
+        contactValue: read("Kontakt"),
+        note: read("Poznámka"),
       } satisfies CalendarEvent;
     })
     .filter((event) => event.start && event.end);
@@ -513,9 +513,9 @@ function daySlotRowsToEvents(bodyRows: string[][], headerRow: readonly string[])
         status,
         start,
         end,
-        contactName: read("contactName") || "TJ Baník Rynholec",
-        contactValue: read("contactValue") || "info@banikrynholec.cz",
-        note: read("note") || "Bez poznámky.",
+        contactName: read("contactName"),
+        contactValue: read("contactValue"),
+        note: read("note"),
       });
     }
   }

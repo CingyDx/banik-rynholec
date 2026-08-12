@@ -15,6 +15,14 @@ const resourceById = new Map<CalendarResourceId, CalendarResource>(
   calendarResources.map((resource) => [resource.id, resource]),
 );
 const statuses = new Set<CalendarStatus>(calendarStatuses);
+const occupiedPublicTitles: Record<CalendarResourceId, string> = {
+  football: "Hřiště obsazeno",
+  sauna: "Sauna obsazena",
+  gym: "Posilovna obsazena",
+  clubhouse: "Klubovna obsazena",
+  "team-a": "A tým obsazen",
+  "team-youth": "Mládež obsazena",
+};
 
 export function normalizeCalendarEventsForStorage(input: unknown): CalendarEvent[] {
   if (!Array.isArray(input)) {
@@ -37,6 +45,19 @@ export async function writeCalendarEventsToStore(events: readonly CalendarEvent[
   const store = getStore({ name: calendarStore, consistency: "strong" });
   await store.setJSON(calendarKey, { events: normalized, updatedAt: new Date().toISOString() });
   return normalized;
+}
+
+export function sanitizeCalendarEventsForPublic(events: readonly CalendarEvent[]): CalendarEvent[] {
+  return events.map((event) => ({
+    ...event,
+    title:
+      event.status === "obsazeno" || event.status === "čeká na schválení"
+        ? occupiedPublicTitles[event.resourceId]
+        : event.title,
+    contactName: "",
+    contactValue: "",
+    note: "",
+  }));
 }
 
 function normalizeCalendarEvent(item: unknown, index: number): CalendarEvent | null {
@@ -66,9 +87,9 @@ function normalizeCalendarEvent(item: unknown, index: number): CalendarEvent | n
     status,
     start,
     end,
-    contactName: readString(record.contactName) || "TJ Baník Rynholec",
-    contactValue: readString(record.contactValue) || "info@banikrynholec.cz",
-    note: readString(record.note) || "",
+    contactName: readString(record.contactName),
+    contactValue: readString(record.contactValue),
+    note: readString(record.note),
   };
 }
 
