@@ -58,6 +58,23 @@ const statusTone: Record<CalendarStatus, string> = {
   "čeká na schválení": "is-pending",
 };
 
+function occupiedResourceTone(event: Pick<CalendarEvent, "resourceId" | "status">): string {
+  if (event.status !== "obsazeno") {
+    return "";
+  }
+  if (event.resourceId === "sauna") {
+    return "resource-sauna";
+  }
+  if (event.resourceId === "gym") {
+    return "resource-gym";
+  }
+  return "";
+}
+
+function eventToneClassName(event: Pick<CalendarEvent, "resourceId" | "status">): string {
+  return [statusTone[event.status], occupiedResourceTone(event)].filter(Boolean).join(" ");
+}
+
 export default function CalendarApp({ mode = "public" }: CalendarAppProps) {
   const isAdmin = mode === "admin";
   const [today, setToday] = useState<Date | null>(null);
@@ -651,7 +668,7 @@ function ListView({ events, onSelect }: { events: CalendarEvent[]; onSelect: (id
             <strong>{event.title}</strong>
             <small>{event.resourceLabel} · {event.contactName}</small>
           </span>
-          <i className={`status-badge ${statusTone[event.status]}`}>{statusLabels[event.status]}</i>
+          <i className={`status-badge ${eventToneClassName(event)}`}>{statusLabels[event.status]}</i>
         </button>
       ))}
     </section>
@@ -662,7 +679,7 @@ function EventPill({ event, onSelect }: { event: CalendarEvent; onSelect: (id: s
   return (
     <button
       aria-label={`${event.title}, ${event.resourceLabel}, ${statusLabels[event.status]}, ${formatTimeRange(event)}`}
-      className={`event-pill ${statusTone[event.status]}`}
+      className={`event-pill ${eventToneClassName(event)}`}
       onClick={() => onSelect(event.id)}
       type="button"
     >
@@ -704,7 +721,7 @@ function EventDetail({
       <section aria-labelledby="event-detail-title" aria-modal="true" className="event-detail" role="dialog">
         <header>
           <div>
-            <span className={`status-badge ${statusTone[draft.status]}`}>{statusLabels[draft.status]}</span>
+            <span className={`status-badge ${eventToneClassName(draft)}`}>{statusLabels[draft.status]}</span>
             <h2 id="event-detail-title">Detail události</h2>
             {editable && <p className="detail-hint">Tady může admin záznam upravit, uložit nebo smazat.</p>}
           </div>
@@ -857,9 +874,10 @@ function DurationField({
       label="Délka"
       value={String(value)}
       onChange={(nextValue) => onChange(Number(nextValue))}
-      options={Array.from({ length: 10 }, (_, index) => {
-        const hours = index + 1;
-        return { value: String(hours), label: `+${hours} h` };
+      options={Array.from({ length: 20 }, (_, index) => {
+        const hours = (index + 1) / 2;
+        const label = Number.isInteger(hours) ? String(hours) : String(hours).replace(".", ",");
+        return { value: String(hours), label: `+${label} h` };
       })}
     />
   );
@@ -977,21 +995,21 @@ function parseCzechDateTime(value: string): string | null {
   return null;
 }
 
-function getDurationHours(start: string, end: string): number {
+export function getDurationHours(start: string, end: string): number {
   const startDate = dateFromInputDateTime(start);
   const endDate = dateFromInputDateTime(end);
   if (!startDate || !endDate) {
     return 2;
   }
 
-  const diffHours = Math.round((endDate.getTime() - startDate.getTime()) / 3_600_000);
+  const diffHours = Math.round(((endDate.getTime() - startDate.getTime()) / 3_600_000) * 2) / 2;
   return clampDuration(diffHours);
 }
 
-function addHoursToDateTime(start: string, hours: number): string {
+export function addHoursToDateTime(start: string, hours: number): string {
   const startDate = dateFromInputDateTime(start) ?? new Date();
   const next = new Date(startDate);
-  next.setHours(next.getHours() + clampDuration(hours), next.getMinutes(), 0, 0);
+  next.setMinutes(next.getMinutes() + clampDuration(hours) * 60, 0, 0);
   return toInputDateTime(next);
 }
 
@@ -1035,7 +1053,7 @@ function clampDuration(hours: number): number {
   if (!Number.isFinite(hours)) {
     return 2;
   }
-  return Math.min(10, Math.max(1, hours));
+  return Math.min(10, Math.max(0.5, Math.round(hours * 2) / 2));
 }
 
 function pad(value: number): string {

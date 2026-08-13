@@ -1,7 +1,11 @@
 import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import CalendarApp, { getMonthGrid } from "../../src/components/calendar/CalendarApp";
+import CalendarApp, {
+  addHoursToDateTime,
+  getDurationHours,
+  getMonthGrid,
+} from "../../src/components/calendar/CalendarApp";
 import { calendarSeedEvents } from "../../src/content/calendar";
 
 describe("CalendarApp modes", () => {
@@ -51,6 +55,37 @@ describe("CalendarApp modes", () => {
     expect(cells[0]?.querySelector("strong")).toHaveTextContent("29. 6.");
     expect(cells[41]).toHaveAttribute("data-date", "2026-08-09");
     expect(cells[41]?.querySelector("strong")).toHaveTextContent("9. 8.");
+  });
+
+  it("offers half-hour duration steps for 90-minute training blocks", async () => {
+    render(<CalendarApp mode="admin" />);
+
+    expect(await screen.findByRole("option", { name: "+0,5 h" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "+1,5 h" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "+10 h" })).toBeInTheDocument();
+  });
+
+  it("keeps 90-minute event arithmetic exact", () => {
+    expect(getDurationHours("2026-09-01T17:00", "2026-09-01T18:30")).toBe(1.5);
+    expect(addHoursToDateTime("2026-09-01T17:00", 1.5)).toBe("2026-09-01T18:30");
+  });
+
+  it("visually distinguishes an occupied sauna from an occupied gym", async () => {
+    const saunaEvent = {
+      ...calendarSeedEvents.find((event) => event.resourceId === "sauna")!,
+      start: "2026-07-01T18:00",
+      end: "2026-07-01T20:00",
+    };
+    const gymEvent = calendarSeedEvents.find((event) => event.resourceId === "gym")!;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(JSON.stringify({ events: [saunaEvent, gymEvent] }), { status: 200 })),
+    );
+
+    render(<CalendarApp mode="public" />);
+
+    expect(await screen.findByLabelText(/Obsazenost sauny/)).toHaveClass("resource-sauna");
+    expect(screen.getByLabelText(/Posilovna blok/)).toHaveClass("resource-gym");
   });
 
   it("automatically follows the real local date across a month boundary", async () => {

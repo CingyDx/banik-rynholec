@@ -670,6 +670,20 @@ a.utility-button {
   color: var(--status-color);
 }
 
+.is-booked.resource-sauna {
+  --status-bg: #fff2df;
+  --status-border: #ea7a16;
+  --status-color: #ad4d00;
+  --status-ring: rgb(234 122 22 / 20%);
+}
+
+.is-booked.resource-gym {
+  --status-bg: #f4edff;
+  --status-border: #8b45d9;
+  --status-color: #6720a8;
+  --status-ring: rgb(139 69 217 / 20%);
+}
+
 .is-training {
   --status-bg: #eaf5ff;
   --status-border: #1479bf;
