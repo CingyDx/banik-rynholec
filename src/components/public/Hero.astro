@@ -5,14 +5,27 @@ import { club } from "../../content/site";
 ---
 
 <section class="hero">
-  <img
-    class="hero-image"
-    src="/images/sportovni-areal-hero.jpg"
-    alt="Fotbalové hřiště v Rynholci"
-    width="450"
-    height="253"
-    fetchpriority="high"
-  />
+  <picture class="hero-media">
+    <source
+      type="image/avif"
+      srcset="/images/hero/sportovni-areal-768.avif 768w, /images/hero/sportovni-areal-1440.avif 1440w, /images/hero/sportovni-areal-2560.avif 2560w"
+      sizes="100vw"
+    />
+    <source
+      type="image/webp"
+      srcset="/images/hero/sportovni-areal-768.webp 768w, /images/hero/sportovni-areal-1440.webp 1440w, /images/hero/sportovni-areal-2560.webp 2560w"
+      sizes="100vw"
+    />
+    <img
+      class="hero-image"
+      src="/images/hero/sportovni-areal-1440.webp"
+      alt="Fotbalové hřiště v Rynholci"
+      width="1440"
+      height="810"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </picture>
   <div class="hero-content container">
     <h1>TJ Baník<br />Rynholec</h1>
     <p>{club.tagline}</p>
@@ -43,11 +56,16 @@ import { club } from "../../content/site";
     isolation: isolate;
   }
 
-  .hero-image {
+  .hero-media {
     position: absolute;
     z-index: -2;
-    top: 0;
-    left: 0;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero-image {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -220,12 +238,15 @@ import { club } from "../../content/site";
       grid-template-rows: 240px auto;
     }
 
-    .hero-image {
+    .hero-media {
       position: relative;
       z-index: auto;
-      top: auto;
+      inset: auto;
       grid-row: 1;
       height: 240px;
+    }
+
+    .hero-image {
       object-position: center;
     }
 
@@ -288,7 +309,7 @@ import { club } from "../../content/site";
       grid-template-rows: 220px auto;
     }
 
-    .hero-image {
+    .hero-media {
       height: 220px;
     }
 

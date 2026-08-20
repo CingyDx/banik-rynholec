@@ -150,7 +150,14 @@ main {
   transition: transform 900ms var(--ease-premium), opacity var(--transition-medium);
 }
 
+.media-frame picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .media-frame img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -478,7 +485,7 @@ a:hover .media-frame::after,
   background:
     linear-gradient(90deg, rgb(5 7 5 / 94%) 0%, rgb(5 7 5 / 80%) 52%, rgb(5 7 5 / 48%) 100%),
     linear-gradient(0deg, rgb(5 7 5 / 92%), rgb(5 7 5 / 20%)),
-    url("/images/sportovni-areal-hero.jpg") center / cover;
+    url("/images/hero/sportovni-areal-1440.avif") center / cover;
   content: "";
   filter: saturate(0.85) contrast(1.08);
   transform: scale(1.02);

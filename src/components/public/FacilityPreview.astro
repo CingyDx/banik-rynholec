@@ -25,13 +25,26 @@ const icons = {
 
     <div class="facility-collage" aria-label="Fotky sportovního areálu">
       <figure class="collage-main media-frame">
-        <img
-          src="/images/sportovni-areal-hero.jpg"
-          alt="Sportovní areál TJ Baník Rynholec"
-          width="450"
-          height="253"
-          loading="lazy"
-        />
+        <picture>
+          <source
+            type="image/avif"
+            srcset="/images/hero/sportovni-areal-768.avif 768w, /images/hero/sportovni-areal-1440.avif 1440w"
+            sizes="(max-width: 820px) 100vw, 55vw"
+          />
+          <source
+            type="image/webp"
+            srcset="/images/hero/sportovni-areal-768.webp 768w, /images/hero/sportovni-areal-1440.webp 1440w"
+            sizes="(max-width: 820px) 100vw, 55vw"
+          />
+          <img
+            src="/images/hero/sportovni-areal-1440.webp"
+            alt="Sportovní areál TJ Baník Rynholec"
+            width="1440"
+            height="810"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
       </figure>
       <figure class="collage-side media-frame">
         <img src="/images/sportovni-areal-secondary.jpg" alt="Multifunkční hřiště v areálu" width="450" height="253" loading="lazy" />

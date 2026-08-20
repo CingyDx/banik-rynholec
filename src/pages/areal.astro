@@ -20,7 +20,24 @@ const icons = {
   <section class="content-band">
     <div class="container areal-intro">
       <div class="areal-image media-frame">
-        <img src="/images/sportovni-areal-hero.jpg" alt="Fotbalové hřiště v areálu Rynholec" width="1200" height="750" />
+        <picture>
+          <source
+            type="image/avif"
+            srcset="/images/hero/sportovni-areal-768.avif 768w, /images/hero/sportovni-areal-1440.avif 1440w, /images/hero/sportovni-areal-2560.avif 2560w"
+            sizes="(max-width: 820px) 100vw, 65vw"
+          />
+          <source
+            type="image/webp"
+            srcset="/images/hero/sportovni-areal-768.webp 768w, /images/hero/sportovni-areal-1440.webp 1440w, /images/hero/sportovni-areal-2560.webp 2560w"
+            sizes="(max-width: 820px) 100vw, 65vw"
+          />
+          <img
+            src="/images/hero/sportovni-areal-1440.webp"
+            alt="Fotbalové hřiště v areálu Rynholec"
+            width="1440"
+            height="810"
+          />
+        </picture>
       </div>
       <div>
         <h2>Areál pro sport i regeneraci</h2>

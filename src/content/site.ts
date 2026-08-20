@@ -143,7 +143,7 @@ export const facilities: readonly Facility[] = [
     capacity: "Fotbalové zápasy a tréninkové bloky",
     bookingLabel: "Hřiště",
     availability: "Program a obsazenost hřiště se zobrazují v klubovém kalendáři.",
-    image: "/images/sportovni-areal-hero.jpg",
+    image: "/images/hero/sportovni-areal-1440.webp",
     details: ["Zápasy", "Tréninky", "Obsazenost", "Klubový program"],
   },
   {
@@ -284,7 +284,7 @@ export const galleryItems: readonly GalleryItem[] = [
     note: "Mužstvo dospělých TJ Baník Rynholec.",
   },
   {
-    src: "/images/sportovni-areal-hero.jpg",
+    src: "/images/hero/sportovni-areal-1440.webp",
     alt: "Fotbalové hřiště TJ Baník Rynholec",
     title: "Fotbalové hřiště",
     category: "areal",
@@ -332,7 +332,7 @@ export const newsPreview: readonly NewsPreviewItem[] = [
     title: "Program klubu najdete v online kalendáři",
     summary: "Kalendář přehledně ukazuje zápasy, tréninky a obsazenost areálu. Program lze zobrazit po měsících, týdnech i jako seznam.",
     href: "/kalendar",
-    image: "/images/sportovni-areal-hero.jpg",
+    image: "/images/hero/sportovni-areal-1440.webp",
   },
 ];
 
