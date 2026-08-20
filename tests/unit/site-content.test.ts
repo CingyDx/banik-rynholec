@@ -3,11 +3,11 @@ import { describe, expect, it } from "vitest";
 import {
   club,
   facilities,
+  gallerySections,
   galleryItems,
   navigation,
   newsPreview,
   reservationAreas,
-  schedulePreview,
   teams,
 } from "../../src/content/site";
 
@@ -27,10 +27,22 @@ describe("public site content", () => {
   it("contains the four confirmed team categories", () => {
     expect(teams.map(({ name }) => name)).toEqual([
       "Přípravka",
-      "Žáci",
+      "Starší žáci",
       "A tým",
       "Stará garda",
     ]);
+
+    expect(teams.find(({ id }) => id === "zaci")).toMatchObject({
+      coach: "Miroslav Chvaščák",
+      phone: "+420 739 572 608",
+      training: "Úterý a čtvrtek od 17:00 do 18:30.",
+      instagram: "https://www.instagram.com/banikrynholeczaci/",
+    });
+    expect(teams.find(({ id }) => id === "zaci")?.image).toBeUndefined();
+
+    expect(teams.find(({ id }) => id === "a-tym")).toMatchObject({
+      image: "/images/teams/a-tym/a-tym-sezona-2025-2026.webp",
+    });
   });
 
   it("describes the verified public facilities", () => {
@@ -45,37 +57,25 @@ describe("public site content", () => {
     expect(club.coordinates).toEqual({ latitude: 50.1349364, longitude: 13.92615 });
   });
 
-  it("keeps the homepage schedule as a longer preview carousel", () => {
-    expect(schedulePreview.length).toBeGreaterThanOrEqual(10);
-    expect(schedulePreview.every(({ preview }) => preview)).toBe(true);
-    expect(schedulePreview.slice(0, 4).map(({ team }) => team)).toEqual([
-      "A tým",
-      "Žáci",
-      "Přípravka",
-      "Areál",
-    ]);
-    expect(schedulePreview.at(-1)).toMatchObject({
-      date: "23. 8.",
-      opponent: "Volný blok areálu",
-    });
-  });
-
-  it("uses prerelease-ready news items with temporary media", () => {
+  it("uses factual news items with supplied media", () => {
     expect(newsPreview[0]).toMatchObject({
-      date: "23. 6. 2026",
-      category: "Klub",
-      title: "Nové místo pro Baník Rynholec vzniká",
+      date: "20. 8. 2026",
+      category: "Týmy",
+      title: "Starší žáci: tréninky a kontakt na jednom místě",
     });
-    expect(newsPreview.length).toBeGreaterThanOrEqual(6);
-    expect(newsPreview.map(({ title }) => title)).toContain("A tým zvládl domácí utkání");
-    expect(newsPreview.every(({ image }) => image.startsWith("/images/placeholders/"))).toBe(true);
+    expect(newsPreview.length).toBeGreaterThanOrEqual(3);
+    expect(newsPreview.map(({ title }) => title)).toContain("A tým Baníku v sezoně 2025/2026");
+    expect(newsPreview.every(({ image }) => !image.includes("/placeholders/"))).toBe(true);
   });
 
-  it("provides three gallery images for every facility group", () => {
-    expect(galleryItems).toHaveLength(facilities.length * 3);
-    for (const facility of facilities) {
-      expect(galleryItems.filter(({ category }) => category === facility.name)).toHaveLength(3);
-    }
+  it("publishes every supplied team photo in a real-photo gallery", () => {
+    expect(gallerySections.map(({ id }) => id)).toEqual(["mladez", "a-tym", "areal"]);
+    expect(galleryItems).toHaveLength(12);
+    expect(galleryItems.filter(({ category }) => category === "mladez")).toHaveLength(9);
+    expect(galleryItems.filter(({ category }) => category === "a-tym")).toHaveLength(1);
+    expect(galleryItems.filter(({ category }) => category === "areal")).toHaveLength(2);
+    expect(galleryItems.every(({ src }) => !src.includes("/placeholders/"))).toBe(true);
+    expect(galleryItems.filter(({ category }) => category === "mladez").every(({ alt }) => !alt.includes("Starší žáci"))).toBe(true);
   });
 
   it("keeps facility availability informational instead of active booking", () => {

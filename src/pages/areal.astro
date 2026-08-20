@@ -20,7 +20,7 @@ const icons = {
   <section class="content-band">
     <div class="container areal-intro">
       <div class="areal-image media-frame">
-        <img src="/images/placeholders/football-2.svg?v=2" alt="Fotbalové hřiště v areálu Rynholec" width="450" height="253" />
+        <img src="/images/sportovni-areal-hero.jpg" alt="Fotbalové hřiště v areálu Rynholec" width="1200" height="750" />
       </div>
       <div>
         <h2>Areál pro sport i regeneraci</h2>
@@ -58,7 +58,14 @@ const icons = {
         return (
           <article id={facility.id}>
             <div class="facility-image media-frame">
-              <img src={facility.image} alt="" width="450" height="253" loading="lazy" />
+              {facility.image ? (
+                <img src={facility.image} alt={facility.name} width="1200" height="750" loading="lazy" />
+              ) : (
+                <div class="facility-symbol" aria-hidden="true">
+                  <Icon size={76} strokeWidth={1.35} />
+                  <span>{facility.bookingLabel}</span>
+                </div>
+              )}
               <Icon aria-hidden="true" size={30} strokeWidth={1.8} />
             </div>
             <div class="facility-content">
@@ -161,6 +168,27 @@ const icons = {
 
   .facility-image img {
     opacity: 0.86;
+  }
+
+  .facility-symbol {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    place-content: center;
+    place-items: center;
+    gap: 1rem;
+    background:
+      linear-gradient(145deg, rgb(47 135 63 / 24%), transparent 62%),
+      #0c120d;
+    color: var(--color-green-bright);
+  }
+
+  .facility-symbol span {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
   }
 
   .facility-image svg {

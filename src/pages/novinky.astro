@@ -7,10 +7,10 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 ---
 
 <PublicLayout title="Novinky" description="Aktuality, články a odkazy na výsledky TJ Baník Rynholec.">
-  <PageHero title="Z klubu" description="Místo pro články k zápasům, klubové zprávy a odkazy na tabulky." />
+  <PageHero title="Z klubu" description="Aktuální informace o týmech, programu a dění kolem Baníku Rynholec." />
 
   <section class="content-band">
-    <div class="container news-feature" id="novy-web">
+    <div class="container news-feature" id="starsi-zaci">
       <div class="feature-image media-frame">
         <img src={newsPreview[0].image} alt="Sportovní areál TJ Baník Rynholec" width="450" height="253" />
       </div>
@@ -18,8 +18,8 @@ import PublicLayout from "../layouts/PublicLayout.astro";
         <span>{newsPreview[0].date} · {newsPreview[0].category}</span>
         <h2>{newsPreview[0].title}</h2>
         <p>{newsPreview[0].summary}</p>
-        <a class="text-link" href="/kalendar">
-          Zobrazit kalendář <ArrowRight aria-hidden="true" size={18} />
+        <a class="text-link" href={newsPreview[0].href}>
+          Detail týmu <ArrowRight aria-hidden="true" size={18} />
         </a>
       </article>
     </div>
@@ -28,12 +28,12 @@ import PublicLayout from "../layouts/PublicLayout.astro";
       {newsPreview.slice(1).map((item) => (
         <article class="news-page-item">
           <div class="item-image media-frame">
-            <img src={item.image} alt="" width="450" height="253" loading="lazy" />
+            <img src={item.image} alt={item.title} width="450" height="253" loading="lazy" />
           </div>
           <span>{item.date} · {item.category}</span>
           <h2>{item.title}</h2>
           <p>{item.summary}</p>
-          <a class="text-link" href={item.href}>
+          <a class="text-link" href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>
             Otevřít sekci <ArrowRight aria-hidden="true" size={18} />
           </a>
         </article>
@@ -43,8 +43,8 @@ import PublicLayout from "../layouts/PublicLayout.astro";
 
   <section class="editorial-note">
     <div class="container editorial-inner">
-      <h2>Aktuality jednoduše</h2>
-      <p>Novinky mohou sloužit pro zápasové reporty, klubové zprávy, fotky z akcí a důležité odkazy pro fanoušky.</p>
+      <h2>Život kolem Baníku</h2>
+      <p>Na webu najdete týmové informace, klubové zprávy, fotografie a odkazy na aktuální program.</p>
     </div>
   </section>
 </PublicLayout>

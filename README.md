@@ -4,12 +4,13 @@ Public club website and simple calendar administration for TJ Banik Rynholec.
 
 ## Status
 
-The project is in the local prerelease 0.1 phase. The current target is a lightweight club website with an informational calendar, one shared admin login, manual calendar edits, and Excel import/export.
+Version 1.0 delivers the public club website, a live informational calendar, one shared administrator login, manual calendar editing, and Excel import/export.
 
 ## Links
 
 - GitHub: https://github.com/CingyDx/banik-rynholec
-- Netlify first look: https://banikrynholec.netlify.app
+- Production website: https://banikrynholec.cz
+- Netlify fallback: https://banikrynholec.netlify.app
 - Netlify project: https://app.netlify.com/projects/banikrynholec
 
 ## Local Development
@@ -65,12 +66,13 @@ Do not commit real passwords or production secrets.
 - Netlify and WEDOS credentials belong only in their provider interfaces or approved secret stores.
 - Netlify MFA must be enabled before production launch.
 
-## Temporary Asset Sources
+## Asset Sources
 
 - Club crest source: client-supplied PDF. The source PDF stays outside the repository.
-- Venue photos: [Obec Rynholec - Sportovni areal](https://www.obecrynholec.cz/obec-rynholec/sportovni-areal/), supplied by the client as the temporary photo source.
-- The municipality versions are only 450 pixels wide. They are suitable for the first look, but launch quality requires original-size files or a new club photo set.
-- Publication permission and youth-photo privacy rules must be confirmed before launch.
+- Venue photos: [Obec Rynholec - Sportovni areal](https://www.obecrynholec.cz/obec-rynholec/sportovni-areal/), supplied by the client as the current venue photo source.
+- Adult-team photo supplied by Rudolf Sladek for the club website.
+- Youth photos supplied by Matej Sima for the club website. The gallery identifies them only as youth photos because individual team labels and captions were not supplied.
+- The club remains responsible for confirming publication permissions and youth-photo privacy requirements.
 
 ## Git Workflow
 

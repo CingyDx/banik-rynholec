@@ -10,12 +10,6 @@ const icons = {
   "stara-garda": Medal,
 };
 
-const teamImages = {
-  pripravka: "/images/placeholders/multifunction-2.svg?v=2",
-  zaci: "/images/placeholders/football-2.svg?v=2",
-  "a-tym": "/images/placeholders/football-3.svg?v=2",
-  "stara-garda": "/images/placeholders/clubhouse-3.svg?v=2",
-};
 ---
 
 <section class="team-section section-surface">
@@ -33,8 +27,14 @@ const teamImages = {
         const Icon = icons[team.id];
         return (
           <a class="team-item" href={`/tymy#${team.id}`}>
-            <span class="team-photo media-frame">
-              <img src={teamImages[team.id]} alt="" width="450" height="253" loading="lazy" />
+            <span class:list={["team-photo", "media-frame", `is-${team.id}`, { "has-photo": Boolean(team.image) }]}>
+              <img
+                src={team.image ?? "/images/club-logo.png"}
+                alt=""
+                width={team.image ? 1200 : 88}
+                height={team.image ? 750 : 130}
+                loading="lazy"
+              />
               <span>{String(index + 1).padStart(2, "0")}</span>
             </span>
             <span class="team-content">
@@ -126,6 +126,16 @@ const teamImages = {
     inset: 0;
     background: linear-gradient(180deg, transparent 25%, rgb(9 11 9 / 66%));
     content: "";
+  }
+
+  .team-photo:not(.has-photo) img {
+    padding: 2rem;
+    object-fit: contain;
+    opacity: 0.72;
+  }
+
+  .team-photo.is-a-tym img {
+    object-fit: contain;
   }
 
   .team-photo span {

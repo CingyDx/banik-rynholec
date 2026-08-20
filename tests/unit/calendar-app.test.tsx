@@ -43,6 +43,9 @@ describe("CalendarApp modes", () => {
     expect(screen.getByRole("button", { name: /Export Excel/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Nový zápis" })).toBeInTheDocument();
     expect(screen.getByLabelText("Začátek")).toHaveValue(formatExpectedTodayStart());
+    expect(screen.getByLabelText("Jméno")).toHaveValue("");
+    expect(screen.getByLabelText("Kontakt")).toHaveValue("");
+    expect(screen.getByLabelText("Poznámka")).toHaveValue("");
     expect(screen.getByRole("button", { name: /Dnes/i })).toBeInTheDocument();
     expect(document.querySelector(".month-cell.is-today strong")).toHaveTextContent("29. 7.");
     expect(document.querySelector(".month-cell.is-today")).toHaveAttribute("aria-current", "date");

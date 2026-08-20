@@ -9,16 +9,21 @@ import { newsPreview } from "../../content/site";
     <div>
       <h2 class="section-title">Z klubu</h2>
       <div class="section-rule"></div>
-      <p class="section-copy">Aktuality, zápasové články a důležité zprávy z klubu budou mít vlastní přehlednou sekci.</p>
+      <p class="section-copy">Aktuality, týmové informace a důležité zprávy z klubu na jednom místě.</p>
     </div>
     <a class="command" href="/novinky">Všechny novinky <ArrowRight aria-hidden="true" size={18} /></a>
   </div>
 
   <div class="container news-list">
     {newsPreview.slice(0, 3).map((item, index) => (
-      <a class:list={["news-item", { "is-featured": index === 0 }]} href={item.href}>
+      <a
+        class:list={["news-item", { "is-featured": index === 0 }]}
+        href={item.href}
+        target={item.external ? "_blank" : undefined}
+        rel={item.external ? "noreferrer" : undefined}
+      >
         <span class="news-image media-frame">
-          <img src={item.image} alt="" width="450" height="253" loading="lazy" />
+          <img src={item.image} alt={item.title} width="450" height="253" loading="lazy" />
         </span>
         <span class="news-meta">{item.date} · {item.category}</span>
         <h3>{item.title}</h3>

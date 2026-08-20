@@ -964,9 +964,9 @@ function createDefaultDraft(date = new Date()): EventDraft {
     status: "čeká na schválení",
     start,
     end: addHoursToDateTime(start, 2),
-    contactName: "Jan Novák",
-    contactValue: "+420 777 123 456",
-    note: "Nový ruční zápis do kalendáře.",
+    contactName: "",
+    contactValue: "",
+    note: "",
   };
 }
 
